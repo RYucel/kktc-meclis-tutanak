@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KKTC Cumhuriyet Meclisi Tutanak Arşivi (1960–2026)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF7F2;
+    --folio: #FFFFFF;
+    --ink: #161B22;
+    --ink-soft: #475261;
+    --ink-muted: #76808F;
+    --crimson: #B91C1C;
+    --crimson-dark: #8F1515;
+    --crimson-tint: #FEF2F2;
+    --olive: #2E5339;
+    --brass: #9A7B3E;
+    --rule: #E2DBD0;
+    --rule-strong: #C9BFAE;
+    --mark-bg: #FDE68A;
+    --shadow-sm: 0 1px 2px rgba(22, 27, 34, 0.05);
+    --shadow-md: 0 10px 30px rgba(22, 27, 34, 0.08);
+    --serif: 'Newsreader', Georgia, serif;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  body {
+    background-image: radial-gradient(rgba(154, 123, 62, 0.08) 1px, transparent 0);
+    background-size: 24px 24px;
+    min-height: 100vh;
+  }
+
+  .top-band { height: 4px; background: linear-gradient(90deg, var(--crimson) 0%, var(--crimson) 68%, var(--brass) 68%, var(--brass) 100%); }
+  .masthead { background: var(--folio); border-bottom: 3px double var(--rule-strong); padding: 22px 24px 18px; }
+  .masthead-inner { max-width: 1180px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; }
+  .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--crimson); font-weight: 600; margin-bottom: 6px; }
+  .masthead h1 { font-family: var(--serif); font-size: clamp(26px, 3.6vw, 38px); font-weight: 700; margin: 0; line-height: 1.08; letter-spacing: -0.02em; }
+  .masthead-sub { margin: 7px 0 0; font-size: 14px; color: var(--ink-soft); }
+  .telemetry { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  .tel-item { border-left: 2px solid var(--rule); padding-left: 12px; }
+  .tel-val { font-family: var(--mono); font-size: 16px; font-weight: 600; }
+  .tel-lbl { font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .hf-pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--rule-strong); background: var(--paper); color: var(--ink); font-size: 12px; font-weight: 600; text-decoration: none; transition: all 0.15s; }
+  .hf-pill:hover { border-color: var(--crimson); background: var(--crimson-tint); color: var(--crimson-dark); }
+
+  .container { max-width: 1180px; margin: 22px auto 64px; padding: 0 20px; }
+
+  .search-panel { background: var(--folio); border: 1px solid var(--rule-strong); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); }
+  .search-grid { display: grid; grid-template-columns: 1.35fr 1.65fr auto; gap: 12px; align-items: end; }
+  .filters-row { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--rule); display: grid; grid-template-columns: 1.1fr 0.7fr 0.7fr 0.7fr 1fr 1fr; gap: 10px; align-items: end; }
+  @media (max-width: 900px) { .search-grid { grid-template-columns: 1fr; } .filters-row { grid-template-columns: 1fr 1fr; } }
+  .field label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-soft); margin-bottom: 5px; }
+  .field input, .field select { width: 100%; padding: 10px 12px; font-family: var(--sans); font-size: 14px; color: var(--ink); background: var(--paper); border: 1px solid var(--rule-strong); border-radius: 6px; outline: none; transition: all 0.15s; }
+  .field input:focus, .field select:focus { background: #fff; border-color: var(--crimson); box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1); }
+  .btn-primary { padding: 10px 24px; height: 41px; border: 0; border-radius: 6px; background: var(--crimson); color: #fff; font-family: var(--sans); font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+  .btn-primary:hover { background: var(--crimson-dark); }
+  .btn-primary:disabled { opacity: 0.6; cursor: wait; }
+  .btn-ghost { padding: 7px 12px; border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--folio); color: var(--ink-soft); font-family: var(--sans); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+  .btn-ghost:hover { border-color: var(--ink); color: var(--ink); background: var(--paper); }
+
+  .ac-wrap { position: relative; }
+  .ac-dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--folio); border: 1px solid var(--rule-strong); border-radius: 8px; box-shadow: var(--shadow-md); max-height: 290px; overflow-y: auto; z-index: 40; display: none; }
+  .ac-item { padding: 9px 12px; cursor: pointer; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; border-bottom: 1px solid #F3EFE8; }
+  .ac-item:last-child { border-bottom: 0; }
+  .ac-item:hover { background: var(--crimson-tint); }
+  .ac-name { font-weight: 600; font-size: 14px; color: var(--ink); }
+  .ac-meta { font-family: var(--mono); font-size: 11px; color: var(--ink-muted); white-space: nowrap; }
+
+  .quick-bar { margin-top: 13px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .quick-lbl { font-family: var(--mono); font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
+  .chip { padding: 4px 10px; border-radius: 999px; border: 1px solid var(--rule); background: var(--paper); color: var(--ink-soft); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+  .chip:hover { border-color: var(--crimson); color: var(--crimson-dark); background: var(--crimson-tint); }
+  .chip.active { background: var(--crimson); color: #fff; border-color: var(--crimson); }
+
+  /* Engine status pill */
+  .engine-note { margin-top: 10px; font-family: var(--mono); font-size: 11.5px; color: var(--ink-muted); display: flex; align-items: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brass); display: inline-block; }
+  .dot.ok { background: var(--olive); }
+  .dot.busy { background: var(--crimson); animation: pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity: 0.35; } }
+
+  /* Speaker Dossier */
+  #dossier { display: none; margin-top: 18px; background: var(--folio); border: 1px solid var(--rule-strong); border-top: 3px solid var(--crimson); border-radius: 10px; padding: 20px 22px; box-shadow: var(--shadow-sm); animation: fadeUp 0.22s ease-out; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .dossier-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+  .dossier-name { font-family: var(--serif); font-size: 28px; font-weight: 700; margin: 0; }
+  .dossier-tags { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 11.5px; padding: 3px 9px; border-radius: 4px; background: var(--paper); border: 1px solid var(--rule); color: var(--ink-soft); }
+  .tag.olive { background: #EEF5F0; border-color: #C7DEC9; color: var(--olive); }
+  .dossier-stats { display: flex; gap: 18px; flex-wrap: wrap; }
+  .ds-box { text-align: right; }
+  .ds-val { font-family: var(--mono); font-size: 18px; font-weight: 600; }
+  .ds-lbl { font-size: 11px; color: var(--ink-muted); text-transform: uppercase; }
+
+  .timeline-box { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--rule); }
+  .timeline-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; color: var(--ink-muted); }
+  .timeline-bars { display: flex; align-items: flex-end; gap: 3px; height: 76px; padding: 4px 2px 0; overflow-x: auto; }
+  .t-col { flex: 1 0 18px; max-width: 34px; display: flex; flex-direction: column; align-items: center; cursor: pointer; height: 100%; justify-content: flex-end; }
+  .t-bar { width: 100%; min-height: 3px; background: #C9BFAE; border-radius: 2px 2px 0 0; transition: background 0.15s; }
+  .t-col:hover .t-bar { background: var(--brass); }
+  .t-col.active .t-bar { background: var(--crimson); }
+  .t-yr { font-family: var(--mono); font-size: 9px; color: var(--ink-muted); margin-top: 4px; }
+
+  /* Directory Grid (initial landing view) */
+  .dir-heading { font-family: var(--serif); font-size: 22px; margin: 22px 0 12px; display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+  .dir-heading span { font-family: var(--sans); font-size: 13px; color: var(--ink-muted); font-weight: 400; }
+  .dir-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+  .dir-card { background: var(--folio); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.15s; box-shadow: var(--shadow-sm); }
+  .dir-card:hover { border-color: var(--crimson); transform: translateY(-1px); box-shadow: 0 5px 14px rgba(22, 27, 34, 0.07); }
+  .dir-name { font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--ink); }
+  .dir-meta { font-family: var(--mono); font-size: 11.5px; color: var(--ink-muted); margin-top: 5px; }
+  .dir-role { font-size: 12px; color: var(--ink-soft); margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .results-bar { margin: 18px 2px 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .results-count { font-family: var(--mono); font-size: 12.5px; color: var(--ink-soft); }
+  .results-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+  .speech-card { background: var(--folio); border: 1px solid var(--rule); border-radius: 8px; padding: 18px 20px; margin-bottom: 11px; box-shadow: var(--shadow-sm); transition: border-color 0.15s; }
+  .speech-card:hover { border-color: var(--rule-strong); }
+  .sc-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+  .sc-speaker { font-family: var(--serif); font-size: 19px; font-weight: 700; color: var(--ink); cursor: pointer; border-bottom: 1px dotted transparent; }
+  .sc-speaker:hover { color: var(--crimson); border-bottom-color: var(--crimson); }
+  .sc-title { font-size: 12px; color: var(--ink-soft); margin-left: 8px; font-weight: 500; }
+  .sc-meta { font-family: var(--mono); font-size: 11.5px; color: var(--ink-muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .sc-code { padding: 2px 7px; border-radius: 4px; background: var(--paper); border: 1px solid var(--rule); color: var(--ink-soft); font-weight: 500; }
+  .sc-body { font-family: var(--serif); font-size: 16.5px; line-height: 1.65; color: #222933; margin: 0 0 12px; }
+  .sc-body mark { background: var(--mark-bg); color: var(--ink); padding: 0 3px; border-radius: 2px; }
+  .sc-foot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding-top: 10px; border-top: 1px solid #F2EEE7; font-size: 12px; }
+  .sc-src { font-family: var(--mono); font-size: 11px; color: var(--ink-muted); text-decoration: none; }
+  .sc-src:hover { color: var(--crimson); text-decoration: underline; }
+
+  .pager { display: flex; justify-content: center; gap: 10px; margin-top: 22px; align-items: center; }
+
+  .drawer-backdrop { position: fixed; inset: 0; background: rgba(22, 27, 34, 0.45); backdrop-filter: blur(2px); z-index: 90; display: none; justify-content: flex-end; }
+  .drawer-backdrop.open { display: flex; }
+  .drawer { width: min(740px, 96vw); height: 100%; background: var(--paper); border-left: 3px solid var(--crimson); display: flex; flex-direction: column; box-shadow: -12px 0 40px rgba(0, 0, 0, 0.22); }
+  .drawer-head { background: var(--folio); padding: 16px 20px; border-bottom: 1px solid var(--rule-strong); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .drawer-title { font-family: var(--serif); font-size: 20px; font-weight: 700; margin: 0; }
+  .drawer-sub { font-family: var(--mono); font-size: 11.5px; color: var(--ink-muted); margin-top: 4px; }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 18px 20px 40px; }
+  .ctx-turn { background: var(--folio); border: 1.5px solid var(--crimson); border-radius: 8px; padding: 16px 18px; margin-bottom: 12px; }
+  .ctx-text { font-family: var(--serif); font-size: 16px; line-height: 1.7; white-space: pre-wrap; color: #1F2630; }
+  .doc-full { background: var(--folio); border: 1px solid var(--rule-strong); border-radius: 8px; padding: 16px 18px; font-family: var(--serif); font-size: 14.5px; line-height: 1.65; white-space: pre-wrap; color: #2b323d; margin-top: 12px; }
+
+  .empty-state { background: var(--folio); border: 1px dashed var(--rule-strong); border-radius: 10px; padding: 38px 24px; text-align: center; color: var(--ink-soft); }
+  .loading-box { background: var(--folio); border: 1px solid var(--brass); border-left: 4px solid var(--crimson); border-radius: 8px; padding: 20px; display: flex; align-items: center; gap: 14px; }
+  .spinner { width: 18px; height: 18px; border: 2.5px solid var(--rule); border-top-color: var(--crimson); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  footer { max-width: 1180px; margin: 0 auto 36px; padding: 18px 20px 0; border-top: 1px solid var(--rule); font-size: 12px; color: var(--ink-muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  footer a { color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="top-band"></div>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <div class="kicker">Kuzey Kıbrıs Türk Cumhuriyeti · Resmî Tutanak Dizini</div>
+      <h1>Cumhuriyet Meclisi Konuşma Arşivi</h1>
+      <p class="masthead-sub">1960'tan günümüze tüm meclis tutanaklarında konuşmacı bazlı ve tam metin arama</p>
+    </div>
+    <div class="telemetry">
+      <div class="tel-item">
+        <div class="tel-val" id="stat-speeches">1.272.408</div>
+        <div class="tel-lbl">Konuşma Bloğu</div>
+      </div>
+      <div class="tel-item">
+        <div class="tel-val" id="stat-docs">3.694</div>
+        <div class="tel-lbl">Birleşim</div>
+      </div>
+      <div class="tel-item">
+        <div class="tel-val" id="stat-span">1960–2026</div>
+        <div class="tel-lbl">Tarih Aralığı</div>
+      </div>
+      <a class="hf-pill" href="https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak" target="_blank" rel="noopener">
+        HF Veri Seti ↗
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <form class="search-panel" id="search-form">
+    <div class="search-grid">
+      <div class="field ac-wrap">
+        <label for="speaker">Konuşmacı Adı</label>
+        <input id="speaker" placeholder="Örn: Tufan Erhürman, Derviş Eroğlu, Özker Özgür..." autocomplete="off">
+        <div class="ac-dropdown" id="ac-dropdown"></div>
+      </div>
+      <div class="field">
+        <label for="q">Konuşma Metni (birden fazla kelime veya "tam ifade")</label>
+        <input id="q" placeholder='Örn: elektrik, anayasa, "su projesi", hellim, bütçe...'>
+      </div>
+      <div>
+        <button type="submit" class="btn-primary" id="btn-submit">Arşivde Ara</button>
+      </div>
+    </div>
+
+    <div class="filters-row">
+      <div class="field">
+        <label for="meclis">Meclis</label>
+        <select id="meclis">
+          <option value="">Tüm Meclisler</option>
+          <option value="KKTC">KKTC Cumhuriyet Meclisi (1985–)</option>
+          <option value="KKTC_KM">KKTC Kurucu Meclisi (1983–85)</option>
+          <option value="KTFD">KTFD Meclisi (1976–83)</option>
+          <option value="KTFD_KM">KTFD Kurucu Meclisi (1975–76)</option>
+          <option value="KTY">Kıbrıs Türk Yönetimi (1970–75)</option>
+          <option value="KKTC_ARA">KKTC Aradönem</option>
+          <option value="TCM">Türk Cemaat Meclisi (1963)</option>
+          <option value="KC">Kıbrıs Cumhuriyeti (1960)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="donem">Dönem</label>
+        <input id="donem" type="number" min="1" max="15" placeholder="Tümü">
+      </div>
+      <div class="field">
+        <label for="from_year">Baş. Yılı</label>
+        <input id="from_year" type="number" min="1960" max="2026" placeholder="1960">
+      </div>
+      <div class="field">
+        <label for="to_year">Bitiş Yılı</label>
+        <input id="to_year" type="number" min="1960" max="2026" placeholder="2026">
+      </div>
+      <div class="field">
+        <label for="role">Rol</label>
+        <select id="role">
+          <option value="">Tüm Roller</option>
+          <option value="milletvekili_bakan">Milletvekili / Bakan</option>
+          <option value="baskan">Oturum Başkanı</option>
+          <option value="katip">Katip</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="sort">Sıralama</label>
+        <select id="sort">
+          <option value="newest">En Yeni Tarih</option>
+          <option value="oldest">En Eski Tarih</option>
+          <option value="longest">En Uzun Konuşma</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="quick-bar" id="quick-bar"></div>
+    <div class="engine-note" id="engine-note">
+      <span class="dot" id="engine-dot"></span>
+      <span id="engine-text">DuckDB-WASM tarayıcı içi Parquet motoru hazırlanıyor...</span>
+    </div>
+  </form>
+
+  <section id="dossier"></section>
+
+  <div class="results-bar">
+    <div class="results-count" id="results-count"></div>
+    <div class="results-actions">
+      <button type="button" class="btn-ghost" id="btn-clear" style="display:none">Filtreleri Temizle</button>
+      <button type="button" class="btn-ghost" id="btn-export" style="display:none">CSV İndir (maks. 500)</button>
+    </div>
+  </div>
+
+  <div id="results"></div>
+  <div class="pager" id="pager"></div>
+</main>
+
+<div class="drawer-backdrop" id="drawer-backdrop">
+  <aside class="drawer" role="dialog" aria-modal="true">
+    <div class="drawer-head">
+      <div>
+        <h3 class="drawer-title" id="drawer-title">Tam Konuşma</h3>
+        <div class="drawer-sub" id="drawer-sub"></div>
+      </div>
+      <button type="button" class="btn-ghost" id="drawer-close">Kapat ✕</button>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+  </aside>
+</div>
+
+<footer>
+  <div>Orijinal tutanakların hakları <strong>KKTC Cumhuriyet Meclisi</strong>'ne aittir (<a href="https://evrakcm.gov.ct.tr/siteler/belgeler/tutanaklar/Shared%20Documents/Forms/Belge%20Grntleme.aspx" target="_blank" rel="noopener">evrakcm.gov.ct.tr</a>).</div>
+  <div>Sunucusuz DuckDB-WASM · Açık Veri: <a href="https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak" target="_blank" rel="noopener">stevevaius/KKTC_Meclis_Tutanak</a> (CC BY 4.0)</div>
+</footer>
+
+<script type="module">
+import * as duckdb from 'https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0/+esm';
+
+const SPEECHES_URL = 'https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/data/speeches.parquet';
+const DOCS_URL = 'https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/data/documents.parquet';
+const PAGE_SIZE = 25;
+
+const QUICK_LEADERS = [
+  "Rauf Raif Denktaş", "Derviş Eroğlu", "Özker Özgür", "Hakkı Atun",
+  "İrsen Küçük", "Ferdi Sabit Soyer", "Serdar Denktaş", "Mustafa Akıncı",
+  "Ersin Tatar", "Tufan Erhürman", "Ünal Üstel", "Sibel Siber"
+];
+
+const $ = id => document.getElementById(id);
+let speakersIndex = [];
+let speakersByName = new Map();
+let db = null;
+let conn = null;
+let duckReadyPromise = null;
+let lastQueryState = null;
+let lastItems = [];
+
+function escHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function sqlQuote(s) {
+  return "'" + String(s).replace(/'/g, "''") + "'";
+}
+function trLower(s) {
+  return String(s).replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase().replace(/\u0307/g, '');
+}
+function foldAscii(s) {
+  const map = {'ç':'c','ğ':'g','ı':'i','ö':'o','ş':'s','ü':'u','â':'a','î':'i','û':'u'};
+  return trLower(s).replace(/[çğıöşüâîû]/g, c => map[c] || c).replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+function setEngineStatus(state, text) {
+  const dot = $('engine-dot');
+  dot.className = 'dot' + (state === 'ok' ? ' ok' : state === 'busy' ? ' busy' : '');
+  $('engine-text').textContent = text;
+}
+
+// 1. Load speakers_index.json immediately (0ms autocomplete & dossier)
+async function loadIndex() {
+  const r = await fetch('./speakers_index.json');
+  const data = await r.json();
+  speakersIndex = data.speakers || [];
+  for (const s of speakersIndex) speakersByName.set(s.n, s);
+  const st = data.stats;
+  $('stat-speeches').textContent = st.speeches.toLocaleString('tr-TR');
+  $('stat-docs').textContent = st.docs.toLocaleString('tr-TR');
+  $('stat-span').textContent = `${(st.min_date||'1960').slice(0,4)}–${(st.max_date||'2026').slice(0,4)}`;
+}
+
+// 2. Initialize DuckDB-WASM (runs in background worker via Blob URL)
+function ensureDuckDB() {
+  if (duckReadyPromise) return duckReadyPromise;
+  duckReadyPromise = (async () => {
+    setEngineStatus('busy', 'DuckDB-WASM başlatılıyor...');
+    const bundles = duckdb.getJsDelivrBundles();
+    const bundle = await duckdb.selectBundle(bundles);
+    const workerUrl = URL.createObjectURL(
+      new Blob([`importScripts("${bundle.mainWorker}");`], { type: 'text/javascript' })
+    );
+    const worker = new Worker(workerUrl);
+    const logger = new duckdb.ConsoleLogger(duckdb.LogLevel.WARNING);
+    db = new duckdb.AsyncDuckDB(logger, worker);
+    await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+    URL.revokeObjectURL(workerUrl);
+
+    await db.registerFileURL('speeches.parquet', SPEECHES_URL, duckdb.DuckDBDataProtocol.HTTP, false);
+    await db.registerFileURL('documents.parquet', DOCS_URL, duckdb.DuckDBDataProtocol.HTTP, false);
+    conn = await db.connect();
+    setEngineStatus('ok', 'Hazır · Konuşmacı bazlı sorgular yalnızca ilgili Parquet bloğunu (~6 MB) doğrudan tarayıcıda okur');
+    return conn;
+  })().catch(err => {
+    setEngineStatus('err', 'DuckDB-WASM hatası: ' + err.message);
+    duckReadyPromise = null;
+    throw err;
+  });
+  return duckReadyPromise;
+}
+
+function parseQueryTerms(q) {
+  const out = [];
+  const re = /"([^"]+)"|(\S+)/g;
+  let m;
+  while ((m = re.exec(q.trim())) !== null) {
+    const t = (m[1] || m[2] || '').trim();
+    if (t.length >= 2) out.push(t);
+    if (out.length >= 6) break;
+  }
+  return out;
+}
+
+function highlightSnippet(text, terms, maxLen = 440) {
+  const clean = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!terms.length) {
+    return escHtml(clean.length > maxLen ? clean.slice(0, maxLen) + '...' : clean);
+  }
+  const charMap = {
+    'i':'[iİıI]', 'ı':'[iİıI]', 'c':'[cCçÇ]', 'ç':'[cCçÇ]',
+    'g':'[gGğĞ]', 'ğ':'[gGğĞ]', 'o':'[oOöÖ]', 'ö':'[oOöÖ]',
+    's':'[sSşŞ]', 'ş':'[sSşŞ]', 'u':'[uUüÜ]', 'ü':'[uUüÜ]'
+  };
+  const alts = terms.map(t => [...t].map(ch => {
+    const cl = trLower(ch);
+    return charMap[cl] || ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }).join(''));
+  const re = new RegExp('(' + alts.join('|') + ')', 'gi');
+  const m = re.exec(clean);
+  let win = clean;
+  if (clean.length > maxLen) {
+    let start = m ? Math.max(0, m.index - 130) : 0;
+    let end = Math.min(clean.length, start + maxLen);
+    if (start > 0) { const sp = clean.indexOf(' ', start); if (sp > 0 && sp - start < 20) start = sp + 1; }
+    if (end < clean.length) { const sp = clean.lastIndexOf(' ', end); if (sp > start + maxLen / 2) end = sp; }
+    win = (start > 0 ? '...' : '') + clean.slice(start, end) + (end < clean.length ? '...' : '');
+  }
+  re.lastIndex = 0;
+  return win.split(re).map((part, i) => i % 2 === 1 ? `<mark>${escHtml(part)}</mark>` : escHtml(part)).join('');
+}
+
+function resolveSpeakers(query) {
+  const q = query.trim();
+  if (!q) return [];
+  if (speakersByName.has(q)) return [q];
+  const fq = foldAscii(q);
+  if (!fq) return [];
+  const matches = [];
+  for (const s of speakersIndex) {
+    if (s.f.includes(fq)) {
+      matches.push(s.n);
+      if (matches.length >= 20) break;
+    }
+  }
+  return matches;
+}
+
+function renderDossier(name) {
+  const p = speakersByName.get(name);
+  if (!p) { $('dossier').style.display = 'none'; return; }
+  const tl = p.y || [];
+  const maxCnt = Math.max(1, ...tl.map(x => x[1]));
+  const activeYr = ($('from_year').value && $('from_year').value === $('to_year').value) ? $('from_year').value : '';
+  const barsHtml = tl.map(([yr, cnt]) => {
+    const h = Math.max(4, Math.round((cnt / maxCnt) * 58));
+    return `<div class="t-col${activeYr === yr ? ' active' : ''}" data-year="${yr}" title="${yr}: ${cnt.toLocaleString('tr-TR')} konuşma">
+      <div class="t-bar" style="height:${h}px"></div>
+      <div class="t-yr">${yr.slice(2)}</div>
+    </div>`;
+  }).join('');
+
+  $('dossier').innerHTML = `
+    <div class="dossier-head">
+      <div>
+        <h2 class="dossier-name">${escHtml(p.n)}</h2>
+        <div class="dossier-tags">
+          ${(p.c || []).map(c => `<span class="tag olive">${escHtml(c)}</span>`).join('')}
+          ${(p.t || []).slice(0, 4).map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}
+        </div>
+      </div>
+      <div class="dossier-stats">
+        <div class="ds-box"><div class="ds-val">${p.s.toLocaleString('tr-TR')}</div><div class="ds-lbl">Konuşma</div></div>
+        <div class="ds-box"><div class="ds-val">${p.w.toLocaleString('tr-TR')}</div><div class="ds-lbl">Kelime</div></div>
+        <div class="ds-box"><div class="ds-val">${p.d.toLocaleString('tr-TR')}</div><div class="ds-lbl">Birleşim</div></div>
+        <div class="ds-box"><div class="ds-val">${(p.a||'?').slice(0,4)}–${(p.b||'?').slice(0,4)}</div><div class="ds-lbl">Aktif Dönem</div></div>
+      </div>
+    </div>
+    ${tl.length ? `
+    <div class="timeline-box">
+      <div class="timeline-hdr">
+        <span>Yıllara göre konuşma yoğunluğu (filtrelemek için yıla tıklayın)</span>
+        ${activeYr ? `<button type="button" class="btn-ghost" id="clear-yr-btn">Yıl filtresini kaldır (${activeYr})</button>` : ''}
+      </div>
+      <div class="timeline-bars" id="timeline-bars">${barsHtml}</div>
+    </div>` : ''}
+  `;
+  $('dossier').style.display = 'block';
+
+  const tb = $('timeline-bars');
+  if (tb) {
+    tb.onclick = e => {
+      const col = e.target.closest('.t-col');
+      if (!col) return;
+      const yr = col.dataset.year;
+      if ($('from_year').value === yr && $('to_year').value === yr) {
+        $('from_year').value = ''; $('to_year').value = '';
+      } else {
+        $('from_year').value = yr; $('to_year').value = yr;
+      }
+      runSearch(0);
+    };
+  }
+  const cy = $('clear-yr-btn');
+  if (cy) cy.onclick = () => { $('from_year').value = ''; $('to_year').value = ''; runSearch(0); };
+}
+
+function renderDirectoryLanding() {
+  $('dossier').style.display = 'none';
+  $('btn-clear').style.display = 'none';
+  $('btn-export').style.display = 'none';
+  $('pager').innerHTML = '';
+  $('results-count').textContent = 'En çok söz alan siyasetçilerden birini seçin veya yukarıdan konuşmacı/kelime arayın.';
+  const generic = new Set(['Meclis Başkanı', 'Katip', 'Geçici Başkan', 'Geçici Katip', 'Sesler']);
+  const top = speakersIndex.filter(s => !generic.has(s.n)).slice(0, 24);
+  $('results').innerHTML = `
+    <div class="dir-heading">Öne Çıkan Konuşmacılar (1960–2026) <span>Tıklayarak tüm konuşmalarını anında listeleyin</span></div>
+    <div class="dir-grid">
+      ${top.map(s => `
+        <div class="dir-card" data-pick="${escHtml(s.n)}">
+          <div class="dir-name">${escHtml(s.n)}</div>
+          <div class="dir-meta">${s.s.toLocaleString('tr-TR')} söz · ${s.w.toLocaleString('tr-TR')} kelime · ${(s.a||'?').slice(0,4)}–${(s.b||'?').slice(0,4)}</div>
+          <div class="dir-role">${escHtml((s.t && s.t[0]) || (s.c && s.c[0]) || 'Milletvekili')}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function buildWhereSql() {
+  const clauses = [];
+  const spkRaw = $('speaker').value.trim();
+  let resolved = [];
+  if (spkRaw) {
+    resolved = resolveSpeakers(spkRaw);
+    if (!resolved.length) return { empty: true, resolved: [], terms: [], sql: '1=0' };
+    if (resolved.length === 1) {
+      clauses.push(`speaker_name = ${sqlQuote(resolved[0])}`);
+    } else {
+      clauses.push(`speaker_name IN (${resolved.map(sqlQuote).join(', ')})`);
+    }
+  }
+  const meclis = $('meclis').value.trim();
+  if (meclis) clauses.push(`meclis = ${sqlQuote(meclis)}`);
+  const donem = $('donem').value.trim();
+  if (donem && /^\d+$/.test(donem)) clauses.push(`donem = ${Number(donem)}`);
+  const fy = $('from_year').value.trim();
+  if (fy && /^\d{4}$/.test(fy)) clauses.push(`tarih >= ${sqlQuote(fy + '-01-01')}`);
+  const ty = $('to_year').value.trim();
+  if (ty && /^\d{4}$/.test(ty)) clauses.push(`tarih <= ${sqlQuote(ty + '-12-31')}`);
+  const role = $('role').value.trim();
+  if (role) clauses.push(`speaker_role = ${sqlQuote(role)}`);
+
+  const terms = parseQueryTerms($('q').value);
+  for (const term of terms) {
+    const tTr = trLower(term);
+    const variants = [...new Set([tTr, tTr.replace(/ı/g, 'i'), tTr.replace(/i/g, 'ı')])];
+    clauses.push('(' + variants.map(v => `contains(lower(text), ${sqlQuote(v)})`).join(' OR ') + ')');
+  }
+  return {
+    empty: false,
+    resolved,
+    terms,
+    sql: clauses.length ? clauses.join(' AND ') : '1=1',
+  };
+}
+
+function syncUrl() {
+  const p = new URLSearchParams();
+  for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role', 'sort']) {
+    const v = $(f).value.trim();
+    if (v && !(f === 'sort' && v === 'newest')) p.set(f, v);
+  }
+  const qs = p.toString();
+  history.replaceState(null, '', qs ? ('?' + qs) : location.pathname);
+}
+
+async function runSearch(offset = 0) {
+  syncUrl();
+  const spkVal = $('speaker').value.trim();
+  document.querySelectorAll('.chip').forEach(ch => ch.classList.toggle('active', ch.dataset.name.toLowerCase() === spkVal.toLowerCase()));
+
+  const hasAny = ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role'].some(f => $(f).value.trim());
+  if (!hasAny) {
+    renderDirectoryLanding();
+    return;
+  }
+
+  $('btn-clear').style.display = 'inline-flex';
+  const w = buildWhereSql();
+  if (w.resolved.length >= 1) renderDossier(w.resolved[0]);
+  else $('dossier').style.display = 'none';
+
+  if (w.empty) {
+    $('results-count').textContent = '0 konuşma bulundu';
+    $('btn-export').style.display = 'none';
+    $('results').innerHTML = `<div class="empty-state"><strong>"${escHtml(spkVal)}"</strong> ile eşleşen konuşmacı bulunamadı.</div>`;
+    $('pager').innerHTML = '';
+    return;
+  }
+
+  const fastHint = w.resolved.length === 1
+    ? `${w.resolved[0]} için ilgili Parquet bloğu (~6 MB) okunuyor...`
+    : 'Tüm arşiv üzerinde Parquet sorgusu çalıştırılıyor (konuşmacı seçerseniz ~30x daha hızlıdır)...';
+  $('results').innerHTML = `<div class="loading-box"><div class="spinner"></div><div><strong>Sorgulanıyor...</strong><div style="font-size:13px;color:var(--ink-soft);margin-top:2px">${escHtml(fastHint)}</div></div></div>`;
+  $('btn-submit').disabled = true;
+  setEngineStatus('busy', fastHint);
+
+  try {
+    const c = await ensureDuckDB();
+    const t0 = performance.now();
+    const sortVal = $('sort').value;
+    const orderSql = sortVal === 'oldest' ? 'tarih ASC NULLS LAST, turn_index ASC'
+                   : sortVal === 'longest' ? 'word_count DESC, tarih DESC NULLS LAST'
+                   : 'tarih DESC NULLS LAST, turn_index ASC';
+
+    const cntRes = await c.query(`SELECT COUNT(*)::DOUBLE AS cnt FROM 'speeches.parquet' WHERE ${w.sql}`);
+    const total = Number(cntRes.toArray()[0]?.cnt || 0);
+
+    const rowsRes = await c.query(`
+      SELECT speech_id, doc_id, meclis, donem, birlesim, oturum, tarih, turn_index,
+             speaker_name, speaker_title, constituency, modifiers, speaker_role,
+             text, word_count, source_file, source_url
+      FROM 'speeches.parquet'
+      WHERE ${w.sql}
+      ORDER BY ${orderSql}
+      LIMIT ${PAGE_SIZE} OFFSET ${offset}
+    `);
+    const rows = rowsRes.toArray().map(r => r.toJSON());
+    const ms = Math.round(performance.now() - t0);
+    lastQueryState = { whereSql: w.sql, orderSql, terms: w.terms };
+    lastItems = rows;
+
+    setEngineStatus('ok', `Son sorgu ${ms.toLocaleString('tr-TR')} ms · DuckDB-WASM (sunucusuz)`);
+    const fromN = total ? offset + 1 : 0;
+    const toN = Math.min(offset + rows.length, total);
+    $('results-count').textContent = `${total.toLocaleString('tr-TR')} konuşma bulundu (${ms} ms)` +
+      (total ? ` · Gösterilen: ${fromN.toLocaleString('tr-TR')}–${toN.toLocaleString('tr-TR')}` : '');
+    $('btn-export').style.display = total > 0 ? 'inline-flex' : 'none';
+
+    if (!rows.length) {
+      $('results').innerHTML = `<div class="empty-state"><strong>Sonuç bulunamadı.</strong><br>Farklı bir anahtar kelime veya daha geniş bir tarih aralığı deneyin.</div>`;
+      $('pager').innerHTML = '';
+      return;
+    }
+
+    $('results').innerHTML = rows.map((it, idx) => {
+      const code = [it.meclis, it.donem ? `D${it.donem}` : '', it.birlesim ? `B${it.birlesim}` : '', it.oturum ? `O${it.oturum}` : ''].filter(Boolean).join(' · ');
+      return `
+        <article class="speech-card">
+          <div class="sc-head">
+            <div>
+              <span class="sc-speaker" data-pick="${escHtml(it.speaker_name)}">${escHtml(it.speaker_name)}</span>
+              ${it.speaker_title ? `<span class="sc-title">${escHtml(it.speaker_title)}</span>` : ''}
+              ${it.constituency ? `<span class="tag olive" style="margin-left:6px">${escHtml(it.constituency)}</span>` : ''}
+            </div>
+            <div class="sc-meta">
+              <span>${escHtml(it.tarih || 'Tarihsiz')}</span>
+              <span class="sc-code">${escHtml(code)}</span>
+              <span>${Number(it.word_count || 0).toLocaleString('tr-TR')} kelime</span>
+            </div>
+          </div>
+          <p class="sc-body">${highlightSnippet(it.text, w.terms)}</p>
+          <div class="sc-foot">
+            <button type="button" class="btn-ghost read-btn" data-idx="${idx}">Tam Konuşmayı Oku</button>
+            <a class="sc-src" href="${escHtml(it.source_url)}" target="_blank" rel="noopener">Orijinal Belge: ${escHtml(it.source_file)} ↗</a>
+          </div>
+        </article>
+      `;
+    }).join('');
+
+    const pagerHtml = [];
+    if (offset > 0) pagerHtml.push(`<button type="button" class="btn-ghost" id="pg-prev">← Önceki Sayfa</button>`);
+    const pageNum = Math.floor(offset / PAGE_SIZE) + 1;
+    const totalPages = Math.ceil(total / PAGE_SIZE);
+    pagerHtml.push(`<span class="results-count">Sayfa ${pageNum.toLocaleString('tr-TR')} / ${totalPages.toLocaleString('tr-TR')}</span>`);
+    if (offset + PAGE_SIZE < total) pagerHtml.push(`<button type="button" class="btn-ghost" id="pg-next">Sonraki Sayfa →</button>`);
+    $('pager').innerHTML = pagerHtml.join('');
+    if ($('pg-prev')) $('pg-prev').onclick = () => { runSearch(Math.max(0, offset - PAGE_SIZE)); window.scrollTo({top: 0, behavior: 'smooth'}); };
+    if ($('pg-next')) $('pg-next').onclick = () => { runSearch(offset + PAGE_SIZE); window.scrollTo({top: 0, behavior: 'smooth'}); };
+  } catch (err) {
+    $('results').innerHTML = `<div class="empty-state" style="color:var(--crimson)"><strong>Sorgu hatası:</strong> ${escHtml(err.message)}</div>`;
+    setEngineStatus('err', 'Hata: ' + err.message);
+  } finally {
+    $('btn-submit').disabled = false;
+  }
+}
+
+function openSpeechDrawer(item) {
+  $('drawer-backdrop').classList.add('open');
+  $('drawer-title').textContent = `${item.speaker_name} · ${item.tarih || 'Tarihsiz'}`;
+  $('drawer-sub').innerHTML = `${escHtml(item.meclis)} ${item.donem ? 'Dönem ' + item.donem : ''} ${item.birlesim ? item.birlesim + '. Birleşim' : ''} · <a href="${escHtml(item.source_url)}" target="_blank" rel="noopener" style="color:var(--crimson)">${escHtml(item.source_file)} ↗</a>`;
+  $('drawer-body').innerHTML = `
+    <div class="ctx-turn">
+      <div style="font-family:var(--mono);font-size:11.5px;color:var(--ink-muted);margin-bottom:8px">
+        ${item.speaker_title ? escHtml(item.speaker_title) + ' · ' : ''}Oturum ${item.oturum || 1} · Konuşma #${item.turn_index} · ${Number(item.word_count||0).toLocaleString('tr-TR')} kelime
+      </div>
+      <div class="ctx-text">${escHtml(item.text)}</div>
+    </div>
+    <div>
+      <button type="button" class="btn-ghost" id="load-full-doc">Tüm Birleşim Tutanağını Yükle</button>
+      <div id="full-doc-slot"></div>
+    </div>
+  `;
+  $('load-full-doc').onclick = async () => {
+    const slot = $('full-doc-slot');
+    slot.innerHTML = '<div style="margin-top:10px;color:var(--ink-muted);font-size:13px">Birleşim belgesi indiriliyor...</div>';
+    try {
+      const c = await ensureDuckDB();
+      const res = await c.query(`SELECT text FROM 'documents.parquet' WHERE doc_id = ${sqlQuote(item.doc_id)} LIMIT 1`);
+      const doc = res.toArray()[0]?.toJSON();
+      slot.innerHTML = doc ? `<div class="doc-full">${escHtml(doc.text)}</div>` : '<div style="margin-top:10px">Belge bulunamadı.</div>';
+    } catch (e) {
+      slot.innerHTML = `<div style="margin-top:10px;color:var(--crimson)">Hata: ${escHtml(e.message)}</div>`;
+    }
+  };
+}
+
+// Export CSV client-side
+$('btn-export').onclick = async () => {
+  if (!lastQueryState) return;
+  $('btn-export').textContent = 'Hazırlanıyor...';
+  try {
+    const c = await ensureDuckDB();
+    const res = await c.query(`
+      SELECT tarih, meclis, donem, birlesim, oturum, turn_index,
+             speaker_name, speaker_title, constituency, word_count, text, source_url
+      FROM 'speeches.parquet'
+      WHERE ${lastQueryState.whereSql}
+      ORDER BY ${lastQueryState.orderSql}
+      LIMIT 500
+    `);
+    const rows = res.toArray().map(r => r.toJSON());
+    const cols = ['tarih','meclis','donem','birlesim','oturum','turn_index','speaker_name','speaker_title','constituency','word_count','text','source_url'];
+    const csvCell = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+    const lines = [cols.join(','), ...rows.map(r => cols.map(k => csvCell(r[k])).join(','))];
+    const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'kktc_tutanak_sonuclar.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  } finally {
+    $('btn-export').textContent = 'CSV İndir (maks. 500)';
+  }
+};
+
+// Quick chips
+$('quick-bar').innerHTML = '<span class="quick-lbl">Hızlı Seçim:</span>' + QUICK_LEADERS.map(name =>
+  `<button type="button" class="chip" data-name="${name}">${name}</button>`
+).join('');
+$('quick-bar').onclick = e => {
+  const btn = e.target.closest('.chip');
+  if (!btn) return;
+  $('speaker').value = btn.dataset.name;
+  $('from_year').value = ''; $('to_year').value = '';
+  runSearch(0);
+};
+
+// Autocomplete (0ms local)
+$('speaker').addEventListener('input', () => {
+  const v = $('speaker').value.trim();
+  const dd = $('ac-dropdown');
+  if (v.length < 2) { dd.style.display = 'none'; return; }
+  const fq = foldAscii(v);
+  const hits = [];
+  for (const s of speakersIndex) {
+    if (s.f.includes(fq)) { hits.push(s); if (hits.length >= 16) break; }
+  }
+  if (!hits.length) { dd.style.display = 'none'; return; }
+  dd.innerHTML = hits.map(it => `
+    <div class="ac-item" data-name="${escHtml(it.n)}">
+      <span class="ac-name">${escHtml(it.n)}</span>
+      <span class="ac-meta">${it.s.toLocaleString('tr-TR')} söz · ${(it.a||'?').slice(0,4)}–${(it.b||'?').slice(0,4)}</span>
+    </div>
+  `).join('');
+  dd.style.display = 'block';
+});
+$('ac-dropdown').onclick = e => {
+  const item = e.target.closest('.ac-item');
+  if (!item) return;
+  $('speaker').value = item.dataset.name;
+  $('ac-dropdown').style.display = 'none';
+  runSearch(0);
+};
+document.addEventListener('click', e => { if (!e.target.closest('.ac-wrap')) $('ac-dropdown').style.display = 'none'; });
+
+$('results').onclick = e => {
+  const pick = e.target.closest('[data-pick]');
+  if (pick) {
+    $('speaker').value = pick.dataset.pick;
+    $('from_year').value = ''; $('to_year').value = '';
+    runSearch(0);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    return;
+  }
+  const rd = e.target.closest('.read-btn');
+  if (rd) openSpeechDrawer(lastItems[Number(rd.dataset.idx)]);
+};
+
+$('drawer-close').onclick = () => $('drawer-backdrop').classList.remove('open');
+$('drawer-backdrop').onclick = e => { if (e.target === $('drawer-backdrop')) $('drawer-backdrop').classList.remove('open'); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('drawer-backdrop').classList.remove('open'); });
+$('btn-clear').onclick = () => {
+  for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role']) $(f).value = '';
+  $('sort').value = 'newest';
+  runSearch(0);
+};
+$('search-form').onsubmit = e => { e.preventDefault(); runSearch(0); };
+for (const sel of ['meclis', 'role', 'sort']) $(sel).onchange = () => { if (['speaker','q','meclis','donem','from_year','to_year','role'].some(f => $(f).value.trim())) runSearch(0); };
+
+// Boot!
+await loadIndex();
+// Hydrate URL params if present
+const urlP = new URLSearchParams(location.search);
+for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role', 'sort']) {
+  if (urlP.has(f)) $(f).value = urlP.get(f);
+}
+// Start warming DuckDB-WASM in background right away
+ensureDuckDB().catch(() => {});
+if (['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role'].some(f => $(f).value.trim())) {
+  runSearch(0);
+} else {
+  renderDirectoryLanding();
+}
+</script>
+</body>
+</html>

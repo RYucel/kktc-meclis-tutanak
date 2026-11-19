@@ -1,0 +1,1083 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KKTC Cumhuriyet Meclisi Tutanak Arşivi (1960–2026)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF7F2;
+    --folio: #FFFFFF;
+    --ink: #161B22;
+    --ink-soft: #475261;
+    --ink-muted: #76808F;
+    --crimson: #B91C1C;
+    --crimson-dark: #8F1515;
+    --crimson-tint: #FEF2F2;
+    --olive: #2E5339;
+    --brass: #9A7B3E;
+    --rule: #E2DBD0;
+    --rule-strong: #C9BFAE;
+    --mark-bg: #FDE68A;
+    --shadow-sm: 0 1px 2px rgba(22, 27, 34, 0.05);
+    --shadow-md: 0 10px 30px rgba(22, 27, 34, 0.08);
+    --serif: 'Newsreader', Georgia, serif;
+    --sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+  body {
+    background-image:
+      radial-gradient(rgba(154, 123, 62, 0.08) 1px, transparent 0);
+    background-size: 24px 24px;
+    min-height: 100vh;
+  }
+
+  /* Masthead */
+  .top-band {
+    height: 4px;
+    background: linear-gradient(90deg, var(--crimson) 0%, var(--crimson) 68%, var(--brass) 68%, var(--brass) 100%);
+  }
+  .masthead {
+    background: var(--folio);
+    border-bottom: 3px double var(--rule-strong);
+    padding: 22px 24px 18px;
+  }
+  .masthead-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--crimson);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .masthead h1 {
+    font-family: var(--serif);
+    font-size: clamp(26px, 3.6vw, 38px);
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .masthead-sub {
+    margin: 7px 0 0;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .telemetry {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tel-item {
+    border-left: 2px solid var(--rule);
+    padding-left: 12px;
+  }
+  .tel-val {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .tel-lbl {
+    font-size: 11px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .hf-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .hf-pill:hover { border-color: var(--crimson); background: var(--crimson-tint); color: var(--crimson-dark); }
+
+  /* Loading Banner */
+  #boot-banner {
+    max-width: 1180px;
+    margin: 20px auto 0;
+    padding: 0 20px;
+    display: none;
+  }
+  .boot-card {
+    background: var(--folio);
+    border: 1px solid var(--brass);
+    border-left: 4px solid var(--crimson);
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2.5px solid var(--rule);
+    border-top-color: var(--crimson);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Main Container */
+  .container {
+    max-width: 1180px;
+    margin: 22px auto 64px;
+    padding: 0 20px;
+  }
+
+  /* Search Panel */
+  .search-panel {
+    background: var(--folio);
+    border: 1px solid var(--rule-strong);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .search-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1.65fr auto;
+    gap: 12px;
+    align-items: end;
+  }
+  .filters-row {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--rule);
+    display: grid;
+    grid-template-columns: 1.1fr 0.7fr 0.7fr 0.7fr 1fr 1fr;
+    gap: 10px;
+    align-items: end;
+  }
+  @media (max-width: 900px) {
+    .search-grid { grid-template-columns: 1fr; }
+    .filters-row { grid-template-columns: 1fr 1fr; }
+  }
+  .field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 10px 12px;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule-strong);
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  }
+  .field input:focus, .field select:focus {
+    background: #fff;
+    border-color: var(--crimson);
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+  }
+  .btn-primary {
+    padding: 10px 24px;
+    height: 41px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--crimson);
+    color: #fff;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+  .btn-primary:hover { background: var(--crimson-dark); }
+  .btn-primary:active { transform: translateY(1px); }
+
+  .btn-ghost {
+    padding: 7px 12px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 6px;
+    background: var(--folio);
+    color: var(--ink-soft);
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .btn-ghost:hover { border-color: var(--ink); color: var(--ink); background: var(--paper); }
+
+  /* Autocomplete */
+  .ac-wrap { position: relative; }
+  .ac-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: var(--folio);
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    max-height: 290px;
+    overflow-y: auto;
+    z-index: 40;
+    display: none;
+  }
+  .ac-item {
+    padding: 9px 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    border-bottom: 1px solid #F3EFE8;
+  }
+  .ac-item:last-child { border-bottom: 0; }
+  .ac-item:hover { background: var(--crimson-tint); }
+  .ac-name { font-weight: 600; font-size: 14px; color: var(--ink); }
+  .ac-meta { font-family: var(--mono); font-size: 11px; color: var(--ink-muted); white-space: nowrap; }
+
+  /* Quick-pick leaders */
+  .quick-bar {
+    margin-top: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .quick-lbl {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-right: 4px;
+  }
+  .chip {
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .chip:hover { border-color: var(--crimson); color: var(--crimson-dark); background: var(--crimson-tint); }
+  .chip.active { background: var(--crimson); color: #fff; border-color: var(--crimson); }
+
+  /* Speaker Dossier */
+  #dossier {
+    display: none;
+    margin-top: 18px;
+    background: var(--folio);
+    border: 1px solid var(--rule-strong);
+    border-top: 3px solid var(--crimson);
+    border-radius: 10px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow-sm);
+    animation: fadeUp 0.25s ease-out;
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .dossier-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .dossier-name {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--ink);
+  }
+  .dossier-tags {
+    margin-top: 6px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 11.5px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+  }
+  .tag.olive { background: #EEF5F0; border-color: #C7DEC9; color: var(--olive); }
+  .dossier-stats {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .ds-box { text-align: right; }
+  .ds-val { font-family: var(--mono); font-size: 18px; font-weight: 600; color: var(--ink); }
+  .ds-lbl { font-size: 11px; color: var(--ink-muted); text-transform: uppercase; }
+
+  /* Timeline Chart */
+  .timeline-box {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+  }
+  .timeline-hdr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--ink-muted);
+  }
+  .timeline-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 76px;
+    padding: 4px 2px 0;
+    overflow-x: auto;
+  }
+  .t-col {
+    flex: 1 0 18px;
+    max-width: 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    height: 100%;
+    justify-content: flex-end;
+  }
+  .t-bar {
+    width: 100%;
+    min-height: 3px;
+    background: #C9BFAE;
+    border-radius: 2px 2px 0 0;
+    transition: background 0.15s;
+  }
+  .t-col:hover .t-bar { background: var(--brass); }
+  .t-col.active .t-bar { background: var(--crimson); }
+  .t-yr {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--ink-muted);
+    margin-top: 4px;
+  }
+
+  /* Results Toolbar */
+  .results-bar {
+    margin: 18px 2px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .results-count {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .results-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+  /* Speech Cards */
+  .speech-card {
+    background: var(--folio);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 11px;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .speech-card:hover {
+    border-color: var(--rule-strong);
+    box-shadow: 0 4px 14px rgba(22, 27, 34, 0.06);
+  }
+  .sc-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .sc-speaker {
+    font-family: var(--serif);
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    border-bottom: 1px dotted transparent;
+  }
+  .sc-speaker:hover { color: var(--crimson); border-bottom-color: var(--crimson); }
+  .sc-title {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-left: 8px;
+    font-weight: 500;
+  }
+  .sc-meta {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-muted);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .sc-code {
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+  .sc-body {
+    font-family: var(--serif);
+    font-size: 16.5px;
+    line-height: 1.65;
+    color: #222933;
+    margin: 0 0 12px;
+  }
+  .sc-body mark {
+    background: var(--mark-bg);
+    color: var(--ink);
+    padding: 0 3px;
+    border-radius: 2px;
+  }
+  .sc-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #F2EEE7;
+    font-size: 12px;
+  }
+  .sc-src {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    text-decoration: none;
+  }
+  .sc-src:hover { color: var(--crimson); text-decoration: underline; }
+
+  /* Pagination */
+  .pager {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 22px;
+    align-items: center;
+  }
+
+  /* Context Drawer */
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(22, 27, 34, 0.45);
+    backdrop-filter: blur(2px);
+    z-index: 90;
+    display: none;
+    justify-content: flex-end;
+  }
+  .drawer-backdrop.open { display: flex; }
+  .drawer {
+    width: min(720px, 96vw);
+    height: 100%;
+    background: var(--paper);
+    border-left: 3px solid var(--crimson);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -12px 0 40px rgba(0, 0, 0, 0.22);
+    animation: slideIn 0.2s ease-out;
+  }
+  @keyframes slideIn { from { transform: translateX(30px); opacity: 0.6; } to { transform: translateX(0); opacity: 1; } }
+  .drawer-head {
+    background: var(--folio);
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--rule-strong);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .drawer-title { font-family: var(--serif); font-size: 20px; font-weight: 700; margin: 0; }
+  .drawer-sub { font-family: var(--mono); font-size: 11.5px; color: var(--ink-muted); margin-top: 4px; }
+  .drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 20px 40px;
+  }
+  .ctx-turn {
+    background: var(--folio);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .ctx-turn.focus {
+    border: 1.5px solid var(--crimson);
+    background: #FFFDFB;
+    box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.08);
+  }
+  .ctx-spk {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .ctx-text {
+    font-family: var(--serif);
+    font-size: 15.5px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    color: #1F2630;
+  }
+
+  .empty-state {
+    background: var(--folio);
+    border: 1px dashed var(--rule-strong);
+    border-radius: 10px;
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--ink-soft);
+  }
+  footer {
+    max-width: 1180px;
+    margin: 0 auto 36px;
+    padding: 18px 20px 0;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--ink-muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  footer a { color: var(--ink-soft); }
+</style>
+</head>
+<body>
+<div class="top-band"></div>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <div class="kicker">Kuzey Kıbrıs Türk Cumhuriyeti · Resmî Tutanak Dizini</div>
+      <h1>Cumhuriyet Meclisi Konuşma Arşivi</h1>
+      <p class="masthead-sub">1960'tan günümüze tüm meclis tutanaklarında konuşmacı bazlı ve tam metin arama</p>
+    </div>
+    <div class="telemetry">
+      <div class="tel-item">
+        <div class="tel-val" id="stat-speeches">—</div>
+        <div class="tel-lbl">Konuşma Bloğu</div>
+      </div>
+      <div class="tel-item">
+        <div class="tel-val" id="stat-docs">—</div>
+        <div class="tel-lbl">Birleşim</div>
+      </div>
+      <div class="tel-item">
+        <div class="tel-val" id="stat-span">1960–2026</div>
+        <div class="tel-lbl">Tarih Aralığı</div>
+      </div>
+      <a class="hf-pill" href="https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak" target="_blank" rel="noopener">
+        HF Veri Seti ↗
+      </a>
+    </div>
+  </div>
+</header>
+
+<div id="boot-banner">
+  <div class="boot-card">
+    <div class="spinner"></div>
+    <div>
+      <strong style="font-size:14px">Arşiv hazırlanıyor...</strong>
+      <div id="boot-status" style="font-size:13px;color:var(--ink-soft);margin-top:2px">Veri seti yükleniyor</div>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+  <form class="search-panel" id="search-form">
+    <div class="search-grid">
+      <div class="field ac-wrap">
+        <label for="speaker">Konuşmacı Adı</label>
+        <input id="speaker" placeholder="Örn: Tufan Erhürman, Derviş Eroğlu, Özker Özgür..." autocomplete="off">
+        <div class="ac-dropdown" id="ac-dropdown"></div>
+      </div>
+      <div class="field">
+        <label for="q">Konuşma Metni (birden fazla kelime veya "tam ifade")</label>
+        <input id="q" placeholder='Örn: elektrik, anayasa, "su projesi", hellim, bütçe...'>
+      </div>
+      <div>
+        <button type="submit" class="btn-primary">Arşivde Ara</button>
+      </div>
+    </div>
+
+    <div class="filters-row">
+      <div class="field">
+        <label for="meclis">Meclis</label>
+        <select id="meclis">
+          <option value="">Tüm Meclisler</option>
+          <option value="KKTC">KKTC Cumhuriyet Meclisi (1985–)</option>
+          <option value="KKTC_KM">KKTC Kurucu Meclisi (1983–85)</option>
+          <option value="KTFD">KTFD Meclisi (1976–83)</option>
+          <option value="KTFD_KM">KTFD Kurucu Meclisi (1975–76)</option>
+          <option value="KTY">Kıbrıs Türk Yönetimi (1970–75)</option>
+          <option value="KKTC_ARA">KKTC Aradönem</option>
+          <option value="TCM">Türk Cemaat Meclisi (1963)</option>
+          <option value="KC">Kıbrıs Cumhuriyeti (1960)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="donem">Dönem</label>
+        <input id="donem" type="number" min="1" max="15" placeholder="Tümü">
+      </div>
+      <div class="field">
+        <label for="from_year">Baş. Yılı</label>
+        <input id="from_year" type="number" min="1960" max="2026" placeholder="1960">
+      </div>
+      <div class="field">
+        <label for="to_year">Bitiş Yılı</label>
+        <input id="to_year" type="number" min="1960" max="2026" placeholder="2026">
+      </div>
+      <div class="field">
+        <label for="role">Rol</label>
+        <select id="role">
+          <option value="">Tüm Roller</option>
+          <option value="milletvekili_bakan">Milletvekili / Bakan</option>
+          <option value="baskan">Oturum Başkanı</option>
+          <option value="katip">Katip</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="sort">Sıralama</label>
+        <select id="sort">
+          <option value="newest">En Yeni Tarih</option>
+          <option value="oldest">En Eski Tarih</option>
+          <option value="longest">En Uzun Konuşma</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="quick-bar" id="quick-bar">
+      <span class="quick-lbl">Hızlı Seçim:</span>
+    </div>
+  </form>
+
+  <section id="dossier"></section>
+
+  <div class="results-bar">
+    <div class="results-count" id="results-count"></div>
+    <div class="results-actions">
+      <button type="button" class="btn-ghost" id="btn-clear" style="display:none">Filtreleri Temizle</button>
+      <a class="btn-ghost" id="btn-export" href="#" style="display:none">CSV İndir (maks. 500)</a>
+    </div>
+  </div>
+
+  <div id="results"></div>
+  <div class="pager" id="pager"></div>
+</main>
+
+<div class="drawer-backdrop" id="drawer-backdrop">
+  <aside class="drawer" role="dialog" aria-modal="true">
+    <div class="drawer-head">
+      <div>
+        <h3 class="drawer-title" id="drawer-title">Oturum Bağlamı</h3>
+        <div class="drawer-sub" id="drawer-sub"></div>
+      </div>
+      <button type="button" class="btn-ghost" id="drawer-close">Kapat ✕</button>
+    </div>
+    <div class="drawer-body" id="drawer-body"></div>
+  </aside>
+</div>
+
+<footer>
+  <div>Orijinal tutanakların hakları <strong>KKTC Cumhuriyet Meclisi</strong>'ne aittir (<a href="https://evrakcm.gov.ct.tr/siteler/belgeler/tutanaklar/Shared%20Documents/Forms/Belge%20Grntleme.aspx" target="_blank" rel="noopener">evrakcm.gov.ct.tr</a>).</div>
+  <div>Açık Veri: <a href="https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak" target="_blank" rel="noopener">stevevaius/KKTC_Meclis_Tutanak</a> (CC BY 4.0)</div>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const QUICK_LEADERS = [
+  "Rauf Raif Denktaş", "Derviş Eroğlu", "Özker Özgür", "Hakkı Atun",
+  "İrsen Küçük", "Ferdi Sabit Soyer", "Serdar Denktaş", "Mustafa Akıncı",
+  "Ersin Tatar", "Tufan Erhürman", "Ünal Üstel", "Sibel Siber"
+];
+
+let appReady = false;
+let currentOffset = 0;
+const PAGE_SIZE = 25;
+
+// Render quick-pick chips
+$('quick-bar').innerHTML = '<span class="quick-lbl">Hızlı Seçim:</span>' + QUICK_LEADERS.map(name =>
+  `<button type="button" class="chip" data-name="${name}">${name}</button>`
+).join('');
+
+$('quick-bar').addEventListener('click', e => {
+  const btn = e.target.closest('.chip');
+  if (!btn) return;
+  $('speaker').value = btn.dataset.name;
+  $('from_year').value = '';
+  $('to_year').value = '';
+  runSearch(0);
+});
+
+function escHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function getQueryParams(offset = 0) {
+  const p = new URLSearchParams();
+  const fields = ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role', 'sort'];
+  for (const f of fields) {
+    const v = $(f).value.trim();
+    if (v) p.set(f, v);
+  }
+  p.set('limit', String(PAGE_SIZE));
+  p.set('offset', String(offset));
+  return p;
+}
+
+function syncUrlFromForm() {
+  const p = new URLSearchParams();
+  for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role', 'sort']) {
+    const v = $(f).value.trim();
+    if (v && !(f === 'sort' && v === 'newest')) p.set(f, v);
+  }
+  const qs = p.toString();
+  history.replaceState(null, '', qs ? ('?' + qs) : location.pathname);
+}
+
+function hydrateFormFromUrl() {
+  const p = new URLSearchParams(location.search);
+  for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role', 'sort']) {
+    if (p.has(f)) $(f).value = p.get(f);
+  }
+}
+
+async function pollReady() {
+  try {
+    const r = await fetch('/api/stats');
+    const data = await r.json();
+    if (!data.ready) {
+      $('boot-banner').style.display = 'block';
+      $('boot-status').textContent = data.status || 'İndeksleniyor...';
+      setTimeout(pollReady, 1500);
+      return;
+    }
+    appReady = true;
+    $('boot-banner').style.display = 'none';
+    $('stat-speeches').textContent = data.speeches.toLocaleString('tr-TR');
+    $('stat-docs').textContent = data.docs.toLocaleString('tr-TR');
+    $('stat-span').textContent = `${(data.min_date || '1960').slice(0,4)}–${(data.max_date || '2026').slice(0,4)}`;
+    runSearch(0);
+  } catch (err) {
+    $('boot-banner').style.display = 'block';
+    $('boot-status').textContent = 'Sunucuya bağlanılıyor...';
+    setTimeout(pollReady, 2000);
+  }
+}
+
+// Autocomplete
+let acTimer = null;
+$('speaker').addEventListener('input', () => {
+  clearTimeout(acTimer);
+  const v = $('speaker').value.trim();
+  if (!appReady || v.length < 2) { $('ac-dropdown').style.display = 'none'; return; }
+  acTimer = setTimeout(async () => {
+    const r = await fetch('/api/speakers?q=' + encodeURIComponent(v));
+    if (!r.ok) return;
+    const items = await r.json();
+    if (!items.length) { $('ac-dropdown').style.display = 'none'; return; }
+    $('ac-dropdown').innerHTML = items.map(it => `
+      <div class="ac-item" data-name="${escHtml(it.speaker_name)}">
+        <span class="ac-name">${escHtml(it.speaker_name)}</span>
+        <span class="ac-meta">${it.speech_count.toLocaleString('tr-TR')} söz · ${(it.first_date||'?').slice(0,4)}–${(it.last_date||'?').slice(0,4)}</span>
+      </div>
+    `).join('');
+    $('ac-dropdown').style.display = 'block';
+  }, 140);
+});
+
+$('ac-dropdown').addEventListener('click', e => {
+  const item = e.target.closest('.ac-item');
+  if (!item) return;
+  $('speaker').value = item.dataset.name;
+  $('ac-dropdown').style.display = 'none';
+  runSearch(0);
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('.ac-wrap')) $('ac-dropdown').style.display = 'none';
+});
+
+async function loadDossier(speakerName) {
+  if (!speakerName) {
+    $('dossier').style.display = 'none';
+    return;
+  }
+  try {
+    const r = await fetch('/api/speaker_profile?name=' + encodeURIComponent(speakerName));
+    if (!r.ok) { $('dossier').style.display = 'none'; return; }
+    const p = await r.json();
+    const maxCnt = Math.max(1, ...p.timeline.map(t => t.speeches));
+    const activeYr = ($('from_year').value && $('from_year').value === $('to_year').value) ? $('from_year').value : '';
+
+    const barsHtml = p.timeline.map(t => {
+      const h = Math.max(4, Math.round((t.speeches / maxCnt) * 58));
+      const isAct = activeYr === t.year ? ' active' : '';
+      return `<div class="t-col${isAct}" data-year="${t.year}" title="${t.year}: ${t.speeches.toLocaleString('tr-TR')} konuşma (${t.words.toLocaleString('tr-TR')} kelime)">
+        <div class="t-bar" style="height:${h}px"></div>
+        <div class="t-yr">${t.year.slice(2)}</div>
+      </div>`;
+    }).join('');
+
+    $('dossier').innerHTML = `
+      <div class="dossier-head">
+        <div>
+          <h2 class="dossier-name">${escHtml(p.speaker_name)}</h2>
+          <div class="dossier-tags">
+            ${p.constituencies.map(c => `<span class="tag olive">${escHtml(c)}</span>`).join('')}
+            ${p.titles.slice(0, 4).map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}
+          </div>
+        </div>
+        <div class="dossier-stats">
+          <div class="ds-box"><div class="ds-val">${p.speech_count.toLocaleString('tr-TR')}</div><div class="ds-lbl">Konuşma</div></div>
+          <div class="ds-box"><div class="ds-val">${p.word_count.toLocaleString('tr-TR')}</div><div class="ds-lbl">Kelime</div></div>
+          <div class="ds-box"><div class="ds-val">${p.doc_count.toLocaleString('tr-TR')}</div><div class="ds-lbl">Birleşim</div></div>
+          <div class="ds-box"><div class="ds-val">${(p.first_date||'?').slice(0,4)}–${(p.last_date||'?').slice(0,4)}</div><div class="ds-lbl">Aktif Dönem</div></div>
+        </div>
+      </div>
+      ${p.timeline.length ? `
+      <div class="timeline-box">
+        <div class="timeline-hdr">
+          <span>Yıllara göre konuşma yoğunluğu (filtrelemek için yıla tıklayın)</span>
+          ${activeYr ? `<button type="button" class="btn-ghost" id="clear-yr-btn">Yıl filtresini kaldır (${activeYr})</button>` : ''}
+        </div>
+        <div class="timeline-bars" id="timeline-bars">${barsHtml}</div>
+      </div>` : ''}
+    `;
+    $('dossier').style.display = 'block';
+
+    const tb = $('timeline-bars');
+    if (tb) {
+      tb.addEventListener('click', e => {
+        const col = e.target.closest('.t-col');
+        if (!col) return;
+        const yr = col.dataset.year;
+        if ($('from_year').value === yr && $('to_year').value === yr) {
+          $('from_year').value = '';
+          $('to_year').value = '';
+        } else {
+          $('from_year').value = yr;
+          $('to_year').value = yr;
+        }
+        runSearch(0);
+      });
+    }
+    const cy = $('clear-yr-btn');
+    if (cy) {
+      cy.addEventListener('click', () => {
+        $('from_year').value = '';
+        $('to_year').value = '';
+        runSearch(0);
+      });
+    }
+  } catch {
+    $('dossier').style.display = 'none';
+  }
+}
+
+async function runSearch(offset = 0) {
+  if (!appReady) return;
+  currentOffset = offset;
+  syncUrlFromForm();
+
+  // Highlight active quick chip
+  const spkVal = $('speaker').value.trim();
+  document.querySelectorAll('.chip').forEach(ch => {
+    ch.classList.toggle('active', ch.dataset.name.toLowerCase() === spkVal.toLowerCase());
+  });
+
+  const hasFilters = ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role'].some(f => $(f).value.trim());
+  $('btn-clear').style.display = hasFilters ? 'inline-flex' : 'none';
+
+  $('results-count').textContent = 'Aranıyor...';
+  const params = getQueryParams(offset);
+  const r = await fetch('/api/search?' + params.toString());
+  const data = await r.json();
+
+  if (data.resolved_speakers && data.resolved_speakers.length === 1) {
+    loadDossier(data.resolved_speakers[0]);
+  } else if (spkVal && data.resolved_speakers && data.resolved_speakers.length > 0) {
+    loadDossier(data.resolved_speakers[0]);
+  } else {
+    $('dossier').style.display = 'none';
+  }
+
+  const fromN = data.total ? offset + 1 : 0;
+  const toN = Math.min(offset + data.items.length, data.total);
+  $('results-count').textContent = `${data.total.toLocaleString('tr-TR')} konuşma bulundu (${data.ms} ms)` +
+    (data.total ? ` · Gösterilen: ${fromN.toLocaleString('tr-TR')}–${toN.toLocaleString('tr-TR')}` : '');
+
+  if (data.total > 0) {
+    const expParams = new URLSearchParams(params);
+    expParams.delete('offset');
+    expParams.set('limit', '500');
+    $('btn-export').href = '/api/export?' + expParams.toString();
+    $('btn-export').style.display = 'inline-flex';
+  } else {
+    $('btn-export').style.display = 'none';
+  }
+
+  if (!data.items.length) {
+    $('results').innerHTML = `<div class="empty-state"><strong>Sonuç bulunamadı.</strong><br>Farklı bir konuşmacı adı, daha kısa bir anahtar kelime veya daha geniş bir tarih aralığı deneyin.</div>`;
+    $('pager').innerHTML = '';
+    return;
+  }
+
+  $('results').innerHTML = data.items.map(it => {
+    const code = [it.meclis, it.donem ? `D${it.donem}` : '', it.birlesim ? `B${it.birlesim}` : '', it.oturum ? `O${it.oturum}` : ''].filter(Boolean).join(' · ');
+    return `
+      <article class="speech-card">
+        <div class="sc-head">
+          <div>
+            <span class="sc-speaker" data-pick="${escHtml(it.speaker_name)}">${escHtml(it.speaker_name)}</span>
+            ${it.speaker_title ? `<span class="sc-title">${escHtml(it.speaker_title)}</span>` : ''}
+            ${it.constituency ? `<span class="tag olive" style="margin-left:6px">${escHtml(it.constituency)}</span>` : ''}
+          </div>
+          <div class="sc-meta">
+            <span>${escHtml(it.tarih || 'Tarihsiz')}</span>
+            <span class="sc-code">${escHtml(code)}</span>
+            <span>${it.word_count} kelime</span>
+          </div>
+        </div>
+        <p class="sc-body">${it.snippet_html}</p>
+        <div class="sc-foot">
+          <button type="button" class="btn-ghost ctx-btn" data-doc="${escHtml(it.doc_id)}" data-turn="${it.turn_index}">
+            Oturum Bağlamında Gör
+          </button>
+          <a class="sc-src" href="${escHtml(it.source_url)}" target="_blank" rel="noopener">
+            Orijinal Belge: ${escHtml(it.source_file)} ↗
+          </a>
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  // Pagination controls
+  const pagerHtml = [];
+  if (offset > 0) pagerHtml.push(`<button type="button" class="btn-ghost" id="pg-prev">← Önceki Sayfa</button>`);
+  const pageNum = Math.floor(offset / PAGE_SIZE) + 1;
+  const totalPages = Math.ceil(data.total / PAGE_SIZE);
+  pagerHtml.push(`<span class="results-count">Sayfa ${pageNum.toLocaleString('tr-TR')} / ${totalPages.toLocaleString('tr-TR')}</span>`);
+  if (offset + PAGE_SIZE < data.total) pagerHtml.push(`<button type="button" class="btn-ghost" id="pg-next">Sonraki Sayfa →</button>`);
+  $('pager').innerHTML = pagerHtml.join('');
+
+  if ($('pg-prev')) $('pg-prev').onclick = () => { runSearch(Math.max(0, offset - PAGE_SIZE)); window.scrollTo({top: 0, behavior: 'smooth'}); };
+  if ($('pg-next')) $('pg-next').onclick = () => { runSearch(offset + PAGE_SIZE); window.scrollTo({top: 0, behavior: 'smooth'}); };
+}
+
+$('results').addEventListener('click', e => {
+  const spk = e.target.closest('.sc-speaker');
+  if (spk) {
+    $('speaker').value = spk.dataset.pick;
+    runSearch(0);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    return;
+  }
+  const ctx = e.target.closest('.ctx-btn');
+  if (ctx) {
+    openContext(ctx.dataset.doc, Number(ctx.dataset.turn));
+  }
+});
+
+async function openContext(docId, turnIndex) {
+  $('drawer-backdrop').classList.add('open');
+  $('drawer-title').textContent = 'Oturum Bağlamı Yükleniyor...';
+  $('drawer-sub').textContent = docId;
+  $('drawer-body').innerHTML = '<div style="padding:20px;color:var(--ink-muted)">Yükleniyor...</div>';
+
+  const r = await fetch(`/api/context?doc_id=${encodeURIComponent(docId)}&turn_index=${turnIndex}&window=3`);
+  if (!r.ok) {
+    $('drawer-body').innerHTML = '<div style="padding:20px;color:var(--crimson)">Bağlam yüklenemedi.</div>';
+    return;
+  }
+  const data = await r.json();
+  $('drawer-title').textContent = `${data.tarih || 'Tarihsiz'} · ${data.meclis} ${data.donem ? 'Dönem ' + data.donem : ''} ${data.birlesim ? data.birlesim + '. Birleşim' : ''}`;
+  $('drawer-sub').innerHTML = `<a href="${escHtml(data.source_url)}" target="_blank" rel="noopener" style="color:var(--crimson)">${escHtml(data.source_file)} ↗</a>`;
+  $('drawer-body').innerHTML = data.turns.map(t => `
+    <div class="ctx-turn${t.is_focus ? ' focus' : ''}" id="${t.is_focus ? 'ctx-focus' : ''}">
+      <div class="ctx-spk">
+        <span>${escHtml(t.speaker_name)}${t.speaker_title ? ` <span style="font-weight:400;color:var(--ink-soft);font-size:13px">· ${escHtml(t.speaker_title)}</span>` : ''}</span>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--ink-muted)">#${t.turn_index} · Oturum ${t.oturum}</span>
+      </div>
+      <div class="ctx-text">${escHtml(t.text)}</div>
+    </div>
+  `).join('');
+  const foc = $('ctx-focus');
+  if (foc) foc.scrollIntoView({block: 'center', behavior: 'smooth'});
+}
+
+$('drawer-close').onclick = () => $('drawer-backdrop').classList.remove('open');
+$('drawer-backdrop').onclick = e => { if (e.target === $('drawer-backdrop')) $('drawer-backdrop').classList.remove('open'); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('drawer-backdrop').classList.remove('open'); });
+
+$('btn-clear').onclick = () => {
+  for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role']) $(f).value = '';
+  $('sort').value = 'newest';
+  runSearch(0);
+};
+
+$('search-form').addEventListener('submit', e => { e.preventDefault(); runSearch(0); });
+for (const sel of ['meclis', 'role', 'sort']) $(sel).addEventListener('change', () => runSearch(0));
+
+hydrateFormFromUrl();
+pollReady();
+</script>
+</body>
+</html>

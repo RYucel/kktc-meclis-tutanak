@@ -1,0 +1,53 @@
+name: Sync KKTC Meclis Tutanakları to Hugging Face
+
+on:
+  schedule:
+    # Every Monday at 04:00 UTC (07:00 KKTC/TR time)
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Test sync without uploading to Hugging Face"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kktc-tutanak-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: requirements-ci.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements-ci.txt
+
+      - name: Run incremental sync
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          KKTC_DATASET_REPO: stevevaius/KKTC_Meclis_Tutanak
+          KKTC_SPACE_REPO: stevevaius/KKTC-Meclis-Tutanak-Arama
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            python -u src/sync_incremental.py --dry-run
+          else
+            python -u src/sync_incremental.py
+          fi
