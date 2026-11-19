@@ -1,9 +1,8 @@
 name: Sync KKTC Meclis Tutanakları to Hugging Face
 
 on:
-  schedule:
-    # Every Monday at 04:00 UTC (07:00 KKTC/TR time)
-    - cron: "0 4 * * 1"
+  # Note: evrakcm.gov.ct.tr blocks US/Azure cloud runner IPs; scheduled auto-sync runs via
+  # Windows Task Scheduler (`scripts/run_sync.ps1`). Keep manual dispatch for self-hosted runners.
   workflow_dispatch:
     inputs:
       dry_run:
