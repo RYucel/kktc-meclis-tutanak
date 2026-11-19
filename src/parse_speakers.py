@@ -323,19 +323,21 @@ def clean_person_name(raw: str) -> str:
 
 
 def looks_like_chair_declaration(role_tok: str, sep: str, rest: str, lines_since_oturum: int) -> bool:
-    """Distinguish 'BAŞKAN: Zorlu TÖRE' / 'BAŞKAN - Geçici Başkan Ziya M. Rizkı' from speeches."""
+    """Distinguish 'BAŞKAN: Meclis Başkan Vekili Ünal ÜSTEL' from speeches."""
     rest_s = rest.strip()
     if not rest_s or len(rest_s) > 95:
         return False
     rl = tr_lower(rest_s)
     if any(rl.startswith(op) for op in SPEECH_OPENERS_LOWER):
         return False
-    if any(bad in rl for bad in CHAIR_REJECT_SUBSTRS):
-        return False
     if "?" in rest_s or "!" in rest_s or ";" in rest_s:
         return False
     words = rest_s.split()
     if len(words) > 9:
+        return False
+    # Strip legitimate chair title prefixes BEFORE checking reject words (so "Meclis Başkan Vekili Ünal Üstel" passes!)
+    person = clean_person_name(rest_s)
+    if not person or len(person.split()) < 2:
         return False
     if sep == ":":
         return True
@@ -378,9 +380,9 @@ def split_speaker_candidate(line: str) -> tuple[str, str, str] | None:
     else:
         s_norm = s
 
-    # Special check for session header with colon (case-insensitive for old PDFs: "Başkan: Dt. Sait Güven", "Kâtipler: ...")
+    # Special check for session header with colon (case-insensitive: "Başkan: ...", "BAŞKAN VEKİLİ : Zorlu TÖRE", "Kâtipler: ...")
     m_col = re.match(
-        r"^[.\s]*((?:Geçici\s+)?(?:Başkan|Başkam|Eaşkan|Katip|Kâtip|Katipler|Kâtipler|Kâtipltr|BAŞKAN|BAŞKAM|EAŞKAN|KATİP|KATIP|KATİPLER|KÂTİP|KÂTİPLER|KATİF))\s*(:)\s*(.*)$",
+        r"^[.\s]*((?:Geçici\s+|Meclis\s+|Oturum\s+)?(?:Başkan\s+Vekili|Başkan\s+Yardımcısı|Başkanı|Başkan|Başkam|Eaşkan|Katip|Kâtip|Katipler|Kâtipler|Kâtipltr|BAŞKAN\s+VEKİLİ|BAŞKAN\s+YARDIMCISI|BAŞKANI|BAŞKAN|BAŞKAM|EAŞKAN|KATİP|KATIP|KATİPLER|KÂTİP|KÂTİPLER|KATİF))\s*(:)\s*(.*)$",
         s_norm,
         re.I,
     )
@@ -587,20 +589,27 @@ def clean_speech_body(lines: list[str], is_pdf: bool) -> str:
 
 
 def merge_wrapped_pdf_speaker_lines(lines: list[str]) -> list[str]:
-    """Re-join 2-line wrapped speaker headers in narrow-column scanned PDFs:
-    e.g. 'ÖZKAN MURAT' + '(Devamla) - ...' or 'KOMİTESİ BAŞKANI KENAN' + 'AKIN - ...'
+    """Re-join 2-line wrapped speaker headers in PDFs (both scanned & 2025/2026 digital PDFs):
+    - 'BAŞKAN' + '- Sayın milletvekilleri...'
+    - 'ÖZKAN MURAT' + '(Devamla) - ...'
+    - 'KOMİTESİ BAŞKANI KENAN' + 'AKIN - ...'
     """
     out: list[str] = []
     i = 0
     n = len(lines)
     while i < n:
         cur = lines[i].strip()
-        if i + 1 < n and cur and not cur.startswith("(") and 4 <= len(cur) <= 95:
-            # Check if cur looks like an unfinished ALL-CAPS speaker prefix (no dash, no sentence end)
+        if i + 1 < n and cur and not cur.startswith("(") and 4 <= len(cur) <= 110:
             if not re.search(r"[-–—:;.!?]$", cur) and not any(ch.isdigit() for ch in cur):
-                alphas = [c for c in cur if c.isalpha()]
-                if len(alphas) >= 4 and sum(1 for c in alphas if c.isupper() or c in "ÇĞİÖŞÜÂÎÛ") / len(alphas) >= 0.85:
+                core_cur = re.sub(r"\([^)]*\)", " ", cur)
+                alphas = [c for c in core_cur if c.isalpha()]
+                if len(alphas) >= 4 and sum(1 for c in alphas if c.isupper() or c in "ÇĞİÖŞÜÂÎÛ") / len(alphas) >= 0.82:
                     nxt = lines[i + 1].strip()
+                    # Case 0: next line starts directly with dash ("- Sayın milletvekilleri...")
+                    if re.match(r"^[-–—](?:\s+|$)", nxt):
+                        out.append(cur + " " + nxt)
+                        i += 2
+                        continue
                     # Case 1: next line starts with (Yerinden)/(Devamla)/(District) followed by dash
                     if re.match(r"^\([A-ZÇĞİÖŞÜa-zçğıöşü\s.]{3,35}\)\s*[-–—]", nxt):
                         out.append(cur + " " + nxt)
@@ -694,13 +703,15 @@ def parse_document(doc: dict) -> tuple[dict, list[dict]]:
                         current_clerk = person
                 pending_header_role = None
                 continue
-            low_bare = tr_lower(stripped.strip(" .•·-–—:"))
-            if low_bare in ("başkan", "baskan", "geçici başkan", "gecici baskan"):
-                pending_header_role = "baskan"
-                continue
-            if low_bare in ("katip", "kâtip", "katipler", "kâtipler", "kâtipltr", "geçici katip"):
-                pending_header_role = "katip"
-                continue
+            # Only treat bare "Başkan" / "Kâtipler" (NOT "KATİP -" speech turns!) as two-line headers
+            if not stripped.endswith(("-", "–", "—")):
+                low_bare = tr_lower(stripped.strip(" .•·:"))
+                if low_bare in ("başkan", "baskan", "geçici başkan", "gecici baskan"):
+                    pending_header_role = "baskan"
+                    continue
+                if low_bare in ("katip", "kâtip", "katipler", "kâtipler", "kâtipltr", "geçici katip"):
+                    pending_header_role = "katip"
+                    continue
 
         # 2. Check mid-session chair handoff stage direction
         if stripped.startswith("(") and "Başkanlık" in stripped:
@@ -723,8 +734,10 @@ def parse_document(doc: dict) -> tuple[dict, list[dict]]:
 
             # Check if this is a chair/clerk session header declaration
             if core_up in (
-                "BAŞKAN", "BAŞKAM", "EAŞKAN", "GEÇİCİ BAŞKAN", "KATİP", "KATIP", "KÂTİP",
-                "KATİPLER", "KÂTİPLER", "KÂTİPLTR", "KATİF", "GEÇİCİ KATİP", "GEÇİCİ KATİPLER",
+                "BAŞKAN", "BAŞKAM", "EAŞKAN", "GEÇİCİ BAŞKAN", "MECLİS BAŞKANI", "OTURUM BAŞKANI",
+                "BAŞKAN VEKİLİ", "BAŞKAN YARDIMCISI", "MECLİS BAŞKAN VEKİLİ", "MECLİS BAŞKAN YARDIMCISI",
+                "KATİP", "KATIP", "KÂTİP", "KATİPLER", "KÂTİPLER", "KÂTİPLTR", "KATİF",
+                "GEÇİCİ KATİP", "GEÇİCİ KATİPLER",
             ):
                 if looks_like_chair_declaration(core_up, sep, rest, lines_since_oturum):
                     person = clean_person_name(rest)

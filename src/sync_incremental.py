@@ -436,14 +436,34 @@ Orijinal tutanak belgelerinin hakları **KKTC Cumhuriyet Meclisi**'ne aittir. Bu
             entry["y"] = timelines[nm]
         speakers_list.append(entry)
 
+    from datetime import datetime, timezone
+    latest_row = con.execute(
+        f"""
+        SELECT tarih, meclis, donem, yasama_yili, birlesim, doc_id, source_url
+        FROM read_parquet('{doc_path.as_posix()}')
+        WHERE tarih IS NOT NULL
+        ORDER BY tarih DESC, doc_id DESC
+        LIMIT 1
+        """
+    ).fetchone()
+
     index_payload = {
         "stats": {
             "speeches": int(st_row[0]),
             "docs": int(st_row[1]),
+            "total_docs": int(total_docs),
             "words": int(st_row[2] or 0),
             "min_date": st_row[4],
             "max_date": st_row[5],
             "speakers": len(speakers_list),
+            "latest_date": latest_row[0] if latest_row else st_row[5],
+            "latest_meclis": latest_row[1] if latest_row else "KKTC",
+            "latest_donem": int(latest_row[2]) if (latest_row and latest_row[2] is not None) else None,
+            "latest_yasama_yili": int(latest_row[3]) if (latest_row and latest_row[3] is not None) else None,
+            "latest_birlesim": int(latest_row[4]) if (latest_row and latest_row[4] is not None) else None,
+            "latest_doc_id": latest_row[5] if latest_row else None,
+            "latest_source_url": latest_row[6] if latest_row else None,
+            "synced_at": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         },
         "speakers": speakers_list,
     }

@@ -433,6 +433,13 @@ def write_dataset_card(
     dates = sorted(d["tarih"] for d in docs if d.get("tarih"))
     date_min = dates[0] if dates else "—"
     date_max = dates[-1] if dates else "—"
+    dated_docs = [d for d in docs if d.get("tarih")]
+    latest_doc = max(dated_docs, key=lambda d: (d["tarih"], d["doc_id"])) if dated_docs else None
+    latest_note = (
+        f"`{latest_doc['tarih']}` ({latest_doc['meclis']} Dönem {latest_doc['donem']} · {latest_doc['birlesim']}. Birleşim · `{latest_doc['doc_id']}`)"
+        if latest_doc
+        else f"`{date_max}`"
+    )
 
     meclis_names = {
         "KKTC": "KKTC Cumhuriyet Meclisi (Dönem 1–10)",
@@ -487,7 +494,9 @@ configs:
 
 Kuzey Kıbrıs Türk Cumhuriyeti (KKTC) Cumhuriyet Meclisi ve öncül meclislerin (1960–günümüz) resmî tutanak dergilerinin **konuşmacı bazlı (speaker-turn)** yapılandırılmış Parquet veri seti.
 
+* **Web Arama Uygulaması:** [KKTC Meclis Tutanak Arama (HF Space)](https://huggingface.co/spaces/stevevaius/KKTC-Meclis-Tutanak-Arama)
 * **Kaynak:** [KKTC Cumhuriyet Meclisi Evrak Arşivi](https://evrakcm.gov.ct.tr/siteler/belgeler/tutanaklar/Shared%20Documents/Forms/Belge%20Grntleme.aspx)
+* **En Son Eklenen Tutanak:** {latest_note}
 * **Toplam Belge:** {len(docs):,}
 * **Toplam Konuşma Bloğu (Turn):** {len(speeches):,}
 * **Benzersiz Konuşmacı (Normalize):** {len(speakers_rows):,}
@@ -521,7 +530,7 @@ Kuzey Kıbrıs Türk Cumhuriyeti (KKTC) Cumhuriyet Meclisi ve öncül meclisleri
 ```python
 from datasets import load_dataset
 
-ds = load_dataset("<kullanici>/KKTC_Meclis_Tutanak", "speeches", split="train")
+ds = load_dataset("stevevaius/KKTC_Meclis_Tutanak", "speeches", split="train")
 erhurman = ds.filter(lambda x: x["speaker_name"] == "Tufan Erhürman")
 print(len(erhurman), erhurman[0]["tarih"], erhurman[0]["text"][:200])
 ```
@@ -534,6 +543,11 @@ Orijinal tutanak belgelerinin hakları **KKTC Cumhuriyet Meclisi**'ne aittir. Bu
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--skip-sqlite", action="store_true")
+    args = ap.parse_args()
+
     t0 = time.time()
     print("Loading parsed documents and speeches...")
     docs = [json.loads(l) for l in (PARSED_DIR / "documents.jsonl").open("r", encoding="utf-8") if l.strip()]
@@ -622,9 +636,12 @@ def main():
     write_dataset_card(docs, speeches, speakers_rows, canon_report)
     print(f"Wrote Hugging Face Dataset Card: {HF_DIR / 'README.md'}")
 
-    print("Building SQLite FTS5 search index...")
-    build_sqlite_fts(speeches, speakers_rows)
-    print(f"Built {DB_PATH} ({DB_PATH.stat().st_size / (1024*1024):.1f} MB) in {time.time() - t0:.1f}s total.")
+    if not args.skip_sqlite:
+        print("Building SQLite FTS5 search index...")
+        build_sqlite_fts(speeches, speakers_rows)
+        print(f"Built {DB_PATH} ({DB_PATH.stat().st_size / (1024*1024):.1f} MB) in {time.time() - t0:.1f}s total.")
+    else:
+        print(f"Skipped SQLite FTS5 build (--skip-sqlite). Done in {time.time() - t0:.1f}s.")
 
 
 if __name__ == "__main__":

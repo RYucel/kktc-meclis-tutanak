@@ -50,6 +50,33 @@
   .hf-pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--rule-strong); background: var(--paper); color: var(--ink); font-size: 12px; font-weight: 600; text-decoration: none; transition: all 0.15s; }
   .hf-pill:hover { border-color: var(--crimson); background: var(--crimson-tint); color: var(--crimson-dark); }
 
+  .freshness-strip {
+    background: #F4EFE6;
+    border-bottom: 1px solid var(--rule);
+    padding: 9px 24px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .freshness-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+  }
+  .freshness-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-weight: 500;
+  }
+  .freshness-badge strong { color: var(--ink); }
+  .freshness-badge a { color: var(--crimson-dark); font-weight: 600; text-decoration: none; border-bottom: 1px dotted var(--crimson); }
+  .freshness-badge a:hover { border-bottom-style: solid; }
+  .freshness-note { font-size: 11.5px; color: var(--ink-muted); }
+
   .container { max-width: 1180px; margin: 22px auto 64px; padding: 0 20px; }
 
   .search-panel { background: var(--folio); border: 1px solid var(--rule-strong); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); }
@@ -186,6 +213,18 @@
     </div>
   </div>
 </header>
+
+<div class="freshness-strip">
+  <div class="freshness-inner">
+    <div class="freshness-badge" id="freshness-latest">
+      <span class="dot ok"></span>
+      <span>En son yüklenen tutanak: <strong>Yükleniyor...</strong></span>
+    </div>
+    <div class="freshness-note" id="freshness-note">
+      1960–1995 arası taranmış PDF belgelerinde eski OCR kaynaklı küçük yazım farkları bulunabilir; her konuşmanın altında orijinal resmî Meclis tutanağı bağlantısı yer alır.
+    </div>
+  </div>
+</div>
 
 <main class="container">
   <form class="search-panel" id="search-form">
@@ -330,6 +369,15 @@ function setEngineStatus(state, text) {
   $('engine-text').textContent = text;
 }
 
+function formatDateTR(iso) {
+  if (!iso) return '—';
+  const months = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  const m = String(iso).match(/^(\d{4})-(\d{2})(?:-(\d{2}))?/);
+  if (!m) return iso;
+  const yr = m[1], mo = months[Number(m[2]) - 1] || m[2], dy = m[3] ? Number(m[3]) : null;
+  return dy ? `${dy} ${mo} ${yr}` : `${mo} ${yr}`;
+}
+
 // 1. Load speakers_index.json immediately (0ms autocomplete & dossier)
 async function loadIndex() {
   const r = await fetch('./speakers_index.json');
@@ -338,8 +386,23 @@ async function loadIndex() {
   for (const s of speakersIndex) speakersByName.set(s.n, s);
   const st = data.stats;
   $('stat-speeches').textContent = st.speeches.toLocaleString('tr-TR');
-  $('stat-docs').textContent = st.docs.toLocaleString('tr-TR');
+  $('stat-docs').textContent = (st.total_docs || st.docs).toLocaleString('tr-TR');
   $('stat-span').textContent = `${(st.min_date||'1960').slice(0,4)}–${(st.max_date||'2026').slice(0,4)}`;
+
+  const latestDateTR = formatDateTR(st.latest_date || st.max_date);
+  const syncedTR = formatDateTR(st.synced_at);
+  const parts = [
+    st.latest_meclis || 'KKTC',
+    st.latest_donem ? `Dönem ${st.latest_donem}` : '',
+    st.latest_birlesim ? `${st.latest_birlesim}. Birleşim` : ''
+  ].filter(Boolean).join(' · ');
+  const fileLink = st.latest_source_url
+    ? ` (<a href="${escHtml(st.latest_source_url)}" target="_blank" rel="noopener">${escHtml((st.latest_doc_id || '').split('/').pop())} ↗</a>)`
+    : '';
+  $('freshness-latest').innerHTML = `
+    <span class="dot ok"></span>
+    <span>En son tutanak: <strong>${escHtml(latestDateTR)}</strong> · ${escHtml(parts)}${fileLink}${st.synced_at ? ` &nbsp;|&nbsp; Son arşiv kontrolü: <strong>${escHtml(syncedTR)}</strong>` : ''}</span>
+  `;
 }
 
 // 2. Initialize DuckDB-WASM (runs in background worker via Blob URL)

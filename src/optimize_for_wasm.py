@@ -71,8 +71,19 @@ def main():
     print(f"   speeches.parquet row groups: {rg_info}")
 
     print("3. Building compact space_static/speakers_index.json...")
+    from datetime import datetime, timezone
     st_row = con.execute(
         f"SELECT COUNT(*), COUNT(DISTINCT doc_id), SUM(word_count), MIN(tarih), MAX(tarih) FROM read_parquet('{sp_in}')"
+    ).fetchone()
+    total_all_docs = con.execute(f"SELECT COUNT(*) FROM read_parquet('{doc_in}')").fetchone()[0]
+    latest_row = con.execute(
+        f"""
+        SELECT tarih, meclis, donem, yasama_yili, birlesim, doc_id, source_url
+        FROM read_parquet('{doc_in}')
+        WHERE tarih IS NOT NULL
+        ORDER BY tarih DESC, doc_id DESC
+        LIMIT 1
+        """
     ).fetchone()
 
     # Yearly timelines for speakers with >= 5 speeches
@@ -120,10 +131,19 @@ def main():
         "stats": {
             "speeches": int(st_row[0]),
             "docs": int(st_row[1]),
+            "total_docs": int(total_all_docs),
             "words": int(st_row[2] or 0),
             "min_date": st_row[3],
             "max_date": st_row[4],
             "speakers": len(speakers_list),
+            "latest_date": latest_row[0] if latest_row else st_row[4],
+            "latest_meclis": latest_row[1] if latest_row else "KKTC",
+            "latest_donem": int(latest_row[2]) if (latest_row and latest_row[2] is not None) else None,
+            "latest_yasama_yili": int(latest_row[3]) if (latest_row and latest_row[3] is not None) else None,
+            "latest_birlesim": int(latest_row[4]) if (latest_row and latest_row[4] is not None) else None,
+            "latest_doc_id": latest_row[5] if latest_row else None,
+            "latest_source_url": latest_row[6] if latest_row else None,
+            "synced_at": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
         },
         "speakers": speakers_list,
     }
