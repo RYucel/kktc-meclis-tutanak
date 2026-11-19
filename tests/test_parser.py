@@ -189,10 +189,43 @@ def test_chair_prefix_and_2026_pdf_split_dash():
     assert turns3[1]["speaker_name"] == "Ziya Öztürkler"
 
 
+def test_historic_1960_1970_colon_parser():
+    # 1. Standalone 1960 Dr. Fazıl Küçük speech
+    d0, t0 = parse_document({
+        "local_rel_path": "Kıbrıs Cumhuriyeti/16 Ağustos 1960 Cb muavini konusma metni.pdf",
+        "filename": "16 Ağustos 1960 Cb muavini konusma metni.pdf",
+        "meclis": "KC", "donem": None, "yasama_yili": None,
+        "text_source": "pdf_embedded_ocr", "download_url": "https://example.test/1960.pdf",
+        "text": "Kıbrıs Cumhuriyetinin Cumhurbaşkan Muavini olarak görevime fiilen başlamış bulunuyorum. " * 25,
+    })
+    assert d0["tarih"] == "1960-08-16"
+    assert len(t0) == 1 and t0[0]["speaker_name"] == "Fazıl Küçük"
+
+    # 2. 1967-1970 KTY Dönem I colon-formatted minutes
+    d1, t1 = parse_document({
+        "local_rel_path": "KTY Dönem I/B.30-11-1967.pdf",
+        "filename": "B.30-11-1967.pdf",
+        "meclis": "KTY", "donem": 1, "yasama_yili": None,
+        "text_source": "pdf_embedded_ocr", "download_url": "https://example.test/1967.pdf",
+        "text": "\n".join([
+            "Hazır olanlar: İbrahim Orhan, Reis vekili",
+            "Reis Vekili: Anayasanın 76'ncı maddesi gereğince toplantıyı açıyorum. " * 10,
+            "A.Mithat Berberoğlu: Sayın Başkan, bu geçirilecek olan kanun ada sathına şamildir. " * 10,
+            "Ü.Süleyman: Muhterem Başkanın teklifini desteklerim. " * 10,
+        ]),
+    })
+    assert d1["tarih"] == "1967-11-30"
+    assert len(t1) == 3
+    assert t1[0]["speaker_name"] == "İbrahim Orhan"
+    assert t1[1]["speaker_name"] == "Ahmet Mithat Berberoğlu"
+    assert t1[2]["speaker_name"] == "Ümit Süleyman"
+
+
 if __name__ == "__main__":
     test_turkish_case()
     test_modern_docx_chair_handoff_and_turns()
     test_old_pdf_two_line_chair_and_academic_strip()
     test_pdf_spaced_wrapped_mojibake_and_edge_cases()
     test_chair_prefix_and_2026_pdf_split_dash()
+    test_historic_1960_1970_colon_parser()
     print("ALL UNIT TESTS PASSED!")

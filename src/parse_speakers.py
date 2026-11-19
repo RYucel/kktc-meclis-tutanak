@@ -239,10 +239,20 @@ MECLIS_MIN_YEAR = {
 }
 
 
-def extract_date(header_lines: list[str], meclis: str = "KKTC") -> str | None:
+def extract_date(header_lines: list[str], meclis: str = "KKTC", filename: str = "") -> str | None:
     min_yr = MECLIS_MIN_YEAR.get(meclis, 1960)
+    # For historic 1967-1970 KTY Dönem I files whose filename explicitly carries DD-MM-YYYY
+    # (e.g. "O.25-03-1970.pdf", "V.24-07-1970.pdf"), prefer filename date over earlier cover-letter dates.
+    if meclis == "KTY" and filename:
+        m_fn = re.search(r"(?:^|[.\s_])(\d{1,2})-(\d{1,2})-(19[67]\d)(?:[^0-9]|$)", filename)
+        if m_fn:
+            day, month, year = int(m_fn.group(1)), int(m_fn.group(2)), int(m_fn.group(3))
+            if 1 <= day <= 31 and 1 <= month <= 12:
+                return f"{year:04d}-{month:02d}-{day:02d}"
     # Search the cover/title lines (first 25 lines) first so TOC references to old laws don't override session date
     windows = ["\n".join(header_lines[:25]), "\n".join(header_lines[:100])]
+    if filename:
+        windows.append(filename)
     for header_text in windows:
         for m in DATE_TEXT_RE.finditer(header_text):
             day = int(m.group(1))
@@ -251,6 +261,11 @@ def extract_date(header_lines: list[str], meclis: str = "KKTC") -> str | None:
             if 1 <= day <= 31 and min_yr <= year <= 2027:
                 return f"{year:04d}-{month:02d}-{day:02d}"
         for m in DATE_NUM_RE.finditer(header_text):
+            day, month, year = int(m.group(1)), int(m.group(2)), int(m.group(3))
+            if 1 <= day <= 31 and 1 <= month <= 12 and min_yr <= year <= 2027:
+                return f"{year:04d}-{month:02d}-{day:02d}"
+        # Also support DD-MM-YYYY in historic filenames like "A.26-10-1967.pdf"
+        for m in re.finditer(r"\b(\d{1,2})-(\d{1,2})-(19[5-9]\d|20[0-3]\d)\b", header_text):
             day, month, year = int(m.group(1)), int(m.group(2)), int(m.group(3))
             if 1 <= day <= 31 and 1 <= month <= 12 and min_yr <= year <= 2027:
                 return f"{year:04d}-{month:02d}-{day:02d}"
@@ -634,7 +649,7 @@ def parse_document(doc: dict) -> tuple[dict, list[dict]]:
         lines = merge_wrapped_pdf_speaker_lines(lines)
 
     header_window = "\n".join(lines[:100])
-    tarih = extract_date(lines, meclis=doc.get("meclis", "KKTC"))
+    tarih = extract_date(lines, meclis=doc.get("meclis", "KKTC"), filename=doc.get("filename", ""))
     birlesim = extract_birlesim(header_window, doc["filename"])
 
     # Pre-scan TOC / header for title -> name mappings (e.g., "Başbakan Sayın Ünal Üstel'in ...")
@@ -786,6 +801,14 @@ def parse_document(doc: dict) -> tuple[dict, list[dict]]:
 
     flush_turn()
 
+    # Fallback: Dedicated 1960-1970 historic colon-format parser (KTY Dönem I, Kıbrıs Cumhuriyeti, TCM)
+    # Only activates when standard dash-parser found <10 turns in a historic 1960-1970 document.
+    if doc.get("meclis") in ("KC", "TCM", "KTY") and len(turns) < 10 and len(text) > 1000:
+        hist_turns, hist_chairs = parse_historic_colon_turns(doc, lines, tarih, birlesim)
+        if len(hist_turns) > len(turns):
+            turns = hist_turns
+            seen_chairs = hist_chairs
+
     # Assign sequential turn_index and speech_id
     doc_slug = re.sub(r"[^a-zA-Z0-9_\-]+", "_", doc["local_rel_path"]).strip("_")
     for idx, t in enumerate(turns):
@@ -813,6 +836,268 @@ def parse_document(doc: dict) -> tuple[dict, list[dict]]:
         "sha256": doc.get("sha256"),
     }
     return doc_record, turns
+
+
+# --- Dedicated 1960-1970 Historic Colon-Format Parser (KC, TCM, KTY Dönem I) ---
+
+_HISTORIC_ALIASES = {
+    "ü. süleyman": "Ümit Süleyman",
+    "ü.süleyman": "Ümit Süleyman",
+    "üosüleyman": "Ümit Süleyman",
+    "süleyman": "Ümit Süleyman",
+    "ümit süleyman": "Ümit Süleyman",
+    "a. mithat berberoğlu": "Ahmet Mithat Berberoğlu",
+    "a.mithat berberoğlu": "Ahmet Mithat Berberoğlu",
+    "a. m. berberoğlu": "Ahmet Mithat Berberoğlu",
+    "a. m. berberoglu": "Ahmet Mithat Berberoğlu",
+    "a. m. berberoölu": "Ahmet Mithat Berberoğlu",
+    "mithat berberoğlu": "Ahmet Mithat Berberoğlu",
+    "bay berberoğlu": "Ahmet Mithat Berberoğlu",
+    "berberoğlu": "Ahmet Mithat Berberoğlu",
+    "doktor orhan bey": "Orhan Müderrisoğlu",
+    "dr. orhan müderrisoğlu": "Orhan Müderrisoğlu",
+    "orhan müderrisoğlu": "Orhan Müderrisoğlu",
+    "müderrisoğlu": "Orhan Müderrisoğlu",
+    "denktaş": "Rauf Raif Denktaş",
+    "başkan denktaş": "Rauf Raif Denktaş",
+    "başkan denkpaş": "Rauf Raif Denktaş",
+    "rauf r. denktaş": "Rauf Raif Denktaş",
+    "rauf r. denktag": "Rauf Raif Denktaş",
+    "başkan rauf r. denktaş": "Rauf Raif Denktaş",
+    "başkan rauf r. denktag": "Rauf Raif Denktaş",
+    "h. a. rıza": "Halit Ali Rıza",
+    "h. a. riza": "Halit Ali Rıza",
+    "h. a. rtza": "Halit Ali Rıza",
+    "h. a. rîza": "Halit Ali Rıza",
+    "b. nalbantoğlu": "Burhan Nalbantoğlu",
+    "b. nalbantoglu": "Burhan Nalbantoğlu",
+    "hasan guvener": "Hasan Güvener",
+    "hasan güvener": "Hasan Güvener",
+    "dr. hasan güvener": "Hasan Güvener",
+    "dr. fazıl küçük": "Fazıl Küçük",
+    "fazıl küçük": "Fazıl Küçük",
+    "dr. niyazi manyera": "Niyazi Manyera",
+    "niyazi manyera": "Niyazi Manyera",
+    "glafkos kliridis": "Glafkos Kliridis",
+    "bay glafkos kliridis": "Glafkos Kliridis",
+}
+
+_HIST_REJECT_WORDS = (
+    "saat", "tarih", "madde", "konu", "sayı", "gündem", "bölüm", "bolum", "bolom",
+    "kapanış", "açılış", "not", "cetvel", "hazır", "encümen", "komite", "daire",
+    "müdür", "üyeleri", "sayısı", "isimleri", "teklif", "rapor", "kanun", "tasarı",
+    "kural", "fıkra", "hakkında", "olanlar", "bulunanlar", "dağıtılan", "içtima",
+    "inikat", "rasırlıyan", "hazırlayan", "meclis idaresi", "ek", "e k", "e e",
+    "s e", "devre", "yıl", "dönem", "tutana", "zabıt", "imza", "karar", "sonuç",
+    "lehte", "aleyhte", "çekimser", "toplam", "nisap", "yoklama", "devamla",
+)
+
+# Reject Greek-script OCR artifacts in 1960 bilingual Cyprus House minutes (e.g. TPAMMATEYZ, AHMHTPIAAHZ, IİPOEAPOZ)
+_GREEK_OCR_RE = re.compile(r"(?:AAHZ|IAHZ|ATEYZ|EAPOZ|ZABBI|XP\.|IİP|TPAMM)", re.I)
+
+
+def _normalize_historic_name(raw_label: str, current_chair: str | None) -> tuple[str, str, str | None] | None:
+    """Return (speaker_name, speaker_role, speaker_title) or None if not a valid 1960-1970 speaker."""
+    s = re.sub(r"\s+", " ", raw_label).strip(" .,;:-–—'’\"*^")
+    if not s or len(s) < 3 or len(s) > 48:
+        return None
+    if any(ch.isdigit() for ch in s):
+        return None
+    if _GREEK_OCR_RE.search(s):
+        return None
+
+    sl = tr_lower(s)
+    # Direct reject of structural/procedural labels
+    if sl in _HIST_REJECT_WORDS or any(w in sl for w in _HIST_REJECT_WORDS):
+        # Exception: "Meclis Reisi Glafkos Kliridis", "Geçici Reis Vekili Dr. Niyazi Manyera", "Başkan Denktaş"
+        if not re.match(r"^(?:geçici\s+|meclis\s+)?(?:reis|başkan)", sl):
+            return None
+
+    # Check explicit alias map first
+    if sl in _HISTORIC_ALIASES:
+        role = "baskan" if ("başkan" in sl or "reis" in sl) else "milletvekili_bakan"
+        title = "Meclis Başkanı" if role == "baskan" else None
+        return _HISTORIC_ALIASES[sl], role, title
+
+    # Pure Chair / Reis / Başkan / Başkan Vekili
+    if sl in ("reis", "reîs", "reas", "reıs", "reis vekili", "reîs vekili", "başkan", "baskan",
+              "başkan vekili", "meclis reisi", "geçici meclis reisi", "geçici reis vekili", "meclis başkanı"):
+        title = "Reis Vekili" if "vekil" in sl else ("Meclis Reisi" if "reis" in sl else "Meclis Başkanı")
+        return (current_chair or title), "baskan", title
+
+    # Pure Clerk / Katip
+    if sl in ("katip", "kâtip", "katîp", "kâtipler", "katipler"):
+        return "Katip", "katip", "Katip"
+
+    # Named Chair: "Meclis Reisi Glafkos Kliridis", "Geçici Reis Vekili Dr. Niyazi Manyera", "Başkan X"
+    m_ch = re.match(
+        r"^((?:geçici\s+)?(?:meclis\s+)?(?:reis(?:\s+vekili)?|başkan(?:\s+vekili)?))\s+(.+)$",
+        s,
+        re.I,
+    )
+    if m_ch:
+        title = tr_title(m_ch.group(1))
+        nm_raw = clean_person_name(m_ch.group(2))
+        if nm_raw:
+            nm_l = tr_lower(nm_raw)
+            nm_canon = _HISTORIC_ALIASES.get(nm_l, nm_raw)
+            if len(nm_canon.split()) >= 1 and len(nm_canon) >= 4:
+                return nm_canon, "baskan", title
+
+    # Strip "Bay ", "Bayan ", "Dr.", "Doktor ", trailing " Bey"
+    cleaned = re.sub(r"^(?:Bay|Bayan|Doktor|Dr\.?|Sayın)\s+", "", s, flags=re.I)
+    cleaned = re.sub(r"^(?:Dr|Dt|Av)\.\s*", "", cleaned, flags=re.I)
+    cleaned = re.sub(r"\s+Bey$", "", cleaned, flags=re.I).strip(" .")
+    # Fix missing space after initial dot ("A.Mithat" -> "A. Mithat", "Ü.Süleyman" -> "Ü. Süleyman")
+    cleaned = re.sub(r"\b([A-ZÇĞİÖŞÜ])\.([A-ZÇĞİÖŞÜa-zçğıöşü]{2,})", r"\1. \2", cleaned)
+    cl_l = tr_lower(cleaned)
+    if cl_l in _HISTORIC_ALIASES:
+        return _HISTORIC_ALIASES[cl_l], "milletvekili_bakan", None
+
+    # Validate looks like a real person name (2-4 Title-Case or ALL-CAPS words, no lowercase prose sentences)
+    words = cleaned.split()
+    if not (2 <= len(words) <= 4):
+        return None
+    # Reject lines with weird non-letter OCR junk
+    if any(not re.match(r"^[A-ZÇĞİÖŞÜa-zçğıöşüâîûÂÎÛ.\-]+$", w) for w in words):
+        return None
+    # Every word (except single-letter initial or 've') must start with uppercase (or OCR 'ümit')
+    cap_words = sum(1 for w in words if w[0].isupper() or w[0] in "ÇĞİÖŞÜ" or tr_lower(w) == "ümit")
+    if cap_words < len(words):
+        return None
+    # Avoid Turkish common non-name starters
+    if tr_lower(words[0]) in ("bir", "bu", "şu", "her", "iki", "üç", "dört", "beş", "türk", "kıbrıs", "işbu", "ancak", "fakat", "ayrıca", "olarak"):
+        return None
+
+    return tr_title(cleaned), "milletvekili_bakan", None
+
+
+def parse_historic_colon_turns(
+    doc: dict, lines: list[str], tarih: str | None, birlesim: int | None
+) -> tuple[list[dict], list[str]]:
+    """Parse 1960-1970 colon-formatted minutes (KC, TCM, KTY Dönem I)."""
+    # Special case: Dr. Fazıl Küçük's standalone 16 August 1960 Vice-President inauguration speech
+    if "cb muavini konusma metni" in tr_lower(doc["filename"]):
+        body = clean_speech_body(lines, is_pdf=True)
+        if body:
+            return (
+                [
+                    {
+                        "doc_id": doc["local_rel_path"],
+                        "meclis": doc["meclis"],
+                        "donem": doc["donem"],
+                        "yasama_yili": doc["yasama_yili"],
+                        "birlesim": birlesim,
+                        "oturum": 1,
+                        "tarih": tarih or "1960-08-16",
+                        "speaker_raw": "Cumhurbaşkanı Muavini Dr. Fazıl Küçük",
+                        "speaker_name": "Fazıl Küçük",
+                        "speaker_role": "milletvekili_bakan",
+                        "speaker_title": "Cumhurbaşkanı Muavini",
+                        "constituency": None,
+                        "modifiers": None,
+                        "text": body,
+                        "char_count": len(body),
+                        "word_count": len(body.split()),
+                        "text_source": doc.get("text_source"),
+                        "source_file": doc["local_rel_path"],
+                        "source_url": doc.get("download_url"),
+                    }
+                ],
+                [],
+            )
+
+    # Pre-merge 2-line split colon headers: "Başkan" + ": Oturumu açıyorum."
+    merged_lines: list[str] = []
+    i = 0
+    while i < len(lines):
+        cur = lines[i].strip()
+        if i + 1 < len(lines) and cur and len(cur) <= 35 and not cur.endswith((":", ".", ";", "?", "!")):
+            nxt = lines[i + 1].strip()
+            if nxt.startswith(":"):
+                merged_lines.append(cur + nxt)
+                i += 2
+                continue
+        merged_lines.append(lines[i])
+        i += 1
+
+    # Detect session chair from "Hazır bulunanlar: İbrahim Orhan, Başkan" / "Meclis Başkanı, Dr. Orhan Müderrisoğlu"
+    current_chair: str | None = None
+    seen_chairs: list[str] = []
+    for line in merged_lines[:45]:
+        m_hz = re.search(
+            r"Hazır\s+(?:bulunanlar|olanlar)\s*[:]\s*([A-ZÇĞİÖŞÜ][a-zçğıöşü.\s]+?)\s*,\s*(?:Başkan|Reis(?:\s+vekili)?)",
+            line,
+            re.I,
+        )
+        if m_hz:
+            ch = clean_person_name(m_hz.group(1))
+            if ch and len(ch.split()) >= 2:
+                current_chair = ch
+                if ch not in seen_chairs:
+                    seen_chairs.append(ch)
+                break
+
+    turns: list[dict] = []
+    cur_turn: dict | None = None
+    cur_body: list[str] = []
+
+    def flush():
+        nonlocal cur_turn, cur_body
+        if cur_turn is not None:
+            body_text = clean_speech_body(cur_body, is_pdf=True)
+            if body_text:
+                cur_turn["text"] = body_text
+                cur_turn["char_count"] = len(body_text)
+                cur_turn["word_count"] = len(body_text.split())
+                turns.append(cur_turn)
+        cur_turn = None
+        cur_body = []
+
+    for line in merged_lines:
+        s = line.strip()
+        if not s:
+            continue
+        # Match "<Label> : [-–—^]? <optional speech rest>"
+        m = re.match(r"^([A-ZÇĞİÖŞÜü][A-ZÇĞİÖŞÜa-zçğıöşüâîûÂÎÛ.\s]{1,46}?)\s*:\s*[-–—^]?\s*(.*)$", s)
+        if m:
+            label_raw = m.group(1).strip()
+            rest = m.group(2).strip()
+            norm = _normalize_historic_name(label_raw, current_chair)
+            if norm is not None:
+                spk_name, spk_role, spk_title = norm
+                if spk_role == "baskan" and spk_name not in ("Meclis Başkanı", "Meclis Reisi", "Reis Vekili"):
+                    current_chair = spk_name
+                    if spk_name not in seen_chairs:
+                        seen_chairs.append(spk_name)
+                flush()
+                cur_turn = {
+                    "doc_id": doc["local_rel_path"],
+                    "meclis": doc["meclis"],
+                    "donem": doc["donem"],
+                    "yasama_yili": doc["yasama_yili"],
+                    "birlesim": birlesim,
+                    "oturum": 1,
+                    "tarih": tarih,
+                    "speaker_raw": label_raw,
+                    "speaker_name": spk_name,
+                    "speaker_role": spk_role,
+                    "speaker_title": spk_title,
+                    "constituency": None,
+                    "modifiers": None,
+                    "text_source": doc.get("text_source"),
+                    "source_file": doc["local_rel_path"],
+                    "source_url": doc.get("download_url"),
+                }
+                if rest:
+                    cur_body.append(rest)
+                continue
+
+        if cur_turn is not None:
+            cur_body.append(s)
+
+    flush()
+    return turns, seen_chairs
 
 
 def parse_file_worker(path_str: str) -> tuple[dict, list[dict]]:
