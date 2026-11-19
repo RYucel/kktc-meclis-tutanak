@@ -24,14 +24,12 @@ Kuzey Kıbrıs Türk Cumhuriyeti (KKTC) Cumhuriyet Meclisi ve öncül meclisleri
 7. `python src/upload_hf.py --repo-id <kullanici>/KKTC_Meclis_Tutanak`
    Üretilen veri setini (ve istenirse ham arşivi) doğrudan Hugging Face Hub'a yükler.
 
-## Otomatik Güncelleme (GitHub Actions)
+## Otomatik Güncelleme (Windows Görev Zamanlayıcı)
 
-[`.github/workflows/sync_kktc.yml`](.github/workflows/sync_kktc.yml) her Pazartesi `04:00 UTC` (KKTC saatiyle `07:00`) ve isteğe bağlı manuel tetiklemeyle [`src/sync_incremental.py`](src/sync_incremental.py) betiğini çalıştırır:
+[`scripts/run_sync.ps1`](scripts/run_sync.ps1), [`src/sync_incremental.py`](src/sync_incremental.py) betiğini haftada bir (Pazartesi 10:00, bilgisayar kapalıysa açıldığı ilk anda otomatik telafi edecek şekilde `StartWhenAvailable` ile) çalıştırır:
 1. `evrakcm.gov.ct.tr`'yi tarar ve Hugging Face'teki mevcut `documents.parquet` listesiyle (~50 KB HTTP range isteğiyle) karşılaştırır.
-2. Yeni tutanak yoksa ~10 saniyede çıkar.
+2. Yeni tutanak yoksa ~9 saniyede çıkar.
 3. Yeni tutanak varsa yalnızca yenileri indirip işler, Parquet dosyalarını yeniden sıralayıp hem Hugging Face Dataset'e hem Static Space (`speakers_index.json`) deposuna yükler.
-
-Kurulum için GitHub depo ayarlarında **Settings -> Secrets and variables -> Actions -> `HF_TOKEN`** olarak yazma yetkili (`Write`) Hugging Face token'ınızı eklemeniz yeterlidir.
 
 ## Hızlı Arama Örnekleri
 
