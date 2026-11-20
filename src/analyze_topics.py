@@ -373,7 +373,7 @@ UNIFIED_CONCEPTS = [
     ("orman / yangın", ["orman", "yangin"], "orman alanları ve orman yangınları"),
     ("BRT / BRTK", ["brtk", "bayrak radyo"], "BRT, BRTK, Bayrak Radyo Televizyon Kurumu"),
     ("basın / medya", ["basin", "gazeteci"], "basın özgürlüğü, gazeteciler ve medya"),
-    ("fiber / telekomünikasyon", ["fiber", "telekomünikasyon", "telefon dairesi", "internet"], "fiber optik, Telefon Dairesi, telekomünikasyon"),
+    ("telekomünikasyon / fiber", ["fiber", "telekomünikasyon", "telefon dairesi", "internet"], "Telefon Dairesi, telekomünikasyon, internet, fiber optik"),
     ("Vakıflar / Evkaf", ["vakiflar", "evkaf"], "Vakıflar İdaresi ve Evkaf malları"),
     ("mücahit", ["mücahit"], "mücahitler, mücahit tazminat ve hakları"),
     ("cemaat meclisi / cemaat", ["cemaat"], "Türk Cemaat Meclisi ve cemaat işleri"),
@@ -539,6 +539,111 @@ def build_topics_index(con: duckdb.DuckDBPyConnection, sp_path: str) -> dict:
     }
 
 
+_GENERIC_SPEAKERS = {
+    "Meclis Başkanı", "Katip", "Geçici Başkan", "Geçici Katip",
+    "Sesler", "Başkan", "Başkan Yardımcısı", "Başkan Vekili",
+    "Milletvekilleri", "Sıralardan", "Salondan", "Meclis Reisi",
+}
+
+
+def build_speaker_topics(con: duckdb.DuckDBPyConnection, sp_path: str) -> dict:
+    """Compute per-speaker topic & distinctive concept profiles using ONLY substantive
+    `speaker_role = 'milletvekili_bakan'` turns (excluding procedural Chair/Clerk turns
+    so Speakers of Parliament aren't falsely attributed agenda-reading text).
+    """
+    t0 = time.perf_counter()
+
+    topic_rx_list = [build_re2_pattern(tp["patterns"]) for tp in CURATED_TOPICS]
+    concept_rx_list = [build_re2_pattern(pats) for _, pats, _ in UNIFIED_CONCEPTS]
+
+    agg_cols = [
+        "COUNT(*) AS total_turns",
+        "COUNT(*) FILTER (WHERE speaker_role = 'milletvekili_bakan') AS mp_turns",
+        "COUNT(*) FILTER (WHERE speaker_role != 'milletvekili_bakan') AS chair_turns",
+    ]
+    for i, rx in enumerate(topic_rx_list):
+        agg_cols.append(
+            f"COUNT(*) FILTER (WHERE speaker_role = 'milletvekili_bakan' AND regexp_matches(nt, {_sql_quote(rx)})) AS tp_{i}"
+        )
+    for j, rx in enumerate(concept_rx_list):
+        agg_cols.append(
+            f"COUNT(*) FILTER (WHERE speaker_role = 'milletvekili_bakan' AND regexp_matches(nt, {_sql_quote(rx)})) AS cp_{j}"
+        )
+
+    sql = f"""
+        WITH norm AS (
+            SELECT speaker_name, speaker_role, replace(lower(text), 'ı', 'i') AS nt
+            FROM read_parquet('{sp_path}')
+            WHERE text IS NOT NULL AND length(text) > 0 AND speaker_name IS NOT NULL
+        )
+        SELECT speaker_name, {', '.join(agg_cols)}
+        FROM norm
+        GROUP BY 1
+        HAVING COUNT(*) FILTER (WHERE speaker_role = 'milletvekili_bakan') >= 5
+    """
+    rows = con.execute(sql).fetchall()
+
+    n_topics = len(CURATED_TOPICS)
+    n_concepts = len(UNIFIED_CONCEPTS)
+
+    # First compute global MP-only baseline rates for fair lift comparison
+    total_mp_all = 0
+    global_cp_mp = Counter()
+    parsed_rows = []
+    for row in rows:
+        nm = row[0]
+        if nm in _GENERIC_SPEAKERS:
+            continue
+        tot_t, mp_t, ch_t = int(row[1]), int(row[2]), int(row[3])
+        tp_vals = [int(row[4 + i]) for i in range(n_topics)]
+        cp_vals = [int(row[4 + n_topics + j]) for j in range(n_concepts)]
+        total_mp_all += mp_t
+        for j, c in enumerate(cp_vals):
+            if c > 0:
+                global_cp_mp[j] += c
+        parsed_rows.append((nm, mp_t, ch_t, tp_vals, cp_vals))
+
+    speakers_map = {}
+    for nm, mp_t, ch_t, tp_vals, cp_vals in parsed_rows:
+        # Top 8 topics by count
+        top_t = sorted(
+            ((i, c) for i, c in enumerate(tp_vals) if c > 0),
+            key=lambda x: -x[1],
+        )[:8]
+
+        # Distinctive concepts vs Parliament MP baseline (smoothed lift)
+        min_c = 2 if mp_t < 60 else (4 if mp_t < 300 else max(6, int(mp_t * 0.008)))
+        dist_c = []
+        for j, c in enumerate(cp_vals):
+            if c < min_c:
+                continue
+            lift = ((c + 2.0) / (mp_t + 80.0)) / ((global_cp_mp[j] + 20.0) / (total_mp_all + 2000.0))
+            if lift >= 1.45:
+                dist_c.append((j, c, round(lift, 2)))
+        dist_c.sort(key=lambda x: (-x[2], -x[1]))
+
+        if not top_t and not dist_c:
+            continue
+        entry = {
+            "m": mp_t,
+            "x": ch_t,
+            "t": [[i, c] for i, c in top_t],
+        }
+        if dist_c:
+            entry["d"] = [[j, c, l] for j, c, l in dist_c[:6]]
+        speakers_map[nm] = entry
+
+    print(
+        f"   Built per-speaker topic profiles for {len(speakers_map):,} speakers "
+        f"(baseline {total_mp_all:,} MP/Minister turns) in {time.perf_counter()-t0:.1f}s"
+    )
+    return {
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "topic_ids": [tp["id"] for tp in CURATED_TOPICS],
+        "speakers": speakers_map,
+    }
+
+
 def main():
     sp_path = (HF_DATA / "speeches.parquet").as_posix()
     con = duckdb.connect(":memory:")
@@ -552,15 +657,29 @@ def main():
         f"{len(payload['terms'])} terms)"
     )
 
+    spk_payload = build_speaker_topics(con, sp_path)
+    spk_out = STATIC_SPACE / "speaker_topics.json"
+    spk_out.write_text(json.dumps(spk_payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    print(f"Wrote {spk_out} ({spk_out.stat().st_size / 1024:.1f} KB, {len(spk_payload['speakers'])} speakers)")
+
     c_by_id = {c["id"]: c["label"] for c in payload["concepts"]}
-    print("\n=== Word-Bounded Distinctive Keywords Audit by Era ===")
-    for t in payload["terms"]:
-        if t["id"] in ("KKTC:10", "KKTC:9", "KKTC:6", "KKTC:4", "KKTC:1", "KTFD:1", "KTY:2", "KC"):
-            top5 = [f"{c_by_id[x['id']]}({x['c']})" for x in t["top_concepts"][:5]]
-            dist5 = [f"{c_by_id[x['id']]}({x['c']}, {x['l']}x)" for x in t["distinctive"][:6]]
-            print(f"  {t['id']:8s} ({t['years']:9s}):")
-            print(f"    Top:  {', '.join(top5)}")
-            print(f"    Özgü: {', '.join(dist5)}")
+    t_by_idx = {i: tp["label"] for i, tp in enumerate(CURATED_TOPICS)}
+
+    print("\n=== Per-Speaker Topic Profile Sanity Audit (10 Notable Politicians) ===")
+    for nm in [
+        "Filiz Besim", "Ali Pilli", "Hüseyin Çavuş", "Doğuş Derya",
+        "Tufan Erhürman", "Ersin Tatar", "Derviş Eroğlu", "Özker Özgür",
+        "Sibel Siber", "Erol Kazım Andaç",
+    ]:
+        prof = spk_payload["speakers"].get(nm)
+        if not prof:
+            print(f"  {nm}: NOT FOUND")
+            continue
+        top4 = [f"{t_by_idx[i]}({c})" for i, c in prof["t"][:4]]
+        dist4 = [f"{c_by_id[j]}({c}, {l}x)" for j, c, l in prof.get("d", [])[:4]]
+        print(f"  {nm} [mp={prof['m']:,}, excluded_chair/clerk={prof['x']:,}]:")
+        print(f"    Top konular: {', '.join(top4)}")
+        print(f"    Öne çıkan:   {', '.join(dist4)}")
 
 
 if __name__ == "__main__":

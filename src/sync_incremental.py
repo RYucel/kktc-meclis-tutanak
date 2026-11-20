@@ -33,7 +33,7 @@ SRC_DIR = Path(__file__).resolve().parent
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from analyze_topics import build_topics_index
+from analyze_topics import build_speaker_topics, build_topics_index
 from crawl_manifest import ROOT_REL, crawl_subtree, list_folder_all_pages
 from extract_text import clean_word_text, detect_magic, extract_docx, extract_pdf
 from ole_doc_fallback import extract_ole_doc_text
@@ -627,6 +627,10 @@ def main():
         topics_payload = build_topics_index(con, merged_sp.as_posix())
         topics_out.write_text(json.dumps(topics_payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
+        spk_topics_out = tmp / "speaker_topics.json"
+        spk_topics_payload = build_speaker_topics(con, merged_sp.as_posix())
+        spk_topics_out.write_text(json.dumps(spk_topics_payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
         # Refresh only the affected per-term Parquet shards so term/topic queries stay instant
         touched_terms = {(d["meclis"], d["donem"]) for d in new_docs}
         export_term_shards(con, merged_sp.as_posix(), out_hf / "terms_cache", only_terms=touched_terms)
@@ -673,6 +677,13 @@ def main():
         api.upload_file(
             path_or_fileobj=str(topics_out),
             path_in_repo="topics_index.json",
+            repo_id=args.space_repo,
+            repo_type="space",
+            commit_message=msg,
+        )
+        api.upload_file(
+            path_or_fileobj=str(spk_topics_out),
+            path_in_repo="speaker_topics.json",
             repo_id=args.space_repo,
             repo_type="space",
             commit_message=msg,

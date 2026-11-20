@@ -463,13 +463,21 @@ def main():
         f"{len(terms_payload['terms'])} terms, {total_term_members} term-member entries)"
     )
 
-    from analyze_topics import build_topics_index
+    from analyze_topics import build_speaker_topics, build_topics_index
     topics_payload = build_topics_index(con, sp_in)
     out_topics = STATIC_SPACE / "topics_index.json"
     out_topics.write_text(json.dumps(topics_payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     print(
         f"   Wrote {out_topics} ({out_topics.stat().st_size / 1024:.1f} KB, "
         f"{len(topics_payload['topics'])} topics, {len(topics_payload['concepts'])} concepts)"
+    )
+
+    spk_topics_payload = build_speaker_topics(con, sp_in)
+    out_spk_topics = STATIC_SPACE / "speaker_topics.json"
+    out_spk_topics.write_text(json.dumps(spk_topics_payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    print(
+        f"   Wrote {out_spk_topics} ({out_spk_topics.stat().st_size / 1024:.1f} KB, "
+        f"{len(spk_topics_payload['speakers'])} speakers)"
     )
 
     print("4. Exporting per-term Parquet shards to data/hf_dataset/terms_cache/ for fast term/topic queries...")

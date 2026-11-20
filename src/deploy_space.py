@@ -18,6 +18,7 @@ def main():
     space_dir = Path("space_static")
     assert (space_dir / "index.html").exists() and (space_dir / "speakers_index.json").exists()
     assert (space_dir / "terms_index.json").exists() and (space_dir / "topics_index.json").exists()
+    assert (space_dir / "speaker_topics.json").exists()
 
     api.create_repo(
         repo_id=args.repo_id,
