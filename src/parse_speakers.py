@@ -424,8 +424,14 @@ def split_speaker_candidate(line: str) -> tuple[str, str, str] | None:
     if not label:
         return None
 
-    # Validate label outside parentheses
+    # Validate label outside parentheses (including unclosed OCR modifier tails like "(Yerinden")
     core = re.sub(r"\([^)]*\)", " ", label)
+    core = re.sub(
+        r"[\(\{\[]\s*(?:yerinden|yerinde|yeripden|devamla|devam|demmla|kürsüden|kursuden|tekrar)[^\n]*$",
+        " ",
+        core,
+        flags=re.I,
+    )
     core = collapse_spaced_letters(core)
     core = re.sub(r"\s+", " ", core).strip(" .,;:")
     if not core or len(core) < 3 or len(core) > 135:
@@ -492,6 +498,23 @@ def parse_speaker_label(
                 modifiers.append(tr_title(p.strip()))
 
     core = re.sub(r"\([^)]*\)", " ", label_raw)
+    # Strip OCR-damaged unclosed/mismatched modifier tails like "(Yerinden", "{Yerinden)", ")yerinden)", "Devamla)", "Demmla)"
+    m_broken_mod = re.search(
+        r"(?:[\(\{\[\)\}\]]\s*(?:yerinden|yerinde|yeripden|devamla|devam|demmla|kürsüden|kursuden|tekrar|yar\b)[^\n]*|\s+(?:yerinden|devamla|demmla)\s*[\)\}\]])$",
+        core,
+        re.I,
+    )
+    if m_broken_mod:
+        bmod_txt = tr_lower(m_broken_mod.group(0))
+        if "yerin" in bmod_txt and "Yerinden" not in modifiers:
+            modifiers.append("Yerinden")
+        elif ("devam" in bmod_txt or "demm" in bmod_txt) and "Devamla" not in modifiers:
+            modifiers.append("Devamla")
+        core = core[: m_broken_mod.start()]
+    # Strip any remaining unclosed trailing bracket fragment like "(Gazi", "''Girne}", "Girne)"
+    core = re.sub(r"[\(\{\[]\s*[A-ZÇĞİÖŞÜa-zçğıöşü\s/]{0,20}$", " ", core)
+    core = re.sub(r"['’\"]+\s*(?:Lefkoşa|Gazimağusa|Mağusa|Girne|Güzelyurt|İskele|Lefke)\s*[\)\}\]]?$", " ", core, flags=re.I)
+    core = re.sub(r"\s+(?:Lefkoşa|Gazimağusa|Mağusa|Girne|Güzelyurt|İskele|Lefke)\s*[\)\}\]]$", " ", core, flags=re.I)
     core = collapse_spaced_letters(core)
     # Fix stray tab inside names (e.g. "HASAN K\tÜÇÜK" -> "HASAN KÜÇÜK" if single letter + tab + word)
     core = re.sub(r"\b([A-ZÇĞİÖŞÜ])\t([A-ZÇĞİÖŞÜ]{2,})\b", r"\1\2", core)
@@ -562,15 +585,34 @@ def parse_speaker_label(
             name_part = resolved if resolved else speaker_title
 
     speaker_name = tr_title(name_part)
-    # Strip academic/professional prefixes (Dr., Prof. Dr., Dt., Av., Sayın, OCR Dri/Ör/£>R) into clean canonical form
+    # Strip academic/professional prefixes (Dr., Prof. Dr., Dt., Av., Sayın, OCR Dri/Ör/£>R/Ut./Bt./Ot./Hr.) into clean canonical form
     speaker_name = ACADEMIC_TIGHT_RE.sub("", speaker_name).strip(" .,;:'’\"")
     speaker_name = re.sub(r"^(?:(?:Prof|Doç|Dr|Dt|Dri|Ör|D\s*R|Av|Müh|Uzm|Sayın|Sn)[.,/#•]*\s+)+", "", speaker_name, flags=re.I).strip(" .,;:'’\"")
+    # Strip OCR-damaged "En Yaşlı Üye " / "Heclis Başkanı " / dotted OCR "Ut./Bt./Ot./Hr." prefixes when >= 2 name words follow
+    speaker_name = re.sub(r"^(?:En\s+Yaşlı\s+Üye|Heclis\s+Başkanı)\s+", "", speaker_name, flags=re.I).strip()
+    if len(speaker_name.split()) >= 3:
+        speaker_name = re.sub(r"^(?:Ut|Bt|Ot|Hr)\.\s+", "", speaker_name, flags=re.I).strip()
     # Remove trailing ", Yok" from roll-call lines mistakenly parsed as names
     speaker_name = re.sub(r",\s*Yok$", "", speaker_name, flags=re.I).strip()
     # Fix missing space after middle initial dot like "Ferdi S.soyer" -> "Ferdi S. Soyer"
     speaker_name = re.sub(r"\b([A-ZÇĞİÖŞÜ])\.([A-ZÇĞİÖŞÜa-zçğıöşü]{2,})", lambda m: f"{m.group(1)}. {tr_title(m.group(2))}", speaker_name)
     # Fix space before middle initial dot like "Naci T . Usar" -> "Naci T. Usar"
     speaker_name = re.sub(r"\b([A-ZÇĞİÖŞÜ])\s+\.\s*", r"\1. ", speaker_name)
+    # Collapse doubled names (e.g. "Sonay Adem Sonay Adem" -> "Sonay Adem", "Ferdi Soyer Soyer" -> "Ferdi Soyer")
+    sn_words = speaker_name.split()
+    if len(sn_words) >= 4 and len(sn_words) % 2 == 0:
+        half = len(sn_words) // 2
+        if [tr_lower(w) for w in sn_words[:half]] == [tr_lower(w) for w in sn_words[half:]]:
+            sn_words = sn_words[:half]
+            speaker_name = " ".join(sn_words)
+    if len(sn_words) >= 3 and tr_lower(sn_words[-1]) == tr_lower(sn_words[-2]):
+        sn_words = sn_words[:-1]
+        speaker_name = " ".join(sn_words)
+    # Strip unparenthesized trailing constituency word on 3+ word names (e.g. "Biray Hamzaoğulları İskele")
+    if len(sn_words) >= 3 and tr_lower(sn_words[-1]) in CONSTITUENCY_CANON:
+        if not constituency:
+            constituency = CONSTITUENCY_CANON[tr_lower(sn_words[-1])]
+        speaker_name = " ".join(sn_words[:-1])
     # Strip single stray leading OCR letter like "V Mehmet Bayram" -> "Mehmet Bayram"
     if re.match(r"^[A-ZÇĞİÖŞÜ]\s+[A-ZÇĞİÖŞÜ][a-zçğıöşü]{2,}\s+[A-ZÇĞİÖŞÜ][a-zçğıöşü]{2,}", speaker_name):
         if speaker_name[0] not in ("M", "A", "H", "R", "S", "İ", "O", "K", "T", "E", "N", "F", "C", "B", "D"):

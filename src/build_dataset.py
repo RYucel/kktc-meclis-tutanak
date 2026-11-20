@@ -168,22 +168,160 @@ def canonicalize_speakers(speeches: list[dict]) -> dict:
             )
         folded_to_canon[fk] = max(pool, key=score_variant)
 
-    # Upgrade middle-initial canonicals (e.g. "Ferdi S. Soyer" -> "Ferdi Sabit Soyer")
-    # when an unambiguous full 3-word canonical exists with same first, last, and middle initial.
-    full3_by_init: dict[tuple[str, str, str], list[str]] = defaultdict(list)
-    for fk, canon_nm in folded_to_canon.items():
-        parts = fk.split()
-        if len(parts) == 3 and len(parts[1]) >= 2:
-            full3_by_init[(parts[0], parts[1][0], parts[2])].append(canon_nm)
+    # Track counts & periods per folded key for canonical roster self-deduplication
+    fk_counts: Counter = Counter()
+    fk_periods: dict[str, set] = defaultdict(set)
+    for nm, cnt in all_counts.items():
+        fk = fold_ascii(nm)
+        if fk in folded_to_canon:
+            fk_counts[fk] += cnt
+    for pkey, cnts in period_counts.items():
+        for nm, c in cnts.items():
+            fk = fold_ascii(nm)
+            if fk in folded_to_canon:
+                fk_periods[fk].add(pkey)
 
+    roster_dedup_merges: dict[str, list[str]] = defaultdict(list)
+
+    def _remap_target(old_canon: str, new_canon: str, reason: str):
+        if old_canon == new_canon:
+            return
+        for k, v in list(folded_to_canon.items()):
+            if v == old_canon:
+                folded_to_canon[k] = new_canon
+        roster_dedup_merges[new_canon].append(f"{old_canon} [{reason}]")
+
+    # 2.1 Spaceless exact consolidation inside canonical roster
+    # (e.g. "Ayhan Hal İt Acarkan" -> "Ayhan Halit Acarkan", "Ferdisabitsoyer" -> "Ferdi Sabit Soyer")
+    by_nospace: dict[str, list[str]] = defaultdict(list)
+    for fk in folded_to_canon:
+        ns = fk.replace(" ", "")
+        if len(ns) >= 8:
+            by_nospace[ns].append(fk)
+    for ns, fks in by_nospace.items():
+        if len(fks) < 2:
+            continue
+        winner = max(
+            fks,
+            key=lambda k: (
+                1 if 2 <= len(k.split()) <= 3 else 0,
+                fk_counts[k],
+            ),
+        )
+        win_canon = folded_to_canon[winner]
+        for k in fks:
+            if k != winner:
+                _remap_target(folded_to_canon[k], win_canon, "spaceless")
+
+    # 2.2 Turkish dative/ablative suffix consolidation (chair handoffs without apostrophe)
+    # (e.g. "Ahmet Savaşana" -> "Ahmet Savaşan", "Sunat Atuna" -> "Sunat Atun", "Vehbi Zeki Sertere" -> "Vehbi Zeki Serter")
+    for fk in sorted(folded_to_canon.keys(), key=lambda k: fk_counts[k]):
+        for sfx in ("dan", "den", "tan", "ten", "ya", "ye", "a", "e"):
+            if fk.endswith(sfx) and len(fk) - len(sfx) >= 6:
+                base = fk[: -len(sfx)]
+                if base in folded_to_canon and folded_to_canon[base] != folded_to_canon[fk]:
+                    if fk_counts[base] >= fk_counts[fk] * 3 and (fk_periods[fk] & fk_periods[base]):
+                        _remap_target(folded_to_canon[fk], folded_to_canon[base], "suffix")
+                        break
+
+    # 2.3 Same-period high-confidence OCR typo consolidation inside canonical roster
+    # (e.g. "Vehbi Zekir Serter" -> "Vehbi Zeki Serter", "Hüseyin Avkran Alanlı" -> "Hüseyin Avkıran Alanlı")
+    canon_to_fk_agg: dict[str, str] = {}
+    canon_total_cnt: Counter = Counter()
+    canon_p_agg: dict[str, set] = defaultdict(set)
+    for fk, cnm in folded_to_canon.items():
+        canon_total_cnt[cnm] += fk_counts[fk]
+        canon_p_agg[cnm].update(fk_periods[fk])
+        if cnm not in canon_to_fk_agg or fk_counts[fk] > fk_counts[canon_to_fk_agg[cnm]]:
+            canon_to_fk_agg[cnm] = fk
+
+    survivors: list[tuple[str, str]] = []  # (rep_fk, canon_nm)
+    for cnm, cnt in canon_total_cnt.most_common():
+        rep_fk = canon_to_fk_agg[cnm]
+        rep_words = rep_fk.split()
+        merged_to = None
+        for s_fk, s_cnm in survivors:
+            if cnt >= canon_total_cnt[s_cnm] * 0.15:
+                continue
+            if not (canon_p_agg[cnm] & canon_p_agg[s_cnm]):
+                continue
+            s_words = s_fk.split()
+            if len(rep_words) != len(s_words) or abs(len(rep_fk) - len(s_fk)) > 2:
+                continue
+            if rep_fk[0] != s_fk[0]:
+                continue
+            if SequenceMatcher(None, rep_fk, s_fk).ratio() >= 0.89:
+                merged_to = s_cnm
+                break
+        if merged_to:
+            _remap_target(cnm, merged_to, "roster_ocr")
+            canon_total_cnt[merged_to] += cnt
+            canon_p_agg[merged_to].update(canon_p_agg[cnm])
+        else:
+            survivors.append((rep_fk, cnm))
+
+    # 2.4 Upgrade middle-initial canonicals (e.g. "Ferdi S. Soyer" -> "Ferdi Sabit Soyer",
+    # "Vehbi Z. Serter" -> "Vehbi Zeki Serter", "Naci Ti Usar" -> "Naci Talat Usar")
+    full3_by_init: dict[tuple[str, str, str], set[str]] = defaultdict(set)
+    for fk, canon_nm in folded_to_canon.items():
+        c_parts = fold_ascii(canon_nm).split()
+        if len(c_parts) == 3 and len(c_parts[1]) >= 2 and c_parts[1] not in ("ro", "yo", "ti", "to"):
+            full3_by_init[(c_parts[0], c_parts[1][0], c_parts[2])].add(canon_nm)
+
+    _OCR_INIT_NOISE = {"ro", "yo", "ti", "to", "so", "zo", "no", "mo", "ko", "ho", "bo", "co", "do", "fo", "go", "lo", "po"}
     for fk in list(folded_to_canon.keys()):
         parts = fk.split()
-        if len(parts) == 3 and len(parts[1]) == 1:
-            matches = full3_by_init.get((parts[0], parts[1], parts[2]), [])
+        if len(parts) == 3 and (len(parts[1]) == 1 or parts[1] in _OCR_INIT_NOISE):
+            matches = full3_by_init.get((parts[0], parts[1][0], parts[2]), set())
             if len(matches) == 1:
-                folded_to_canon[fk] = matches[0]
+                target = next(iter(matches))
+                _remap_target(folded_to_canon[fk], target, "middle_initial")
+
+    # 2.5 Unambiguous same-period 2-word <-> 3-word subset consolidation
+    # Keeps first name intact: (A==X and B==Z) OR (A==X and B==Y), NEVER drops first name (protects father/son like Rauf Raif Denktaş vs Raif Denktaş)
+    canon_total_2: Counter = Counter()
+    canon_p_2: dict[str, set] = defaultdict(set)
+    for fk, cnm in folded_to_canon.items():
+        canon_total_2[cnm] += fk_counts[fk]
+        canon_p_2[cnm].update(fk_periods[fk])
+
+    surv_2 = [c for c in canon_total_2 if len(fold_ascii(c).split()) == 2]
+    surv_3 = [c for c in canon_total_2 if len(fold_ascii(c).split()) == 3]
+    surv_3_parts = {c: fold_ascii(c).split() for c in surv_3}
+
+    for c2 in surv_2:
+        a, b = fold_ascii(c2).split()
+        if len(a) < 3 or len(b) < 3:
+            continue
+        p2 = canon_p_2[c2]
+        cands = []
+        for c3 in surv_3:
+            if not (p2 & canon_p_2[c3]):
+                continue
+            x, y, z = surv_3_parts[c3]
+            if (a == x and b == z) or (a == x and b == y):
+                cands.append(c3)
+        if len(cands) == 1:
+            c3 = cands[0]
+            x, y, z = surv_3_parts[c3]
+            tot = canon_total_2[c2] + canon_total_2[c3]
+            # Prefer full 3-word legal name when middle token isn't a bare initial and 3-word form has solid support
+            if len(y) >= 2 and canon_total_2[c3] >= 30 and canon_total_2[c3] >= tot * 0.15:
+                winner, loser = c3, c2
+            elif canon_total_2[c3] > canon_total_2[c2]:
+                winner, loser = c3, c2
+            else:
+                winner, loser = c2, c3
+            _remap_target(loser, winner, "subset_2_3")
 
     canon_set = set(folded_to_canon.values())
+
+    # Refresh full3_by_init with final canonicals for runtime resolve_fuzzy()
+    full3_by_init_final: dict[tuple[str, str, str], list[str]] = defaultdict(list)
+    for canon_nm in canon_set:
+        parts = fold_ascii(canon_nm).split()
+        if len(parts) == 3 and len(parts[1]) >= 2:
+            full3_by_init_final[(parts[0], parts[1][0], parts[2])].append(canon_nm)
 
     # Spaceless exact map for OCR concatenated names (e.g. "Hüseyinangolemli" -> "Hüseyin Angolemli")
     spaceless_to_canon: dict[str, list[str]] = defaultdict(list)
@@ -237,8 +375,8 @@ def canonicalize_speakers(speeches: list[dict]) -> dict:
 
         words = fk.split()
         # 2a-bis. Middle-initial match against 3-word full canonical (e.g., "Vehbi Z. Serter" -> "Vehbi Zeki Serter")
-        if len(words) == 3 and len(words[1]) == 1:
-            m3 = full3_by_init.get((words[0], words[1], words[2]), [])
+        if len(words) == 3 and (len(words[1]) == 1 or words[1] in _OCR_INIT_NOISE):
+            m3 = full3_by_init_final.get((words[0], words[1][0], words[2]), [])
             if len(m3) == 1:
                 fuzzy_cache[ckey] = (m3[0], "middle_initial")
                 return m3[0], "middle_initial"
@@ -302,6 +440,7 @@ def canonicalize_speakers(speeches: list[dict]) -> dict:
         "canonical_roster_size": len(canon_set),
         "doc_surname_merges": doc_surname_merges,
         "method_counts": dict(method_counts),
+        "roster_dedup_merges": dict(sorted(roster_dedup_merges.items())),
         "sample_merges": {
             k: dict(v.most_common(10))
             for k, v in sorted(merge_examples.items(), key=lambda kv: -sum(kv[1].values()))[:80]

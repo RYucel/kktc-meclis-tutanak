@@ -221,6 +221,38 @@ def test_historic_1960_1970_colon_parser():
     assert t1[2]["speaker_name"] == "Ümit Süleyman"
 
 
+def test_broken_modifiers_doubled_names_and_ocr_prefixes():
+    _, turns = parse_document({
+        "local_rel_path": "Dönem 10 Yıl 2(d10y02)/b01.docx",
+        "filename": "b01.docx",
+        "meclis": "KKTC", "donem": 10, "yasama_yili": 2,
+        "text_source": "docx", "download_url": "https://example.test/b01.docx",
+        "text": "\n".join([
+            "1'inci Birleşim", "10 Ocak 2023",
+            "BİRİNCİ OTURUM",
+            "MEHMET BAYRAM (Yerinden - Bir saniye Sayın Başkan.",
+            "ŞERİFE ÜNVERDİ)YERİNDEN) - Katılıyorum efendim.",
+            "SONAY ADEM SONAY ADEM - Söz istiyorum.",
+            "FERDİ SOYER SOYER - Teşekkür ederim.",
+            "BİRAY HAMZAOĞULLARI İSKELE - İskele halkı adına konuşuyorum.",
+            "UT. SAİT GÜVEN - Oturumu yönetiyorum.",
+            "EN YAŞLI ÜYE AYTAÇ BEŞEŞLER - Birleşimi açıyorum.",
+        ]),
+    })
+    names = [t["speaker_name"] for t in turns]
+    assert names == [
+        "Mehmet Bayram",
+        "Şerife Ünverdi",
+        "Sonay Adem",
+        "Ferdi Soyer",
+        "Biray Hamzaoğulları",
+        "Sait Güven",
+        "Aytaç Beşeşler",
+    ], f"Unexpected parsed names: {names}"
+    assert turns[0]["modifiers"] == "Yerinden"
+    assert turns[4]["constituency"] == "İskele"
+
+
 if __name__ == "__main__":
     test_turkish_case()
     test_modern_docx_chair_handoff_and_turns()
@@ -228,4 +260,5 @@ if __name__ == "__main__":
     test_pdf_spaced_wrapped_mojibake_and_edge_cases()
     test_chair_prefix_and_2026_pdf_split_dash()
     test_historic_1960_1970_colon_parser()
+    test_broken_modifiers_doubled_names_and_ocr_prefixes()
     print("ALL UNIT TESTS PASSED!")

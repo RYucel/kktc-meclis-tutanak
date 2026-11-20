@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 .venv/
-data/
+data/*
+!data/official_rosters.json
 *.part
 *.tmp

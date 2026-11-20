@@ -1,0 +1,3385 @@
+{
+  "KKTC:1": {
+    "meclis": "KKTC",
+    "donem": 1,
+    "source": "https://tr.wikipedia.org/wiki/KKTC_Cumhuriyet_Meclisi_1._d%C3%B6nem_milletvekilleri_listesi",
+    "members": [
+      {
+        "name": "Kenan Atakol",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Salih Coşar",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Nazif Borman",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Enver Emin",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Günay Caymaz",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hakkı Atun",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Vehbi Zeki Serter",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Akar",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Altan Yavuz",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Yüksel Tüccaroğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Olgun Paşalar",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Özker Özgür",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ergün Vehbi",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Civa",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Kemal Emirzade",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Sarıca",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Feridun Önsav",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Erbilen",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Alpay Durduran",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Erdal Süreç",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "İbrahim Koreli",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Emin Uzun",
+        "constituency": "Lefkoşa",
+        "party": "YDP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Adaoğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Derviş Eroğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Bayram",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Curcioğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Karpaslı",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Taşkent Atasayan",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Eşber Serakıncı",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Onay Fadıl Demirciler",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Erbay Kanatlı",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Naci Talat Usar",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ferdi Sabit Soyer",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Sadık Aktan",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ergin Abdullah",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Angolemli",
+        "constituency": "Gazimağusa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Altınay",
+        "constituency": "Gazimağusa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "İsmail Bozkurt",
+        "constituency": "Gazimağusa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Çetin Veziroğlu",
+        "constituency": "Gazimağusa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Aytaç Beşeşler",
+        "constituency": "Gazimağusa",
+        "party": "YDP",
+        "note": ""
+      },
+      {
+        "name": "Kenan Akın",
+        "constituency": "Gazimağusa",
+        "party": "YDP",
+        "note": ""
+      },
+      {
+        "name": "Ömer Demir",
+        "constituency": "Gazimağusa",
+        "party": "YDP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Hacıahmetoğlu",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Tokay Varış",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Sait Güven",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Atay Cafer",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Fadıl Çağda",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Salih Usar",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ziya Rızkı",
+        "constituency": "Girne",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Rasıh Keskiner",
+        "constituency": "Girne",
+        "party": "TKP",
+        "note": ""
+      }
+    ]
+  },
+  "KKTC:2": {
+    "meclis": "KKTC",
+    "donem": 2,
+    "source": "https://tr.wikipedia.org/wiki/KKTC_Cumhuriyet_Meclisi_2._d%C3%B6nem_milletvekilleri_listesi",
+    "members": [
+      {
+        "name": "Emin Uzun",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Serdar Denktaş",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hakkı Atun",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Kenan Atakol",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Salih Coşar",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Günay Caymaz",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Nazif Borman",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Güner Göktuğ",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Vehbi Zeki Serter",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Süha Türköz",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Zaim Necatigil",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Erbilen",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Erkan Emekçi",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Yumuk",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Atay Ahmet Raşit",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Gülin Sayıner",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Akıncı",
+        "constituency": "Lefkoşa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Civa",
+        "constituency": "Lefkoşa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "Özker Özgür",
+        "constituency": "Lefkoşa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Sarıca",
+        "constituency": "Lefkoşa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "Ergün Vehbi",
+        "constituency": "Lefkoşa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "İbrahim Koreli",
+        "constituency": "Lefkoşa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "Feridun Önsav",
+        "constituency": "Lefkoşa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "Muharrem Söylemez",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Derviş Eroğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Bayram",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Adaoğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ertuğrul Hasipoğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Aytaç Beşeşler",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Curcioğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Eşber Serakıncı",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ömer Demir",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Karpaslı",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ruhsan Tuğyan",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Sevinç",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Taşkent Atasayan",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Naci Talat Usar",
+        "constituency": "Gazimağusa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Kaşif",
+        "constituency": "Gazimağusa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "Kenan Akın",
+        "constituency": "Gazimağusa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "İsmet Kotak",
+        "constituency": "Gazimağusa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Angolemli",
+        "constituency": "Gazimağusa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Altınay",
+        "constituency": "Gazimağusa",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "İlkay Kamil",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Salih Miroğlu",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Hacıahmetoğlu",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Şükrü Serdaroğlu",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ayhan Halit Acarkan",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ziya Rızkı",
+        "constituency": "Girne",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "Fadıl Çağda",
+        "constituency": "Girne",
+        "party": "DMP",
+        "note": ""
+      },
+      {
+        "name": "Salih Usar",
+        "constituency": "Girne",
+        "party": "DMP",
+        "note": ""
+      }
+    ]
+  },
+  "KKTC:3": {
+    "meclis": "KKTC",
+    "donem": 3,
+    "source": "https://tr.wikipedia.org/wiki/KKTC_Cumhuriyet_Meclisi_3._d%C3%B6nem_milletvekilleri_listesi",
+    "members": [
+      {
+        "name": "Salih Coşar",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Günay Caymaz",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Vehbi Zeki Serter",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Kenan Atakol",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Olgun Paşalar",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "İrsen Küçük",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Erdal Onurhan",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Serdar Denktaş",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Arabacıoğlu",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Hakkı Atun",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Taner Etkin",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Onur Borman",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Süha Türköz",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Özker Özgür",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Civa",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Derya",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Vasfi Candan",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Feridun Önsav",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Özkan Murat",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Akıncı",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "İbrahim Koreli",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Gülsen Bozkurt",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Derviş Eroğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Bayram",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ertuğrul Hasipoğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ruhsan Tuğyan",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Eşber Serakıncı",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Tansel Doratlı",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Derviş Çobanoğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Kaşif",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Adaoğlu",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Kenan Akın",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Gökmen",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "İsmail Başarır",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Aytaç Beşeşler",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Ferdi Sabit Soyer",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Sonay Adem",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Celal",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ergin Abdullah",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Angolemli",
+        "constituency": "Gazimağusa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Emin Karagil",
+        "constituency": "Gazimağusa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "İlkay Kamil",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Salih Miroğlu",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ünal Üstel",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ali Özkan Altınışık",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Ali Ertan Şükrü",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Ayhan Acarkan",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Salih Usar",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ömer Kalyoncu",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Hakan Ataker",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      }
+    ]
+  },
+  "KKTC:4": {
+    "meclis": "KKTC",
+    "donem": 4,
+    "source": "https://tr.wikipedia.org/wiki/KKTC_Cumhuriyet_Meclisi_4._d%C3%B6nem_milletvekilleri_listesi",
+    "members": [
+      {
+        "name": "İrsen Küçük",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Tahsin Ertuğruloğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Hasipoğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Vehbi Zeki Serter",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Taçoy",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Savaş Atakan",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Arabacıoğlu",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Serdar Denktaş",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Salih Coşar",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Özgürgün",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Akıncı",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Kemal Havalı",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Gülsen Bozkurt",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Ali Talat",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Kadri Fellahoğlu",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Derviş Eroğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Bayram",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ertuğrul Hasipoğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Tansel Doratlı",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Derviş Çobanoğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ersoy İnce",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Nurten Hüdaverdioğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Kaşif",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Hatice Faydalı",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Kenan Akın",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Angolemli",
+        "constituency": "Gazimağusa",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Ferdi Sabit Soyer",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Sonay Adem",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Salih Miroğlu",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "İlkay Kamil",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Şükrü Serdaroğlu",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Gülboy Beydağlı",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "İlker Nevzat",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ünal Üstel",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Yusuf Özkum",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Halil Sadrazam",
+        "constituency": "Girne",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Sümer Aygın",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Albayrak",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Süha Türköz",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Erdoğan Şanlıdağ",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Türkay Tokel",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Öztoprak",
+        "constituency": "Güzelyurt",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "İltaç Karayel",
+        "constituency": "Güzelyurt",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Tahsin Mertekçi",
+        "constituency": "Güzelyurt",
+        "party": "TKP",
+        "note": ""
+      },
+      {
+        "name": "Fatma Ekenoğlu",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Önder Sennaroğlu",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Yenigün",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Avkıran Alanlı",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Osman İmre",
+        "constituency": "İskele",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Elbasan",
+        "constituency": "İskele",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Emin Karagil",
+        "constituency": "İskele",
+        "party": "TKP",
+        "note": ""
+      }
+    ]
+  },
+  "KKTC:5": {
+    "meclis": "KKTC",
+    "donem": 5,
+    "source": "https://tr.wikipedia.org/wiki/KKTC_Cumhuriyet_Meclisi_5._d%C3%B6nem_milletvekilleri_listesi",
+    "members": [
+      {
+        "name": "Mehmet Ali Talat",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Gülle",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Kadri Fellahoğlu",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Barçın",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ali Seylani",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Özdil Nami",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Tahsin Ertuğruloğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Özgürgün",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "İrsen Küçük",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Taçoy",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Şerife Ünverdi",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Arabacıoğlu",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Serdar Denktaş",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Akıncı",
+        "constituency": "Lefkoşa",
+        "party": "BDH",
+        "note": ""
+      },
+      {
+        "name": "İzzet İzcan",
+        "constituency": "Lefkoşa",
+        "party": "BDH",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Çakıcı",
+        "constituency": "Lefkoşa",
+        "party": "BDH",
+        "note": ""
+      },
+      {
+        "name": "Ferdi Sabit Soyer",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Sonay Adem",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Okan Dağlı",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Arif Albayrak",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Nuri Çevikel",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Derviş Eroğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Bayram",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Erden Özaşkın",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Turgay Avcı",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "İsmail Arter",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Kaşif",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Hatice Faydalı",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Angolemli",
+        "constituency": "Gazimağusa",
+        "party": "BDH",
+        "note": ""
+      },
+      {
+        "name": "Salih İzbul",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ömer Kalyoncu",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Gülboy Beydağlı",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Bayram Karaman",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Salih Miroğlu",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ergün Serdaroğlu",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Bozer",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ünal Üstel",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Halil Sadrazam",
+        "constituency": "Girne",
+        "party": "BDH",
+        "note": ""
+      },
+      {
+        "name": "Fatma Ekenoğlu",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Çağlar",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Doğan Şahali",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Erdoğan Şanlıdağ",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Türkay Tokel",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Öztoprak",
+        "constituency": "Güzelyurt",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Tahsin Mertekçi",
+        "constituency": "Güzelyurt",
+        "party": "BDH",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Ceylanlı",
+        "constituency": "İskele",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Avkıran Alanlı",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Nazım Çavuşoğlu",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Kemal Yılmaz",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Gökmen",
+        "constituency": "İskele",
+        "party": "DP",
+        "note": ""
+      }
+    ]
+  },
+  "KKTC:6": {
+    "meclis": "KKTC",
+    "donem": 6,
+    "source": "https://tr.wikipedia.org/wiki/KKTC_Cumhuriyet_Meclisi_6._d%C3%B6nem_milletvekilleri_listesi",
+    "members": [
+      {
+        "name": "Mehmet Ali Talat",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Özdil Nami",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Gülle",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Barçın",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Kadri Fellahoğlu",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Yektaoğlu",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ali Seylani",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Alpay Afşaroğlu",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Özgürgün",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Tahsin Ertuğruloğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Şerife Ünverdi",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Taçoy",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "İrsen Küçük",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Arabacıoğlu",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Serdar Denktaş",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Akıncı",
+        "constituency": "Lefkoşa",
+        "party": "BDH",
+        "note": ""
+      },
+      {
+        "name": "Ferdi Sabit Soyer",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Okan Dağlı",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Sonay Adem",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Arif Albayrak",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Teberrüken Uluçay",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ali Gulle",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Derviş Eroğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Bayram",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Kaşif",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Turgay Avcı",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Erden Özaşkın",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ertuğrul Hasipoğlu",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Hatice Faydalı",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Salih İzbul",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ömer Kalyoncu",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Abbas Sınay",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Bayram Karaman",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Salih Miroğlu",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Bozer",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ergün Serdaroğlu",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Kayım",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Tancer",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Fatma Ekenoğlu",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ramadan Gilanlıoğlu",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Çağlar",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Nazım Beratlı",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Kemal Dürüst",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Türkay Tokel",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Erdoğan Şanlıdağ",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Ceylanlı",
+        "constituency": "İskele",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Önder Sennaroğlu",
+        "constituency": "İskele",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Avkıran Alanlı",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Nazım Çavuşoğlu",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Gökmen",
+        "constituency": "İskele",
+        "party": "DP",
+        "note": ""
+      }
+    ]
+  },
+  "KKTC:7": {
+    "meclis": "KKTC",
+    "donem": 7,
+    "source": "https://tr.wikipedia.org/wiki/KKTC_Cumhuriyet_Meclisi_7._d%C3%B6nem_milletvekilleri_listesi",
+    "members": [
+      {
+        "name": "Tahsin Ertuğruloğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Özgürgün",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Şerife Ünverdi",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ersin Tatar",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Taçoy",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Zorlu Töre",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ali Çetin Amcaoğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "İrsen Küçük",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Sibel Siber",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Özdil Nami",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Özkan Yorgancıoğlu",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Yektaoğlu",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Kadri Fellahoğlu",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Arabacıoğlu",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Serdar Denktaş",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Çakıcı",
+        "constituency": "Lefkoşa",
+        "party": "TDP",
+        "note": ""
+      },
+      {
+        "name": "Derviş Eroğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Kaşif",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hamza Ersan Saner",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Sunat Atun",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Afet Özcafer",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Eti",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ferdi Sabit Soyer",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Teberrüken Uluçay",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Sonay Adem",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Arif Albayrak",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ertuğrul Hasipoğlu",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Emiroğluları",
+        "constituency": "Gazimağusa",
+        "party": "TDP",
+        "note": ""
+      },
+      {
+        "name": "Turgay Avcı",
+        "constituency": "Gazimağusa",
+        "party": "ÖRP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Bozer",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "İlkay Kamil",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ünal Üstel",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ergün Serdaroğlu",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Necdet Numan",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Abbas Sınay",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ömer Kalyoncu",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Salih İzbul",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Tancer",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Kemal Dürüst",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Çaluda",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Mutlu Atasayan",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Türkay Tokel",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Fatma Ekenoğlu",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Çağlar",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Nazım Çavuşoğlu",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Zengin",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ali Rıza Usluer",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Önder Sennaroğlu",
+        "constituency": "İskele",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ejder Aslanbaba",
+        "constituency": "İskele",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Gökmen",
+        "constituency": "İskele",
+        "party": "ÖRP",
+        "note": ""
+      }
+    ]
+  },
+  "KKTC:8": {
+    "meclis": "KKTC",
+    "donem": 8,
+    "source": "https://tr.wikipedia.org/wiki/KKTC_Cumhuriyet_Meclisi_8._d%C3%B6nem_milletvekilleri_listesi",
+    "members": [
+      {
+        "name": "Sibel Siber",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Tufan Erhürman",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Özdil Nami",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Özkan Yorgancıoğlu",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Gülle",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Birikim Özgür",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Doğuş Derya",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Tahsin Ertuğruloğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Faiz Sucuoğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ersin Tatar",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Özgürgün",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Serdar Denktaş",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Mustafa Arabacıoğlu",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Taçoy",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Zorlu Töre",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Çakıcı",
+        "constituency": "Lefkoşa",
+        "party": "TDP",
+        "note": ""
+      },
+      {
+        "name": "Teberrüken Uluçay",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Asım Akansoy",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ferdi Sabit Soyer",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Erkut Şahali",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Arif Albayrak",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Sunat Atun",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hamza Ersan Saner",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Erdal Özcenk",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Dursun Oğuz",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Kaşif",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Fikri Ataoğlu",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Hakan Dinçyürek",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Angolemli",
+        "constituency": "Gazimağusa",
+        "party": "TDP",
+        "note": ""
+      },
+      {
+        "name": "Abbas Sınay",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Salih İzbul",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Fazilet Özdenefe",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ömer Kalyoncu",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ünal Üstel",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Kutlu Evren",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "İzlem Gürçağ Altuğra",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Özdemir Berova",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Ergün Serdaroğlu",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Zeki Çeler",
+        "constituency": "Girne",
+        "party": "TDP",
+        "note": ""
+      },
+      {
+        "name": "Armağan Candan",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mehmet Çağlar",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Erçal",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ali Pilli",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Kemal Dürüst",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Menteş Gündüz",
+        "constituency": "Güzelyurt",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Önder Sennaroğlu",
+        "constituency": "İskele",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Biray Hamzaoğlu",
+        "constituency": "İskele",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Nazım Çavuşoğlu",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Avkıran Alanlı",
+        "constituency": "İskele",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Hamit Bakırcı",
+        "constituency": "İskele",
+        "party": "DP",
+        "note": ""
+      }
+    ]
+  },
+  "KKTC:9": {
+    "meclis": "KKTC",
+    "donem": 9,
+    "source": "https://tr.wikipedia.org/wiki/KKTC_Cumhuriyet_Meclisi_9._d%C3%B6nem_milletvekilleri_listesi",
+    "members": [
+      {
+        "name": "Hüseyin Özgürgün",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ersin Tatar",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Faiz Sucuoğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Taçoy",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Olgun Amcaoğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Zorlu Töre",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Tufan Erhürman",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Özdil Nami",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Sıla Usar İncirli",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Doğuş Derya",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Kudret Özersay",
+        "constituency": "Lefkoşa",
+        "party": "HP",
+        "note": ""
+      },
+      {
+        "name": "Tolga Atakan",
+        "constituency": "Lefkoşa",
+        "party": "HP",
+        "note": ""
+      },
+      {
+        "name": "Gülşah Sanver Manavoğlu",
+        "constituency": "Lefkoşa",
+        "party": "HP",
+        "note": ""
+      },
+      {
+        "name": "Cemal Özyiğit",
+        "constituency": "Lefkoşa",
+        "party": "TDP",
+        "note": ""
+      },
+      {
+        "name": "Serdar Denktaş",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Bertan Zaroğlu",
+        "constituency": "Lefkoşa",
+        "party": "YDP",
+        "note": ""
+      },
+      {
+        "name": "Sunat Atun",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Dursun Oğuz",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Oğuzhan Hasipoğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hamza Ersan Saner",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Resmiye Eroğlu Canaltay",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Erkut Şahali",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Teberrüken Uluçay",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Asım Akansoy",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Topal",
+        "constituency": "Gazimağusa",
+        "party": "HP",
+        "note": ""
+      },
+      {
+        "name": "Ayşegül Baybars",
+        "constituency": "Gazimağusa",
+        "party": "HP",
+        "note": ""
+      },
+      {
+        "name": "Fikri Ataoğlu",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Angolemli",
+        "constituency": "Gazimağusa",
+        "party": "TDP",
+        "note": ""
+      },
+      {
+        "name": "Erhan Arıklı",
+        "constituency": "Gazimağusa",
+        "party": "YDP",
+        "note": ""
+      },
+      {
+        "name": "Kutlu Evren",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ünal Üstel",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "İzlem Gürçağ Altuğra",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Özdemir Berova",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Fazilet Özdenefe",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Fikri Toros",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Erek Çağatay",
+        "constituency": "Girne",
+        "party": "HP",
+        "note": ""
+      },
+      {
+        "name": "Jale Refik Rogers",
+        "constituency": "Girne",
+        "party": "HP",
+        "note": ""
+      },
+      {
+        "name": "Zeki Çeler",
+        "constituency": "Girne",
+        "party": "TDP",
+        "note": ""
+      },
+      {
+        "name": "Koral Çağman",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Nazım Çavuşoğlu",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Önder Sennaroğlu",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Yasemi Öztürk",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Biray Hamzaoğulları",
+        "constituency": "İskele",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Mesut Genç",
+        "constituency": "İskele",
+        "party": "HP",
+        "note": ""
+      },
+      {
+        "name": "Ali Pilli",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Menteş Gündüz",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Armağan Candan",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Büyükoğlu",
+        "constituency": "Güzelyurt",
+        "party": "HP",
+        "note": ""
+      },
+      {
+        "name": "Aytaç Çaluda",
+        "constituency": "Lefke",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Salahi Şahiner",
+        "constituency": "Lefke",
+        "party": "CTP",
+        "note": ""
+      }
+    ]
+  },
+  "KKTC:10": {
+    "meclis": "KKTC",
+    "donem": 10,
+    "source": "https://tr.wikipedia.org/wiki/KKTC_Cumhuriyet_Meclisi_10._d%C3%B6nem_milletvekilleri_listesi",
+    "members": [
+      {
+        "name": "Faiz Sucuoğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Olgun Amcaoğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ahmet Savaşan",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Taçoy",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Alişan Şan",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Sadık Gardiyanoğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Zorlu Töre",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Tufan Erhürman",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": "24 Ekim 2025'te Cumhurbaşkanlığını devralmasıyla milletvekilliği sona erdi."
+      },
+      {
+        "name": "Sıla Usar İncirli",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Doğuş Derya",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ürün Solyalı",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Devrim Barçın",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Filiz Besim",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Sami Özuslu",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": "Kudret Özersay milletvekilliğinden istifa etti. Boşalan koltuğa ara seçim ile Sami Özuslu geldi."
+      },
+      {
+        "name": "Hasan Tosunoğlu",
+        "constituency": "Lefkoşa",
+        "party": "DP",
+        "note": "27 Kasım 2024'ten beri bağımsız, 7 Nisan 2025'te istifasını sundu."
+      },
+      {
+        "name": "Talip Atalay",
+        "constituency": "Lefkoşa",
+        "party": "YDP",
+        "note": ""
+      },
+      {
+        "name": "Dursun Oğuz",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Sunat Atun",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Oğuzhan Hasipoğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hakan Dinçyürek",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Resmiye Eroğlu Canaltay",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hüseyin Çavuş Kelle",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Asım Akansoy",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Teberrüken Uluçay",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Erkut Şahali",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Şifa Çolakoğlu",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ayşegül Baybars",
+        "constituency": "Gazimağusa",
+        "party": "Bağımsız",
+        "note": "Halkın Partisi'nden ihraç edildi."
+      },
+      {
+        "name": "Fikri Ataoğlu",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Erhan Arıklı",
+        "constituency": "Gazimağusa",
+        "party": "YDP",
+        "note": ""
+      },
+      {
+        "name": "Kutlu Evren",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "İzlem Gürçağ Altuğra",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ünal Üstel",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Özdemir Berova",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Hasan Küçük",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ongun Talat",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Fikri Toros",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Fazilet Özdenefe",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ceyhun Birinci",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Jale Refik Rogers",
+        "constituency": "Girne",
+        "party": "Bağımsız",
+        "note": "Halkın Partisi'nden ihraç edildi."
+      },
+      {
+        "name": "Serhat Akpınar",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": ""
+      },
+      {
+        "name": "Nazım Çavuşoğlu",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Yasemi Öztürk",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Emrah Yeşilırmak",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Biray Hamzaoğulları",
+        "constituency": "İskele",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Fide Kürşat",
+        "constituency": "İskele",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Ali Pilli",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Ziya Öztürkler",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Armağan Candan",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Fırtına Karanfil",
+        "constituency": "Lefke",
+        "party": "UBP",
+        "note": ""
+      },
+      {
+        "name": "Salahi Şahiner",
+        "constituency": "Lefke",
+        "party": "CTP",
+        "note": ""
+      },
+      {
+        "name": "Kudret Özersay",
+        "constituency": "Lefkoşa",
+        "party": "HP",
+        "note": "İstifa etti (yerine ara seçimle Sami Özuslu seçildi)."
+      }
+    ]
+  },
+  "KKTC:10_cm_official": {
+    "meclis": "KKTC",
+    "donem": 10,
+    "source": "https://cm.gov.ct.tr/Milletvekillerimiz1.aspx",
+    "members": [
+      {
+        "name": "Ahmet  Savaşan",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Ali Pilli",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Alişan Şan",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Armağan Candan",
+        "constituency": "Güzelyurt",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Asım Akansoy",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Ayşegül Baybars",
+        "constituency": "Gazimağusa",
+        "party": "Bağımsız",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Biray  Hamzaoğulları",
+        "constituency": "İskele",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Ceyhun Birinci",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Devrim Barçın",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Doğuş Derya",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Dursun Oğuz",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Emrah Yeşilırmak",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Erhan  Arıklı",
+        "constituency": "Gazimağusa",
+        "party": "YDP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Erkut Şahali",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Faiz Sucuoğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Fazilet Özdenefe",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Fide Kürşat",
+        "constituency": "İskele",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Fikri  Ataoğlu",
+        "constituency": "Gazimağusa",
+        "party": "DP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Fikri Toros",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Filiz Besim",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Fırtına Karanfil",
+        "constituency": "Lefke",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Hakan Dinçyürek",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Hasan Küçük",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Hasan Taçoy",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Hasan Tosunoğlu",
+        "constituency": "Lefkoşa",
+        "party": "Bağımsız",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Hüseyin Çavuş",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "İzlem Gürçağ",
+        "constituency": "Girne",
+        "party": "Bağımsız",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Jale Refik Rogers",
+        "constituency": "Girne",
+        "party": "Bağımsız",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Kutlu Evren",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Nazım Çavuşoğlu",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Oğuzhan Hasipoğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Olgun Amcaoğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Özdemir Berova",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Resmiye Eroğlu Canaltay",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Sadık Gardiyanoğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Salahi Şahiner",
+        "constituency": "Lefke",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Serhat Akpınar",
+        "constituency": "Girne",
+        "party": "DP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Sıla Usar",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Sunat Atun",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Şifa Çolakoğlu",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Teberrüken Uluçay",
+        "constituency": "Gazimağusa",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Ünal Üstel",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Ürün Solyalı",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Yasemi Öztürk",
+        "constituency": "İskele",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Ziya Öztürkler",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Zorlu Töre",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Ongun Talat",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Talip  Atalay",
+        "constituency": "Lefkoşa",
+        "party": "YDP",
+        "note": "Resmî cm.gov.ct.tr"
+      },
+      {
+        "name": "Sami Özuslu",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": "Resmî cm.gov.ct.tr"
+      }
+    ]
+  }
+}
