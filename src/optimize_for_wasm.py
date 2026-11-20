@@ -463,6 +463,48 @@ def main():
         f"{len(terms_payload['terms'])} terms, {total_term_members} term-member entries)"
     )
 
+    from analyze_topics import build_topics_index
+    topics_payload = build_topics_index(con, sp_in)
+    out_topics = STATIC_SPACE / "topics_index.json"
+    out_topics.write_text(json.dumps(topics_payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    print(
+        f"   Wrote {out_topics} ({out_topics.stat().st_size / 1024:.1f} KB, "
+        f"{len(topics_payload['topics'])} topics, {len(topics_payload['concepts'])} concepts)"
+    )
+
+    print("4. Exporting per-term Parquet shards to data/hf_dataset/terms_cache/ for fast term/topic queries...")
+    t_sh = time.perf_counter()
+    export_term_shards(con, sp_in, HF_DATA.parent / "terms_cache")
+    print(f"   Exported term shards in {time.perf_counter() - t_sh:.1f}s")
+
+
+def term_shard_filename(meclis: str, donem: int | None) -> str:
+    return f"{meclis}_{donem}.parquet" if donem is not None else f"{meclis}.parquet"
+
+
+def export_term_shards(
+    con: duckdb.DuckDBPyConnection,
+    sp_path: str,
+    out_dir: Path,
+    only_terms: set[tuple[str, int | None]] | None = None,
+):
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for meclis, donem, _, _, _ in TERM_CATALOG:
+        if only_terms is not None and (meclis, donem) not in only_terms:
+            continue
+        fname = term_shard_filename(meclis, donem)
+        out_p = (out_dir / fname).as_posix()
+        where = f"meclis = '{meclis}' AND donem = {donem}" if donem is not None else f"meclis = '{meclis}' AND donem IS NULL"
+        con.execute(
+            f"""
+            COPY (
+                SELECT * FROM read_parquet('{sp_path}')
+                WHERE {where}
+                ORDER BY tarih DESC NULLS LAST, turn_index ASC
+            ) TO '{out_p}' (FORMAT PARQUET, COMPRESSION ZSTD, ROW_GROUP_SIZE 32768)
+            """
+        )
+
 
 if __name__ == "__main__":
     main()

@@ -33,10 +33,11 @@ SRC_DIR = Path(__file__).resolve().parent
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
+from analyze_topics import build_topics_index
 from crawl_manifest import ROOT_REL, crawl_subtree, list_folder_all_pages
 from extract_text import clean_word_text, detect_magic, extract_docx, extract_pdf
 from ole_doc_fallback import extract_ole_doc_text
-from optimize_for_wasm import build_terms_index
+from optimize_for_wasm import build_terms_index, export_term_shards
 from parse_speakers import parse_document
 
 DATASET_REPO = os.environ.get("KKTC_DATASET_REPO", "stevevaius/KKTC_Meclis_Tutanak")
@@ -622,6 +623,14 @@ def main():
         terms_payload = build_terms_index(con, merged_sp.as_posix(), spk_cnt_map, rosters_path)
         terms_out.write_text(json.dumps(terms_payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
+        topics_out = tmp / "topics_index.json"
+        topics_payload = build_topics_index(con, merged_sp.as_posix())
+        topics_out.write_text(json.dumps(topics_payload, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
+        # Refresh only the affected per-term Parquet shards so term/topic queries stay instant
+        touched_terms = {(d["meclis"], d["donem"]) for d in new_docs}
+        export_term_shards(con, merged_sp.as_posix(), out_hf / "terms_cache", only_terms=touched_terms)
+
         new_total_sp = con.execute(f"SELECT COUNT(*) FROM read_parquet('{merged_sp.as_posix()}')").fetchone()[0]
         new_total_doc = con.execute(f"SELECT COUNT(*) FROM read_parquet('{merged_doc.as_posix()}')").fetchone()[0]
         con.close()
@@ -630,7 +639,8 @@ def main():
             f"      Merged totals: {new_total_doc:,} docs, {new_total_sp:,} speeches | "
             f"speeches={merged_sp.stat().st_size/(1024*1024):.1f} MB, "
             f"index={index_out.stat().st_size/1024:.1f} KB, "
-            f"terms={terms_out.stat().st_size/1024:.1f} KB"
+            f"terms={terms_out.stat().st_size/1024:.1f} KB, "
+            f"topics={topics_out.stat().st_size/1024:.1f} KB"
         )
 
         if args.dry_run:
@@ -656,6 +666,13 @@ def main():
         api.upload_file(
             path_or_fileobj=str(terms_out),
             path_in_repo="terms_index.json",
+            repo_id=args.space_repo,
+            repo_type="space",
+            commit_message=msg,
+        )
+        api.upload_file(
+            path_or_fileobj=str(topics_out),
+            path_in_repo="topics_index.json",
             repo_id=args.space_repo,
             repo_type="space",
             commit_message=msg,

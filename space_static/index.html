@@ -355,6 +355,189 @@
   }
   .mp-all-link:hover { border-bottom-style: solid; }
 
+  /* Active Unified Synonym/Topic Filter Pill & Hint in Search */
+  .synonym-banner {
+    display: none;
+    margin-top: 11px;
+    padding: 9px 13px;
+    border-radius: 7px;
+    background: var(--crimson-tint);
+    border: 1px solid #FCA5A5;
+    color: var(--crimson-dark);
+    font-size: 12.5px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .synonym-banner strong { color: var(--ink); }
+  .synonym-note { color: var(--ink-soft); font-size: 11.5px; margin-left: 6px; }
+  .synonym-hint {
+    display: none;
+    margin-top: 8px;
+    padding: 7px 11px;
+    border-radius: 6px;
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    color: #78350F;
+    font-size: 12px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .synonym-hint button {
+    border: 1px solid #D97706;
+    background: #fff;
+    color: #92400E;
+    border-radius: 5px;
+    padding: 4px 10px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .synonym-hint button:hover { background: #FEF3C7; }
+
+  /* Compact Agenda Strip inside Terms View */
+  .term-agenda-strip {
+    background: var(--folio);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--brass);
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .term-agenda-chips { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+
+  /* Topics & Keywords Analysis Tab */
+  #topics-view { display: none; animation: fadeUp 0.2s ease-out; }
+  .submode-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .seg-group {
+    display: inline-flex;
+    background: #EFE9DF;
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 3px;
+  }
+  .seg-btn {
+    border: 0;
+    background: transparent;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.14s;
+  }
+  .seg-btn.active { background: var(--folio); color: var(--crimson); box-shadow: var(--shadow-sm); }
+
+  .topic-card-box {
+    background: var(--folio);
+    border: 1px solid var(--rule-strong);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .topic-card-box h3 {
+    font-family: var(--serif);
+    font-size: 21px;
+    margin: 0 0 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .topic-card-sub { font-size: 12.5px; color: var(--ink-muted); margin: 0 0 14px; }
+
+  .kw-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+  .kw-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.14s;
+  }
+  .kw-pill:hover { border-color: var(--crimson); background: var(--crimson-tint); color: var(--crimson-dark); transform: translateY(-1px); }
+  .kw-pill.dist { background: #FFF8EB; border-color: #DFC08A; }
+  .kw-pill.dist:hover { border-color: var(--crimson); background: var(--crimson-tint); }
+  .kw-cnt { font-family: var(--mono); font-size: 11px; color: var(--ink-muted); font-weight: 500; }
+  .kw-lift {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: #F4E3C1;
+    color: #7C5313;
+    font-weight: 600;
+  }
+
+  .topic-bars { display: flex; flex-direction: column; gap: 8px; }
+  .topic-bar-row {
+    display: grid;
+    grid-template-columns: 260px 1fr 118px;
+    gap: 12px;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 7px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.14s;
+  }
+  .topic-bar-row:hover { background: var(--crimson-tint); border-color: #FECACA; }
+  @media (max-width: 760px) {
+    .topic-bar-row { grid-template-columns: 1fr; gap: 5px; }
+  }
+  .tb-lbl { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .tb-sub { font-size: 11px; color: var(--ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+  .tb-track { height: 14px; background: #F1ECE3; border-radius: 999px; overflow: hidden; }
+  .tb-fill { height: 100%; background: linear-gradient(90deg, var(--crimson) 0%, #D97706 100%); border-radius: 999px; min-width: 3px; transition: width 0.25s ease; }
+  .tb-val { font-family: var(--mono); font-size: 12px; text-align: right; color: var(--ink-soft); white-space: nowrap; }
+  .tb-val strong { color: var(--ink); }
+
+  /* 1960-2026 Trend Chart */
+  .trend-controls { display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px; margin-bottom: 16px; }
+  @media (max-width: 760px) { .trend-controls { grid-template-columns: 1fr; } }
+  .trend-rows { display: flex; flex-direction: column; gap: 6px; }
+  .trend-row {
+    display: grid;
+    grid-template-columns: 230px 1fr 135px;
+    gap: 12px;
+    align-items: center;
+    padding: 7px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.14s;
+  }
+  .trend-row:hover { background: var(--crimson-tint); }
+  @media (max-width: 760px) { .trend-row { grid-template-columns: 1fr; gap: 4px; } }
+  .trend-term { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .trend-term small { font-family: var(--mono); font-size: 11px; color: var(--ink-muted); font-weight: 400; margin-left: 5px; }
+  .trend-fill { height: 100%; background: linear-gradient(90deg, var(--olive) 0%, var(--brass) 100%); border-radius: 999px; min-width: 2px; }
+
   footer { max-width: 1180px; margin: 0 auto 36px; padding: 18px 20px 0; border-top: 1px solid var(--rule); font-size: 12px; color: var(--ink-muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   footer a { color: var(--ink-soft); }
 </style>
@@ -407,6 +590,9 @@
     </button>
     <button type="button" class="mode-tab" id="tab-terms" role="tab" aria-selected="false">
       Dönemlere Göre Vekiller <span class="mode-badge" id="terms-count-badge">19 Dönem · 1960–2026</span>
+    </button>
+    <button type="button" class="mode-tab" id="tab-topics" role="tab" aria-selected="false">
+      Gündem &amp; Konular <span class="mode-badge" id="topics-count-badge">20 Konu · 91 Kavram</span>
     </button>
   </nav>
 
@@ -474,6 +660,8 @@
     </div>
 
     <div class="quick-bar" id="quick-bar"></div>
+    <div class="synonym-banner" id="synonym-banner"></div>
+    <div class="synonym-hint" id="synonym-hint"></div>
     <div class="engine-note" id="engine-note">
       <span class="dot" id="engine-dot"></span>
       <span id="engine-text">DuckDB-WASM tarayıcı içi Parquet motoru hazırlanıyor...</span>
@@ -497,7 +685,27 @@
   <section id="terms-view" aria-label="Dönemlere Göre Milletvekilleri">
     <div class="terms-nav-panel" id="terms-nav"></div>
     <div class="term-hero" id="term-hero"></div>
+    <div id="term-agenda-slot"></div>
     <div id="term-members-list"></div>
+  </section>
+
+  <section id="topics-view" aria-label="Dönemlere Göre Gündem ve Konular">
+    <div class="submode-bar">
+      <div class="seg-group" role="tablist">
+        <button type="button" class="seg-btn active" id="sub-term-agenda">Dönem Gündemi (Konular &amp; Kelimeler)</button>
+        <button type="button" class="seg-btn" id="sub-trend">1960–2026 Konu Trendi</button>
+      </div>
+      <div style="font-size:12px;color:var(--ink-muted)">
+        Eş anlamlı ve yazım farkları (örn. <em>KIB-TEK / KIBTEK / KIPTEK / Elektrik Kurumu</em>) tek başlıkta birleştirilmiştir.
+      </div>
+    </div>
+    <div id="topics-term-pane">
+      <div class="terms-nav-panel" id="topics-nav"></div>
+      <div id="topics-term-body"></div>
+    </div>
+    <div id="topics-trend-pane" style="display:none">
+      <div class="topic-card-box" id="topics-trend-body"></div>
+    </div>
   </section>
 </main>
 
@@ -524,7 +732,9 @@ import * as duckdb from 'https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.29.0
 
 const SPEECHES_URL = 'https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/data/speeches.parquet';
 const DOCS_URL = 'https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/data/documents.parquet';
+const TERMS_CACHE_BASE = 'https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/terms_cache/';
 const PAGE_SIZE = 25;
+const registeredShards = new Set();
 
 const QUICK_LEADERS = [
   "Rauf Raif Denktaş", "Derviş Eroğlu", "Özker Özgür", "Hakkı Atun",
@@ -537,8 +747,17 @@ let speakersIndex = [];
 let speakersByName = new Map();
 let termsData = [];
 let termsById = new Map();
-let activeView = 'search'; // 'search' | 'terms'
+let topicsIndex = null;
+let topicsById = new Map();
+let conceptsById = new Map();
+let topicTermsById = new Map();
+let activeView = 'search'; // 'search' | 'terms' | 'topics'
 let activeTermId = 'KKTC:10';
+let activeTopicsSub = 'term'; // 'term' | 'trend'
+let activeTrendKind = 'topic'; // 'topic' | 'concept'
+let activeTrendId = 'kibtek_elektrik';
+let activeTrendMetric = 'pct'; // 'pct' | 'count'
+let activeTopicFilter = null; // { kind, id, label, note, terms: [...] }
 let termFilterQuery = '';
 let termFilterDistrict = '';
 let termSortMode = 'speeches'; // 'speeches' | 'alpha'
@@ -577,11 +796,12 @@ function formatDateTR(iso) {
   return dy ? `${dy} ${mo} ${yr}` : `${mo} ${yr}`;
 }
 
-// 1. Load speakers_index.json + terms_index.json in parallel (0ms autocomplete, dossier & term MP directory)
+// 1. Load speakers_index.json + terms_index.json + topics_index.json in parallel (0ms UI)
 async function loadIndex() {
-  const [rSpk, rTerms] = await Promise.all([
+  const [rSpk, rTerms, rTopics] = await Promise.all([
     fetch('./speakers_index.json'),
     fetch('./terms_index.json').catch(() => null),
+    fetch('./topics_index.json').catch(() => null),
   ]);
   const data = await rSpk.json();
   speakersIndex = data.speakers || [];
@@ -595,6 +815,14 @@ async function loadIndex() {
       activeTermId = termsData[0].id;
       $('terms-count-badge').textContent = `${termsData.length} Dönem · 1960–2026`;
     }
+  }
+
+  if (rTopics && rTopics.ok) {
+    topicsIndex = await rTopics.json();
+    for (const tp of (topicsIndex.topics || [])) topicsById.set(tp.id, tp);
+    for (const cp of (topicsIndex.concepts || [])) conceptsById.set(cp.id, cp);
+    for (const tt of (topicsIndex.terms || [])) topicTermsById.set(tt.id, tt);
+    $('topics-count-badge').textContent = `${(topicsIndex.topics||[]).length} Konu · ${(topicsIndex.concepts||[]).length} Kavram`;
   }
 
   const st = data.stats;
@@ -796,16 +1024,291 @@ function renderDirectoryLanding() {
 }
 
 function setActiveView(view, updateHistory = true) {
-  activeView = view === 'terms' ? 'terms' : 'search';
+  activeView = ['terms', 'topics'].includes(view) ? view : 'search';
+  const isSearch = activeView === 'search';
   const isTerms = activeView === 'terms';
-  $('search-view').style.display = isTerms ? 'none' : 'block';
+  const isTopics = activeView === 'topics';
+  $('search-view').style.display = isSearch ? 'block' : 'none';
   $('terms-view').style.display = isTerms ? 'block' : 'none';
-  $('tab-search').classList.toggle('active', !isTerms);
-  $('tab-search').setAttribute('aria-selected', String(!isTerms));
+  $('topics-view').style.display = isTopics ? 'block' : 'none';
+  $('tab-search').classList.toggle('active', isSearch);
+  $('tab-search').setAttribute('aria-selected', String(isSearch));
   $('tab-terms').classList.toggle('active', isTerms);
   $('tab-terms').setAttribute('aria-selected', String(isTerms));
+  $('tab-topics').classList.toggle('active', isTopics);
+  $('tab-topics').setAttribute('aria-selected', String(isTopics));
   if (isTerms) renderTermsDirectory();
+  if (isTopics) renderTopicsView();
   if (updateHistory) syncUrl();
+}
+
+function renderSynonymBanner() {
+  const el = $('synonym-banner');
+  if (!activeTopicFilter) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+  el.style.display = 'flex';
+  el.innerHTML = `
+    <div>
+      <span>Birleştirilmiş Gündem Filtresi: <strong>${escHtml(activeTopicFilter.label)}</strong></span>
+      ${activeTopicFilter.note ? `<span class="synonym-note">(${escHtml(activeTopicFilter.note)})</span>` : ''}
+    </div>
+    <button type="button" class="btn-ghost" id="clear-synonym-btn">Filtreyi Kaldır ✕</button>
+  `;
+  $('clear-synonym-btn').onclick = () => {
+    activeTopicFilter = null;
+    renderSynonymBanner();
+    runSearch(0);
+  };
+}
+
+function openTopicOrConceptSearch(kind, id, termObj = null) {
+  const item = kind === 'topic' ? topicsById.get(id) : conceptsById.get(Number(id));
+  if (!item) return;
+  activeTopicFilter = {
+    kind,
+    id: item.id,
+    label: item.label,
+    note: item.note || '',
+    terms: item.terms || [],
+    rx: item.rx || '',
+  };
+  $('speaker').value = '';
+  $('q').value = '';
+  $('from_year').value = '';
+  $('to_year').value = '';
+  $('role').value = '';
+  if (termObj) {
+    $('meclis').value = termObj.meclis || '';
+    $('donem').value = termObj.donem != null ? String(termObj.donem) : '';
+  } else {
+    $('meclis').value = '';
+    $('donem').value = '';
+  }
+  $('synonym-hint').style.display = 'none';
+  renderSynonymBanner();
+  setActiveView('search', false);
+  runSearch(0);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildTermPillsHtml(list, selectedId) {
+  const groups = [];
+  const gMap = new Map();
+  for (const t of list) {
+    const g = t.group || 'Dönemler';
+    if (!gMap.has(g)) { const arr = []; gMap.set(g, arr); groups.push([g, arr]); }
+    gMap.get(g).push(t);
+  }
+  return groups.map(([grp, arr]) => `
+    <div class="term-era-row">
+      <div class="term-era-lbl">${escHtml(grp)}</div>
+      ${arr.map(t => `
+        <button type="button" class="term-pill${t.id === selectedId ? ' active' : ''}" data-term="${escHtml(t.id)}">
+          ${escHtml(t.label.replace(/^KKTC\s+/, '').replace(/^Kıbrıs Türk Yönetimi · /, 'KTY '))}<small>${escHtml(t.years)}</small>
+        </button>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function renderTermAgendaStrip(termId) {
+  const slot = $('term-agenda-slot');
+  const tt = topicTermsById.get(termId);
+  if (!tt || !topicsIndex) { slot.innerHTML = ''; return; }
+  const picks = (tt.distinctive && tt.distinctive.length >= 4 ? tt.distinctive : tt.top_concepts).slice(0, 6);
+  if (!picks.length) { slot.innerHTML = ''; return; }
+  slot.innerHTML = `
+    <div class="term-agenda-strip">
+      <div class="term-agenda-chips">
+        <span class="quick-lbl" style="margin-right:2px">Bu Dönemin Gündemi:</span>
+        ${picks.map(x => {
+          const cp = conceptsById.get(x.id);
+          if (!cp) return '';
+          return `<button type="button" class="kw-pill dist" data-open-concept="${cp.id}" data-term-id="${escHtml(termId)}" title="${escHtml(cp.note)}">
+            ${escHtml(cp.label)} <span class="kw-cnt">${x.c.toLocaleString('tr-TR')}</span>
+          </button>`;
+        }).join('')}
+      </div>
+      <button type="button" class="btn-ghost" id="jump-term-topics-btn">Tüm Konu Analizi →</button>
+    </div>
+  `;
+  const jbtn = $('jump-term-topics-btn');
+  if (jbtn) jbtn.onclick = () => { activeTopicsSub = 'term'; setActiveView('topics'); };
+}
+
+function renderTopicsView() {
+  if (!topicsIndex || !topicsIndex.terms?.length) {
+    $('topics-term-body').innerHTML = '<div class="empty-state">Konu analizi verisi yüklenemedi.</div>';
+    return;
+  }
+  const isTrend = activeTopicsSub === 'trend';
+  $('sub-term-agenda').classList.toggle('active', !isTrend);
+  $('sub-trend').classList.toggle('active', isTrend);
+  $('topics-term-pane').style.display = isTrend ? 'none' : 'block';
+  $('topics-trend-pane').style.display = isTrend ? 'block' : 'none';
+
+  if (isTrend) {
+    renderTopicsTrendPane();
+  } else {
+    $('topics-nav').innerHTML = buildTermPillsHtml(topicsIndex.terms, activeTermId);
+    renderTopicsTermBody();
+  }
+}
+
+function renderTopicsTermBody() {
+  const tt = topicTermsById.get(activeTermId) || topicsIndex.terms[0];
+  if (!tt) return;
+  activeTermId = tt.id;
+  const maxTopicCnt = Math.max(1, ...(tt.topics || []).map(x => x.c));
+
+  const distHtml = (tt.distinctive || []).length
+    ? (tt.distinctive || []).map(x => {
+        const cp = conceptsById.get(x.id);
+        if (!cp) return '';
+        return `<button type="button" class="kw-pill dist" data-open-concept="${cp.id}" title="Birleştirilen yazımlar: ${escHtml(cp.note)}">
+          ${escHtml(cp.label)}
+          <span class="kw-cnt">${x.c.toLocaleString('tr-TR')}</span>
+          <span class="kw-lift" title="Arşiv ortalamasına göre bu dönemdeki yoğunluk artışı">${x.l.toFixed(1).replace('.', ',')}×</span>
+        </button>`;
+      }).join('')
+    : '<span style="font-size:13px;color:var(--ink-muted)">Bu küçük dönem için belirgin fark oluşmadı; aşağıdaki en sık geçen kavramları inceleyebilirsiniz.</span>';
+
+  const topConceptHtml = (tt.top_concepts || []).map(x => {
+    const cp = conceptsById.get(x.id);
+    if (!cp) return '';
+    return `<button type="button" class="kw-pill" data-open-concept="${cp.id}" title="Birleştirilen yazımlar: ${escHtml(cp.note)}">
+      ${escHtml(cp.label)}
+      <span class="kw-cnt">${x.c.toLocaleString('tr-TR')} (%${x.p.toFixed(1).replace('.', ',')})</span>
+    </button>`;
+  }).join('');
+
+  const barsHtml = (tt.topics || []).map(x => {
+    const tp = topicsById.get(x.id);
+    if (!tp) return '';
+    const wPct = x.c ? Math.max(2, Math.round((x.c / maxTopicCnt) * 100)) : 0;
+    return `
+      <div class="topic-bar-row" data-open-topic="${escHtml(tp.id)}" title="Bu dönemdeki ilgili tüm konuşmaları aç">
+        <div>
+          <div class="tb-lbl">${escHtml(tp.label)}</div>
+          <div class="tb-sub">${escHtml(tp.note)}</div>
+        </div>
+        <div class="tb-track"><div class="tb-fill" style="width:${wPct}%"></div></div>
+        <div class="tb-val"><strong>${x.c.toLocaleString('tr-TR')}</strong> <span style="opacity:0.75">(%${x.p.toFixed(1).replace('.', ',')})</span></div>
+      </div>
+    `;
+  }).join('');
+
+  $('topics-term-body').innerHTML = `
+    <div class="topic-card-box" style="border-top:3px solid var(--crimson)">
+      <h3>
+        <span>${escHtml(tt.label)} (${escHtml(tt.years)}) · Döneme Özgü Öne Çıkanlar</span>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--ink-muted);font-weight:500">${tt.turns.toLocaleString('tr-TR')} konuşma bloğu tarandı</span>
+      </h3>
+      <p class="topic-card-sub">Diğer 18 yasama dönemine göre bu dönemde ortalamanın üzerinde fırlayan gündem kavramları (tıklayarak konuşmaları okuyun):</p>
+      <div class="kw-cloud">${distHtml}</div>
+    </div>
+
+    <div class="topic-card-box">
+      <h3>
+        <span>Dönemin En Çok Konuşulan 20 Gündem Başlığı</span>
+        <span style="font-family:var(--sans);font-size:12px;color:var(--ink-muted);font-weight:400">Satıra tıklayarak bu dönemdeki tüm ilgili konuşmaları açın</span>
+      </h3>
+      <p class="topic-card-sub">Her başlık, yazım ve eş anlamlı farklarını tek potada birleştirir (konuşma bloğu sayısı ve döneme oranı %).</p>
+      <div class="topic-bars">${barsHtml}</div>
+    </div>
+
+    <div class="topic-card-box">
+      <h3><span>Bu Dönemde En Çok Geçen Birleştirilmiş Kavramlar</span></h3>
+      <p class="topic-card-sub">Meclis prosedür kelimeleri elendikten sonra eş anlamlılarıyla birleştirilmiş en sık geçen 22 kavram (üzerine gelince kapsanan yazımlar görünür):</p>
+      <div class="kw-cloud">${topConceptHtml}</div>
+    </div>
+  `;
+}
+
+function renderTopicsTrendPane() {
+  const topicsList = topicsIndex.topics || [];
+  const conceptsList = topicsIndex.concepts || [];
+  const selectedItem = activeTrendKind === 'topic'
+    ? (topicsById.get(activeTrendId) || topicsList[0])
+    : (conceptsById.get(Number(activeTrendId)) || conceptsList[0]);
+  if (!selectedItem) return;
+
+  const series = topicsIndex.terms.map(tt => {
+    let c = 0, p = 0;
+    if (activeTrendKind === 'topic') {
+      const entry = (tt.topics || []).find(x => x.id === selectedItem.id);
+      c = entry ? entry.c : 0;
+      p = entry ? entry.p : 0;
+    } else if (tt.cc && tt.cc[String(selectedItem.id)] != null) {
+      c = Number(tt.cc[String(selectedItem.id)]);
+      p = tt.turns ? (c / tt.turns) * 100 : 0;
+    } else {
+      const entry = (tt.top_concepts || []).find(x => x.id === selectedItem.id)
+                 || (tt.distinctive || []).find(x => x.id === selectedItem.id);
+      c = entry ? entry.c : 0;
+      p = entry ? entry.p : 0;
+    }
+    return { tt, c, p };
+  });
+
+  const maxVal = Math.max(0.01, ...series.map(s => activeTrendMetric === 'pct' ? s.p : s.c));
+
+  $('topics-trend-body').innerHTML = `
+    <h3 style="margin-bottom:6px">1960–2026 Dönemler Arası Konu Trendi</h3>
+    <p class="topic-card-sub">Bir konu veya kavram seçerek 66 yıllık Meclis tarihindeki yükseliş/düşüş seyrini inceleyin; herhangi bir dönem çubuğuna tıklayarak o dönemdeki konuşmaları okuyun.</p>
+    <div class="trend-controls">
+      <div class="field">
+        <label for="trend-select">Konu Başlığı veya Birleştirilmiş Kavram</label>
+        <select id="trend-select">
+          <optgroup label="20 Ana Gündem Başlığı">
+            ${topicsList.map(tp => `<option value="topic:${escHtml(tp.id)}"${activeTrendKind==='topic' && activeTrendId===tp.id ? ' selected' : ''}>${escHtml(tp.label)} (${tp.total.toLocaleString('tr-TR')} söz)</option>`).join('')}
+          </optgroup>
+          <optgroup label="Birleştirilmiş Gündem Kavramları (Tüm 92 Kavram)">
+            ${[...conceptsList].sort((a,b) => b.total - a.total).map(cp => `<option value="concept:${cp.id}"${activeTrendKind==='concept' && String(activeTrendId)===String(cp.id) ? ' selected' : ''}>${escHtml(cp.label)} (${cp.total.toLocaleString('tr-TR')} söz)</option>`).join('')}
+          </optgroup>
+        </select>
+      </div>
+      <div class="field">
+        <label for="trend-metric">Ölçek</label>
+        <select id="trend-metric">
+          <option value="pct"${activeTrendMetric==='pct' ? ' selected' : ''}>Dönem İçindeki Oran (% — Dönemler Arası Adil Kıyas)</option>
+          <option value="count"${activeTrendMetric==='count' ? ' selected' : ''}>Toplam Konuşma Bloğu Sayısı</option>
+        </select>
+      </div>
+    </div>
+    <div style="margin-bottom:12px;font-size:12.5px;color:var(--ink-soft)">
+      <strong>Kapsanan birleştirilmiş yazımlar:</strong> ${escHtml(selectedItem.note || '')}
+      · <strong>Arşiv toplamı:</strong> ${selectedItem.total.toLocaleString('tr-TR')} konuşma
+    </div>
+    <div class="trend-rows">
+      ${series.map(({ tt, c, p }) => {
+        const val = activeTrendMetric === 'pct' ? p : c;
+        const wPct = val > 0 ? Math.max(2, Math.round((val / maxVal) * 100)) : 0;
+        return `
+          <div class="trend-row" data-trend-term="${escHtml(tt.id)}" title="${escHtml(tt.label)} içinde '${escHtml(selectedItem.label)}' konuşmalarını aç">
+            <div class="trend-term">${escHtml(tt.label)}<small>${escHtml(tt.years)}</small></div>
+            <div class="tb-track"><div class="trend-fill" style="width:${wPct}%"></div></div>
+            <div class="tb-val"><strong>%${p.toFixed(2).replace('.', ',')}</strong> <span style="opacity:0.75">(${c.toLocaleString('tr-TR')})</span></div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+
+  $('trend-select').onchange = e => {
+    const [k, id] = e.target.value.split(':');
+    activeTrendKind = k;
+    activeTrendId = k === 'concept' ? Number(id) : id;
+    renderTopicsTrendPane();
+    syncUrl();
+  };
+  $('trend-metric').onchange = e => {
+    activeTrendMetric = e.target.value;
+    renderTopicsTrendPane();
+  };
 }
 
 function partyClass(p) {
@@ -909,6 +1412,7 @@ function renderActiveTermBody() {
   $('term-sort').onchange = e => { termSortMode = e.target.value; renderTermMemberCards(term); };
   $('term-scope').onchange = e => { termClickScope = e.target.value; };
 
+  renderTermAgendaStrip(term.id);
   renderTermMemberCards(term);
 }
 
@@ -1035,14 +1539,26 @@ function buildWhereSql() {
 
   const terms = parseQueryTerms($('q').value);
   for (const term of terms) {
-    const tTr = trLower(term);
-    const variants = [...new Set([tTr, tTr.replace(/ı/g, 'i'), tTr.replace(/i/g, 'ı')])];
-    clauses.push('(' + variants.map(v => `contains(lower(text), ${sqlQuote(v)})`).join(' OR ') + ')');
+    const tNorm = trLower(term).replace(/ı/g, 'i');
+    clauses.push(`contains(replace(lower(text), 'ı', 'i'), ${sqlQuote(tNorm)})`);
+  }
+  const highlightTerms = [...terms];
+  if (activeTopicFilter && (activeTopicFilter.rx || activeTopicFilter.terms?.length)) {
+    if (activeTopicFilter.rx) {
+      clauses.push(`regexp_matches(replace(lower(text), 'ı', 'i'), ${sqlQuote(activeTopicFilter.rx)})`);
+    } else {
+      clauses.push(
+        '(' + activeTopicFilter.terms.map(v => `contains(replace(lower(text), 'ı', 'i'), ${sqlQuote(v)})`).join(' OR ') + ')'
+      );
+    }
+    for (const v of (activeTopicFilter.terms || [])) {
+      if (!highlightTerms.includes(v)) highlightTerms.push(v);
+    }
   }
   return {
     empty: false,
     resolved,
-    terms,
+    terms: highlightTerms,
     sql: clauses.length ? clauses.join(' AND ') : '1=1',
   };
 }
@@ -1052,10 +1568,22 @@ function syncUrl() {
   if (activeView === 'terms') {
     p.set('view', 'terms');
     if (activeTermId) p.set('term', activeTermId);
+  } else if (activeView === 'topics') {
+    p.set('view', 'topics');
+    if (activeTopicsSub === 'trend') {
+      p.set('sub', 'trend');
+      p.set('tk', activeTrendKind);
+      p.set('ti', String(activeTrendId));
+    } else if (activeTermId) {
+      p.set('term', activeTermId);
+    }
   } else {
     for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role', 'sort']) {
       const v = $(f).value.trim();
       if (v && !(f === 'sort' && v === 'newest')) p.set(f, v);
+    }
+    if (activeTopicFilter) {
+      p.set(activeTopicFilter.kind === 'topic' ? 'topic' : 'concept', String(activeTopicFilter.id));
     }
   }
   const qs = p.toString();
@@ -1067,7 +1595,7 @@ async function runSearch(offset = 0) {
   const spkVal = $('speaker').value.trim();
   document.querySelectorAll('.chip').forEach(ch => ch.classList.toggle('active', ch.dataset.name.toLowerCase() === spkVal.toLowerCase()));
 
-  const hasAny = ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role'].some(f => $(f).value.trim());
+  const hasAny = Boolean(activeTopicFilter) || ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role'].some(f => $(f).value.trim());
   if (!hasAny) {
     renderDirectoryLanding();
     return;
@@ -1086,36 +1614,58 @@ async function runSearch(offset = 0) {
     return;
   }
 
+  // Decide optimal Parquet table:
+  // - Single speaker -> speeches.parquet (sorted by speaker_name, ~6 MB range read)
+  // - Specific term (no single speaker) -> terms_cache/{slug}.parquet (~0.2-20 MB instead of 208 MB!)
+  const meclisSel = $('meclis').value.trim();
+  const donemSel = $('donem').value.trim();
+  let targetTable = 'speeches.parquet';
+  let shardFname = null;
+  if (w.resolved.length !== 1 && meclisSel) {
+    const tid = (donemSel && /^\d+$/.test(donemSel)) ? `${meclisSel}:${donemSel}` : meclisSel;
+    if (termsById.has(tid) || topicTermsById.has(tid)) {
+      const tMeta = termsById.get(tid) || topicTermsById.get(tid);
+      shardFname = tMeta.donem != null ? `${tMeta.meclis}_${tMeta.donem}.parquet` : `${tMeta.meclis}.parquet`;
+      targetTable = `term_${shardFname}`;
+    }
+  }
+
   const fastHint = w.resolved.length === 1
     ? `${w.resolved[0]} için ilgili Parquet bloğu (~6 MB) okunuyor...`
-    : 'Tüm arşiv üzerinde Parquet sorgusu çalıştırılıyor (konuşmacı seçerseniz ~30x daha hızlıdır)...';
+    : shardFname
+      ? `Yalnızca seçili dönemin Parquet dosyası (${shardFname}) taranıyor...`
+      : 'Tüm arşiv üzerinde Parquet sorgusu çalıştırılıyor (konuşmacı veya dönem seçerseniz çok daha hızlıdır)...';
   $('results').innerHTML = `<div class="loading-box"><div class="spinner"></div><div><strong>Sorgulanıyor...</strong><div style="font-size:13px;color:var(--ink-soft);margin-top:2px">${escHtml(fastHint)}</div></div></div>`;
   $('btn-submit').disabled = true;
   setEngineStatus('busy', fastHint);
 
   try {
     const c = await ensureDuckDB();
+    if (shardFname && !registeredShards.has(targetTable)) {
+      await db.registerFileURL(targetTable, TERMS_CACHE_BASE + shardFname, duckdb.DuckDBDataProtocol.HTTP, false);
+      registeredShards.add(targetTable);
+    }
     const t0 = performance.now();
     const sortVal = $('sort').value;
     const orderSql = sortVal === 'oldest' ? 'tarih ASC NULLS LAST, turn_index ASC'
                    : sortVal === 'longest' ? 'word_count DESC, tarih DESC NULLS LAST'
                    : 'tarih DESC NULLS LAST, turn_index ASC';
 
-    const cntRes = await c.query(`SELECT COUNT(*)::DOUBLE AS cnt FROM 'speeches.parquet' WHERE ${w.sql}`);
-    const total = Number(cntRes.toArray()[0]?.cnt || 0);
-
+    // Single-pass query with window COUNT(*) OVER() avoids scanning the Parquet file twice!
     const rowsRes = await c.query(`
-      SELECT speech_id, doc_id, meclis, donem, birlesim, oturum, tarih, turn_index,
+      SELECT COUNT(*) OVER()::DOUBLE AS _total,
+             speech_id, doc_id, meclis, donem, birlesim, oturum, tarih, turn_index,
              speaker_name, speaker_title, constituency, modifiers, speaker_role,
              text, word_count, source_file, source_url
-      FROM 'speeches.parquet'
+      FROM '${targetTable}'
       WHERE ${w.sql}
       ORDER BY ${orderSql}
       LIMIT ${PAGE_SIZE} OFFSET ${offset}
     `);
     const rows = rowsRes.toArray().map(r => r.toJSON());
+    const total = rows.length ? Number(rows[0]._total || 0) : 0;
     const ms = Math.round(performance.now() - t0);
-    lastQueryState = { whereSql: w.sql, orderSql, terms: w.terms };
+    lastQueryState = { table: targetTable, whereSql: w.sql, orderSql, terms: w.terms };
     lastItems = rows;
 
     setEngineStatus('ok', `Son sorgu ${ms.toLocaleString('tr-TR')} ms · DuckDB-WASM (sunucusuz)`);
@@ -1216,7 +1766,7 @@ $('btn-export').onclick = async () => {
     const res = await c.query(`
       SELECT tarih, meclis, donem, birlesim, oturum, turn_index,
              speaker_name, speaker_title, constituency, word_count, text, source_url
-      FROM 'speeches.parquet'
+      FROM '${lastQueryState.table || 'speeches.parquet'}'
       WHERE ${lastQueryState.whereSql}
       ORDER BY ${lastQueryState.orderSql}
       LIMIT 500
@@ -1296,13 +1846,50 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') $('drawer-ba
 $('btn-clear').onclick = () => {
   for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role']) $(f).value = '';
   $('sort').value = 'newest';
+  activeTopicFilter = null;
+  renderSynonymBanner();
+  $('synonym-hint').style.display = 'none';
   runSearch(0);
 };
 $('search-form').onsubmit = e => { e.preventDefault(); runSearch(0); };
-for (const sel of ['meclis', 'role', 'sort']) $(sel).onchange = () => { if (['speaker','q','meclis','donem','from_year','to_year','role'].some(f => $(f).value.trim())) runSearch(0); };
+for (const sel of ['meclis', 'role', 'sort']) $(sel).onchange = () => { if (activeTopicFilter || ['speaker','q','meclis','donem','from_year','to_year','role'].some(f => $(f).value.trim())) runSearch(0); };
+
+// Smart synonym suggestion when user types a multi-variant term like "kibtek", "kiptek", "kthy", "covid"...
+$('q').addEventListener('input', () => {
+  const raw = $('q').value.trim();
+  const box = $('synonym-hint');
+  if (!raw || raw.length < 3 || !topicsIndex || activeTopicFilter) {
+    box.style.display = 'none';
+    return;
+  }
+  const nq = trLower(raw).replace(/ı/g, 'i');
+  let matched = null;
+  for (const cp of (topicsIndex.concepts || [])) {
+    if ((cp.terms || []).length < 2) continue;
+    if (cp.terms.some(t => t === nq || (nq.length >= 4 && (t.includes(nq) || nq.includes(t))))) {
+      matched = cp;
+      break;
+    }
+  }
+  if (!matched) { box.style.display = 'none'; return; }
+  box.style.display = 'flex';
+  box.innerHTML = `
+    <span>İpucu: <strong>${escHtml(matched.label)}</strong> için tüm eş anlamlı ve yazım farklarını (${escHtml(matched.note)}) birlikte arayabilirsiniz.</span>
+    <button type="button" id="apply-synonym-hint">Tümünü Birlikte Ara →</button>
+  `;
+  $('apply-synonym-hint').onclick = () => {
+    const meclis = $('meclis').value.trim();
+    const donem = $('donem').value.trim();
+    openTopicOrConceptSearch('concept', matched.id, meclis ? { meclis, donem: donem || null } : null);
+  };
+});
 
 $('tab-search').onclick = () => setActiveView('search');
 $('tab-terms').onclick = () => setActiveView('terms');
+$('tab-topics').onclick = () => setActiveView('topics');
+$('sub-term-agenda').onclick = () => { activeTopicsSub = 'term'; renderTopicsView(); syncUrl(); };
+$('sub-trend').onclick = () => { activeTopicsSub = 'trend'; renderTopicsView(); syncUrl(); };
+
 $('terms-nav').onclick = e => {
   const pill = e.target.closest('.term-pill');
   if (!pill) return;
@@ -1311,6 +1898,36 @@ $('terms-nav').onclick = e => {
   termFilterDistrict = '';
   renderTermsDirectory();
   syncUrl();
+};
+$('term-agenda-slot').onclick = e => {
+  const btn = e.target.closest('[data-open-concept]');
+  if (!btn) return;
+  const term = termsById.get(btn.dataset.termId) || topicTermsById.get(btn.dataset.termId);
+  openTopicOrConceptSearch('concept', Number(btn.dataset.openConcept), term);
+};
+$('topics-nav').onclick = e => {
+  const pill = e.target.closest('.term-pill');
+  if (!pill) return;
+  activeTermId = pill.dataset.term;
+  renderTopicsView();
+  syncUrl();
+};
+$('topics-term-body').onclick = e => {
+  const tRow = e.target.closest('[data-open-topic]');
+  if (tRow) {
+    openTopicOrConceptSearch('topic', tRow.dataset.openTopic, topicTermsById.get(activeTermId));
+    return;
+  }
+  const cBtn = e.target.closest('[data-open-concept]');
+  if (cBtn) {
+    openTopicOrConceptSearch('concept', Number(cBtn.dataset.openConcept), topicTermsById.get(activeTermId));
+  }
+};
+$('topics-trend-body').onclick = e => {
+  const trRow = e.target.closest('[data-trend-term]');
+  if (!trRow) return;
+  const tt = topicTermsById.get(trRow.dataset.trendTerm);
+  openTopicOrConceptSearch(activeTrendKind, activeTrendId, tt);
 };
 $('term-members-list').onclick = e => {
   const allLink = e.target.closest('[data-mp-all]');
@@ -1333,14 +1950,28 @@ const urlP = new URLSearchParams(location.search);
 for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role', 'sort']) {
   if (urlP.has(f)) $(f).value = urlP.get(f);
 }
-if (urlP.get('term') && termsById.has(urlP.get('term'))) {
+if (urlP.get('term') && (termsById.has(urlP.get('term')) || topicTermsById.has(urlP.get('term')))) {
   activeTermId = urlP.get('term');
+}
+if (urlP.get('sub') === 'trend') activeTopicsSub = 'trend';
+if (urlP.get('tk') && ['topic', 'concept'].includes(urlP.get('tk'))) activeTrendKind = urlP.get('tk');
+if (urlP.get('ti')) activeTrendId = activeTrendKind === 'concept' ? Number(urlP.get('ti')) : urlP.get('ti');
+if (urlP.get('topic') && topicsById.has(urlP.get('topic'))) {
+  const tp = topicsById.get(urlP.get('topic'));
+  activeTopicFilter = { kind: 'topic', id: tp.id, label: tp.label, note: tp.note, terms: tp.terms, rx: tp.rx || '' };
+  renderSynonymBanner();
+} else if (urlP.get('concept') && conceptsById.has(Number(urlP.get('concept')))) {
+  const cp = conceptsById.get(Number(urlP.get('concept')));
+  activeTopicFilter = { kind: 'concept', id: cp.id, label: cp.label, note: cp.note, terms: cp.terms, rx: cp.rx || '' };
+  renderSynonymBanner();
 }
 // Start warming DuckDB-WASM in background right away
 ensureDuckDB().catch(() => {});
 if (urlP.get('view') === 'terms') {
   setActiveView('terms', false);
-} else if (['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role'].some(f => $(f).value.trim())) {
+} else if (urlP.get('view') === 'topics') {
+  setActiveView('topics', false);
+} else if (activeTopicFilter || ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role'].some(f => $(f).value.trim())) {
   runSearch(0);
 } else {
   renderDirectoryLanding();
