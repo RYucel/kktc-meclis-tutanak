@@ -382,14 +382,14 @@ def split_speaker_candidate(line: str) -> tuple[str, str, str] | None:
     s = line.strip()
     if not s or s.startswith("("):
         return None
-    # Strip occasional OCR bullet/dots before uppercase speaker label
-    s = re.sub(r"^[•·▪►\*.]+\s*", "", s)
+    # Strip occasional OCR bullet/dots/leading stray dash before uppercase speaker label
+    s = re.sub(r"^[•·▪►\*.\-–—'\s]+(?=[A-ZÇĞİÖŞÜ])", "", s)
     if not s or not s[0].isalpha():
         return None
 
     # Normalize spaced-out letters on the prefix side for reliable matching
-    # (only touch prefix before the first dash/colon so speech body isn't altered)
-    m_pre = re.match(r"^([^:\-–—\n]{2,155})([:\-–—])(.*)$", s)
+    # (only touch prefix before the first dash/colon/tilde so speech body isn't altered)
+    m_pre = re.match(r"^([^:\-–—~\n]{2,155})([:\-–—~])(.*)$", s)
     if m_pre:
         s_norm = collapse_spaced_letters(m_pre.group(1)) + m_pre.group(2) + m_pre.group(3)
     else:
@@ -404,13 +404,14 @@ def split_speaker_candidate(line: str) -> tuple[str, str, str] | None:
     if m_col:
         return tr_upper(m_col.group(1).strip()), ":", m_col.group(3).strip()
 
-    # Main speaker turn separator: dash (hyphen / en-dash / em-dash)
+    # Main speaker turn separator: dash (hyphen / en-dash / em-dash / OCR tilde)
     patterns = [
-        r"^([^\-–—\n]{2,150}?)\s+([-–—])(?:\s+|\.)(.*)$",
-        r"^([^\-–—\n]{2,150}?)\s+([-–—])\s*$",
-        r"^([^\-–—\n]{2,150}?\))\s*([-–—])\s*(.*)$",
-        r"^((?:GEÇİCİ\s+)?(?:BAŞKAN|BAŞKAM|EAŞKAN|KATİP|KATIP|KÂTİP|KATİF))\s*([-–—])\s*(.*)$",
-        r"^([A-ZÇĞİÖŞÜ\s.,]{4,140}?)\s*([-–—])\s+(.*)$",
+        r"^([^\-–—~\n]{2,150}?)\s+([-–—~])(?:\s+|\.)(.*)$",
+        r"^([^\-–—~\n]{2,150}?)\s+([-–—~])\s*$",
+        r"^([^\-–—~\n]{2,150}?\))\s*([-–—~])\s*(.*)$",
+        r"^((?:GEÇİCİ\s+)?(?:BAŞKAN|BAŞKAM|EAŞKAN|KATİP|KATIP|KÂTİP|KATİF))\s*([-–—~])\s*(.*)$",
+        r"^([^\-–—~\n]{8,150}?(?:BAKANI|BAŞBAKAN|BAŞKANI|MİLLETVEKİLİ)\s+[A-ZÇĞİÖŞÜ.\s]{4,50}?)\s*([-–—~])\s*$",
+        r"^([A-ZÇĞİÖŞÜ\s.,]{4,140}?)\s*([-–—~])\s+(.*)$",
     ]
     label, sep, rest = None, None, None
     for pat in patterns:

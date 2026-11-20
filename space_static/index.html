@@ -474,15 +474,20 @@ function highlightSnippet(text, terms, maxLen = 440) {
   return win.split(re).map((part, i) => i % 2 === 1 ? `<mark>${escHtml(part)}</mark>` : escHtml(part)).join('');
 }
 
+function matchSpeakerTokens(foldedName, queryTokens) {
+  return queryTokens.every(tok => foldedName.includes(tok));
+}
+
 function resolveSpeakers(query) {
   const q = query.trim();
   if (!q) return [];
   if (speakersByName.has(q)) return [q];
   const fq = foldAscii(q);
   if (!fq) return [];
+  const tokens = fq.split(' ').filter(Boolean);
   const matches = [];
   for (const s of speakersIndex) {
-    if (s.f.includes(fq)) {
+    if (matchSpeakerTokens(s.f, tokens)) {
       matches.push(s.n);
       if (matches.length >= 20) break;
     }
@@ -683,7 +688,11 @@ async function runSearch(offset = 0) {
     $('btn-export').style.display = total > 0 ? 'inline-flex' : 'none';
 
     if (!rows.length) {
-      $('results').innerHTML = `<div class="empty-state"><strong>Sonuç bulunamadı.</strong><br>Farklı bir anahtar kelime veya daha geniş bir tarih aralığı deneyin.</div>`;
+      const spkProf = w.resolved.length === 1 ? speakersByName.get(w.resolved[0]) : null;
+      const hint = spkProf && spkProf.s > 0
+        ? `<br><strong>${escHtml(spkProf.n)}</strong> için arşivde toplam <strong>${spkProf.s.toLocaleString('tr-TR')}</strong> konuşma (${(spkProf.a||'?').slice(0,4)}–${(spkProf.b||'?').slice(0,4)}) bulunuyor; ancak seçili Meclis/Yıl/Kelime filtresiyle eşleşme yok.`
+        : '<br>Farklı bir anahtar kelime veya daha geniş bir tarih aralığı deneyin.';
+      $('results').innerHTML = `<div class="empty-state"><strong>Sonuç bulunamadı.</strong>${hint}</div>`;
       $('pager').innerHTML = '';
       return;
     }
@@ -801,15 +810,16 @@ $('quick-bar').onclick = e => {
   runSearch(0);
 };
 
-// Autocomplete (0ms local)
+// Autocomplete (0ms local, supports skipping middle names like "Erol Andaç" or "Rauf Denktaş")
 $('speaker').addEventListener('input', () => {
   const v = $('speaker').value.trim();
   const dd = $('ac-dropdown');
   if (v.length < 2) { dd.style.display = 'none'; return; }
   const fq = foldAscii(v);
+  const tokens = fq.split(' ').filter(Boolean);
   const hits = [];
   for (const s of speakersIndex) {
-    if (s.f.includes(fq)) { hits.push(s); if (hits.length >= 16) break; }
+    if (matchSpeakerTokens(s.f, tokens)) { hits.push(s); if (hits.length >= 16) break; }
   }
   if (!hits.length) { dd.style.display = 'none'; return; }
   dd.innerHTML = hits.map(it => `

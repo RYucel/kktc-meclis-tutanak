@@ -95,12 +95,15 @@ def canonicalize_speakers(speeches: list[dict]) -> dict:
                 multi_names[t["speaker_name"]] += 1
         if not multi_names:
             continue
-        # Map folded surname -> list of candidate full names
+        # Map folded surname -> list of candidate full names, and 2-word prefix -> 3-word full names
         surname_map: dict[str, list[str]] = defaultdict(list)
+        prefix2_map: dict[str, list[str]] = defaultdict(list)
         for nm in multi_names:
             f_parts = fold_ascii(nm).split()
             if len(f_parts) >= 2:
                 surname_map[f_parts[-1]].append(nm)
+            if len(f_parts) >= 3:
+                prefix2_map[f"{f_parts[0]} {f_parts[1]}"].append(nm)
 
         for t in turns:
             if t["speaker_role"] != "milletvekili_bakan":
@@ -112,6 +115,13 @@ def canonicalize_speakers(speeches: list[dict]) -> dict:
                 if len(cands) == 1:
                     t["speaker_name"] = cands[0]
                     t["canon_method"] = "doc_surname"
+                    doc_surname_merges += 1
+            elif len(words) == 2:
+                fp2 = fold_ascii(t["speaker_name"])
+                cands = prefix2_map.get(fp2, [])
+                if len(cands) == 1:
+                    t["speaker_name"] = cands[0]
+                    t["canon_method"] = "doc_prefix"
                     doc_surname_merges += 1
 
     # --- Pass 2: Build canonical politician roster ---
