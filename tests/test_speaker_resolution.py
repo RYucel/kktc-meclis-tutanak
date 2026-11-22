@@ -384,3 +384,10 @@ def test_truncation_rule_respects_real_surnames():
     r = SpeakerResolver(stats, {})
     assert r.resolve("Ziya Öztürk", None, 1995) is None
     assert r.resolve("Zaim Necati", None, 1983).name == "Zaim Necatigil"
+
+
+def test_role_labels_are_generic_in_topic_profiles():
+    from analyze_topics import _GENERIC_SPEAKERS
+    from speaker_resolution import ROLE_TITLE_NAMES
+
+    assert ROLE_TITLE_NAMES <= _GENERIC_SPEAKERS
