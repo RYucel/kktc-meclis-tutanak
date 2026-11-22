@@ -19,6 +19,7 @@ Kuzey Kıbrıs Türk Cumhuriyeti (KKTC) Cumhuriyet Meclisi ve öncül meclisleri
    Oturum başlıklarını (`BAŞKAN: ...`, `KATİP: ...`), oturum içi kürsü devirlerini (`Başkanlık Kürsüsünü ... devreder`) ve tüm konuşmacı geçişlerini ayrıştırarak `data/parsed/documents.jsonl` ile `data/parsed/speeches.jsonl` dosyalarını üretir.
 5. `python src/build_dataset.py`
    İki aşamalı konuşmacı kanonikleştirme (belge içi soyadı çözümleme + dönem/genel bulanık yazım düzeltme) uygular, Hugging Face uyumlu Parquet dosyalarını (`data/hf_dataset/`) ve yerel SQLite FTS5 arama veritabanını (`data/search.db`) oluşturur.
+   Ardından 3. geçiş (`src/speaker_resolution.py`) çalışır: resmî milletvekili listeleri ve güçlü kanıtlı kimlikler üzerinden OCR ile bozulmuş, unvanı bitişik yazılmış veya iki kişiyi birden taşıyan etiketleri zaman penceresi kontrolüyle çözer (ayrıntılar aşağıda).
 6. `python src/search_cli.py`
    Konuşmacı adı, anahtar kelime, meclis, dönem ve tarih aralığına göre anlık arama yapar.
 7. `python src/upload_hf.py --repo-id <kullanici>/KKTC_Meclis_Tutanak`
@@ -43,3 +44,23 @@ python src/search_cli.py --speaker "Tufan Erhürman" --query "elektrik OR kib-te
 # Tarih ve dönem filtresiyle arama
 python src/search_cli.py --speaker "Derviş Eroğlu" --from-date 1985-01-01 --to-date 1995-12-31 --query "anayasa"
 ```
+
+## Konuşmacı Kimlik Çözümleme (3. Geçiş)
+
+1960–1995 arası taranmış tutanaklarda OCR aynı kişiyi onlarca farklı yazımla üretir (`Başbakandr . Dervişeroğlu`, `Barbakan Dr Derviş Eroglu`, `Hakkı Attın` …) ve bazı etiketler iki kişiyi birden taşır (`Kutlu Evren, Ünal Üstel`). [`src/speaker_resolution.py`](src/speaker_resolution.py) bunları **önce doğruluk** ilkesiyle çözer:
+
+* **Çapalar (anchor):** `data/official_rosters.json` üyeleri + yüksek frekanslı temiz adlar + (1983 öncesi için) çok sayıda belgede tekrarlanan unvan içi kimlikler (ör. `İkinci Başkan Vekili Ümit Süleyman` → `Ümit Süleyman`).
+* **Bölünmüş kimlik birleştirme:** yalnızca baş harf farkı (`Osman N. Örek` = `Osman Örek`), resmî listeyle doğrulanan düşmüş ilk ad (`Ersan Saner` → `Hamza Ersan Saner`) ve 20 kat daha güçlü bir kimliğin OCR ikizi. Çelişen baş harfler (`Mehmet A.` / `Mehmet B.`) ve Denktaş ailesi gibi korunan soyadları asla birleştirilmez.
+* **Kurtarma:** unvan/önek/bitişik yazım temizlenir; eşleşme ancak tek bir çapaya net farkla uyuyorsa **ve** o kişi ilgili yılda ±2 aktifse uygulanır.
+* **Çok kişili etiketler** hiçbir kişiye atanmaz; başkan/katip sözleri genel makam etiketine düşer.
+
+Yayındaki veri setine ham arşiv olmadan uygulamak için:
+
+```bash
+python src/recanonicalize.py --from-hub            # kuru çalıştırma: data/recanon/ + data/parsed/speaker_resolution_report.json
+python src/recanonicalize.py --from-hub --upload   # rapor uygunsa Dataset + Space indekslerini günceller
+```
+
+Rapordaki her eşleme (`from` → `to`, yöntem, söz sayısı) incelenebilir; ham etiket her zaman `speaker_name_parsed` sütununda kalır. Web arayüzünde otomatik tamamlama yalnızca doğrulanmış kişileri ve makam etiketlerini gösterir; OCR parçaları ancak başka eşleşme yoksa "doğrulanmamış" rozetiyle listelenir.
+
+Testler: `python -m pytest tests/test_speaker_resolution.py tests/test_parser.py tests/test_topics.py`

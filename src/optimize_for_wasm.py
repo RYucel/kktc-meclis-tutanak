@@ -384,51 +384,16 @@ def main():
         for fa in extra_list:
             dedup_aliases.setdefault(canon_nm, set()).add(fa)
 
-    # Yearly timelines for speakers with >= 5 speeches
-    tl_rows = con.execute(
-        f"""
-        SELECT speaker_name, substr(tarih, 1, 4) AS yr, COUNT(*) AS cnt
-        FROM read_parquet('{sp_in}')
-        WHERE tarih IS NOT NULL AND length(tarih) >= 4
-        GROUP BY 1, 2
-        ORDER BY 1, 2
-        """
-    ).fetchall()
-    timelines: dict[str, list[list]] = {}
-    for nm, yr, cnt in tl_rows:
-        timelines.setdefault(nm, []).append([yr, int(cnt)])
+    from speaker_index import build_speaker_entries
 
-    spk_rows = con.execute(
-        f"""
-        SELECT speaker_name, speech_count, word_count, doc_count,
-               first_date, last_date, titles, constituencies
-        FROM read_parquet('{spk_in}')
-        ORDER BY speech_count DESC
-        """
-    ).fetchall()
-
-    speakers_list = []
-    global_speaker_counts: dict[str, int] = {}
-    for r in spk_rows:
-        nm, sc, wc, dc, fd, ld, titles, consts = r
-        global_speaker_counts[nm] = int(sc)
-        base_f = fold_ascii(nm)
-        extra_f = [a for a in sorted(dedup_aliases.get(nm, set())) if a != base_f]
-        search_f = base_f if not extra_f else (base_f + " | " + " | ".join(extra_f))
-        entry = {
-            "n": nm,
-            "f": search_f,
-            "s": int(sc),
-            "w": int(wc),
-            "d": int(dc),
-            "a": (fd or "")[:10],
-            "b": (ld or "")[:10],
-            "c": list(consts)[:3] if consts else [],
-            "t": list(titles)[:5] if titles else [],
-        }
-        if int(sc) >= 5 and nm in timelines:
-            entry["y"] = timelines[nm]
-        speakers_list.append(entry)
+    speakers_list, spk_summary = build_speaker_entries(
+        con, sp_in, spk_in, extra_aliases={k: set(v) for k, v in dedup_aliases.items()}
+    )
+    global_speaker_counts: dict[str, int] = {e["n"]: e["s"] for e in speakers_list}
+    print(
+        f"   Speakers: {spk_summary['speakers_verified']:,} verified, {spk_summary['speakers_role_labels']:,} role labels, "
+        f"{spk_summary['speakers_unverified']:,} unverified (verified turn share {spk_summary['verified_turn_share']:.2%})"
+    )
 
     index_payload = {
         "stats": {
@@ -439,6 +404,8 @@ def main():
             "min_date": st_row[3],
             "max_date": st_row[4],
             "speakers": len(speakers_list),
+            "speakers_verified": spk_summary["speakers_verified"],
+            "verified_turn_share": spk_summary["verified_turn_share"],
             "latest_date": latest_row[0] if latest_row else st_row[4],
             "latest_meclis": latest_row[1] if latest_row else "KKTC",
             "latest_donem": int(latest_row[2]) if (latest_row and latest_row[2] is not None) else None,

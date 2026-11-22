@@ -99,6 +99,9 @@
   .ac-item:hover { background: var(--crimson-tint); }
   .ac-name { font-weight: 600; font-size: 14px; color: var(--ink); }
   .ac-meta { font-family: var(--mono); font-size: 11px; color: var(--ink-muted); white-space: nowrap; }
+  .ac-unverified .ac-name { font-weight: 500; color: var(--ink-muted); }
+  .ac-badge { font-family: var(--mono); font-size: 10px; font-weight: 500; padding: 1px 5px; border-radius: 3px; background: #F3EFE8; color: var(--ink-muted); vertical-align: 1px; margin-left: 4px; }
+  .ac-badge.ac-role { background: var(--crimson-tint); }
 
   .quick-bar { margin-top: 13px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .quick-lbl { font-family: var(--mono); font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
@@ -963,6 +966,27 @@ function matchSpeakerTokens(foldedField, queryTokens) {
   return variants.some(v => queryTokens.every(tok => v.includes(tok)));
 }
 
+// Verified = official roster member / high-confidence identity (v) or generic role label (r).
+// Indexes built before the speaker-resolution pass carry no flags: treat every entry as verified.
+let speakerFlagsPresent = null;
+function isVerifiedSpeaker(s) {
+  if (speakerFlagsPresent === null) speakerFlagsPresent = speakersIndex.some(x => x.v || x.r);
+  return !speakerFlagsPresent || !!(s.v || s.r);
+}
+
+// Verified identities first (index is already sorted by speech count); unverified OCR fragments
+// only fill remaining slots so full-text recall is preserved without polluting the dropdown.
+function findSpeakerHits(tokens, limit, includeUnverified) {
+  const verified = [], unverified = [];
+  for (const s of speakersIndex) {
+    if (!matchSpeakerTokens(s.f, tokens)) continue;
+    if (isVerifiedSpeaker(s)) { verified.push(s); if (verified.length >= limit) break; }
+    else if (unverified.length < limit) unverified.push(s);
+  }
+  if (!includeUnverified) return verified.length ? verified : unverified.slice(0, Math.min(limit, 5));
+  return verified.concat(unverified).slice(0, limit);
+}
+
 function resolveSpeakers(query) {
   const q = query.trim();
   if (!q) return [];
@@ -970,14 +994,7 @@ function resolveSpeakers(query) {
   const fq = foldAscii(q);
   if (!fq) return [];
   const tokens = fq.split(' ').filter(Boolean);
-  const matches = [];
-  for (const s of speakersIndex) {
-    if (matchSpeakerTokens(s.f, tokens)) {
-      matches.push(s.n);
-      if (matches.length >= 20) break;
-    }
-  }
-  return matches;
+  return findSpeakerHits(tokens, 20, true).map(s => s.n);
 }
 
 function renderDossier(name) {
@@ -1962,14 +1979,11 @@ $('speaker').addEventListener('input', () => {
   if (v.length < 2) { dd.style.display = 'none'; return; }
   const fq = foldAscii(v);
   const tokens = fq.split(' ').filter(Boolean);
-  const hits = [];
-  for (const s of speakersIndex) {
-    if (matchSpeakerTokens(s.f, tokens)) { hits.push(s); if (hits.length >= 16) break; }
-  }
+  const hits = findSpeakerHits(tokens, 16, false);
   if (!hits.length) { dd.style.display = 'none'; return; }
   dd.innerHTML = hits.map(it => `
-    <div class="ac-item" data-name="${escHtml(it.n)}">
-      <span class="ac-name">${escHtml(it.n)}</span>
+    <div class="ac-item${isVerifiedSpeaker(it) ? '' : ' ac-unverified'}" data-name="${escHtml(it.n)}">
+      <span class="ac-name">${escHtml(it.n)}${isVerifiedSpeaker(it) ? '' : ' <span class="ac-badge" title="Taranmış eski tutanaklardan gelen, bir milletvekiliyle eşleştirilemeyen OCR etiketi">doğrulanmamış</span>'}${it.r ? ' <span class="ac-badge ac-role" title="Genel makam etiketi (kişi tespit edilemedi)">makam</span>' : ''}</span>
       <span class="ac-meta">${it.s.toLocaleString('tr-TR')} söz · ${(it.a||'?').slice(0,4)}–${(it.b||'?').slice(0,4)}</span>
     </div>
   `).join('');
