@@ -1,6 +1,6 @@
 """Deploy the KKTC Meclisi speaker-based search web app to Hugging Face Spaces.
 
-By default only the UI (index.html + README.md) is uploaded. The JSON indices (speakers/terms/topics/
+By default only the UI (index.html + README.md + og-image.png social preview) is uploaded. The JSON indices (speakers/terms/topics/
 speaker_topics) are produced by the data pipeline (sync_incremental.py / recanonicalize.py --upload)
 and must always match the Parquet files on the dataset; uploading a stale local copy over them would
 break speaker search for every renamed or merged speaker. Use --with-indices only after rebuilding
@@ -53,7 +53,7 @@ def main():
         exist_ok=True,
     )
 
-    patterns = ["index.html", "README.md"]
+    patterns = ["index.html", "README.md", "og-image.png"]
     if args.with_indices:
         for fn in INDEX_FILES:
             assert (space_dir / fn).exists(), f"missing {space_dir / fn}"

@@ -261,10 +261,13 @@ def run(args) -> dict:
             if not fp.exists():
                 raise SystemExit(f"Missing {fp}; refusing a partial Space upload.")
         if args.upload_ui:
-            ui = ROOT / "space_static" / "index.html"
-            if (space_dir / "index.html").resolve() != ui.resolve():
-                shutil.copyfile(ui, space_dir / "index.html")
-            space_files.append("index.html")
+            for fn in ("index.html", "og-image.png"):
+                src_ui = ROOT / "space_static" / fn
+                if not src_ui.exists():
+                    continue
+                if (space_dir / fn).resolve() != src_ui.resolve():
+                    shutil.copyfile(src_ui, space_dir / fn)
+                space_files.append(fn)
         # one commit for all Space files: the UI never sees a half-updated set of indices
         api.upload_folder(
             folder_path=str(space_dir), repo_id=args.space_repo, repo_type="space",
@@ -289,7 +292,7 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--space-repo", default=SPACE_REPO)
     ap.add_argument("--skip-aux", action="store_true", help="Skip terms/topics/speaker_topics/term shard rebuild")
     ap.add_argument("--upload", action="store_true", help="Upload results to the HF dataset + Space")
-    ap.add_argument("--upload-ui", action="store_true", help="With --upload: also upload space_static/index.html")
+    ap.add_argument("--upload-ui", action="store_true", help="With --upload: also upload space_static/index.html + og-image.png")
     return ap
 
 
