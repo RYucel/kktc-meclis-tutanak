@@ -222,6 +222,9 @@ def _ocr_token_equal(a: str, b: str) -> bool:
         return True
     if len(a) >= 3 and (a == b[1:] or a[1:] == b):
         return True
+    # one first letter read as two ("Ural" -> "Tyral") or two as one
+    if min(len(a), len(b)) >= 4 and ((len(a) == len(b) + 1 and a[2:] == b[1:]) or (len(b) == len(a) + 1 and b[2:] == a[1:])):
+        return True
     return len(a) >= 4 and a[:1] == b[:1] and abs(len(a) - len(b)) <= 2 and _ocr_ratio(a, b) >= 80
 
 
@@ -236,6 +239,8 @@ def _pronounceable(tok: str) -> bool:
         return False
     if re.search(r"[^aeiou]{3,}", tok):
         return False
+    if re.search(r"ii|uu|oo|[aeiou]{3,}", tok):
+        return False  # "Tımısiıt", "Uüduılın", "Oaaar": OCR residue ("Saadet" keeps its "aa")
     return sum(c in _VOWELS for c in tok) / len(tok) >= 0.3
 
 
@@ -560,6 +565,13 @@ class SpeakerResolver:
             and wf[-1] not in vocab
         ):
             return "truncated_surname"
+        # (a4) stray initial + dropped middle name of a 20x stronger anchor with the same first and last
+        #      name: "M. Ferdi Soyer" -> "Ferdi Sabit Soyer"
+        if (
+            not weak.roster and weak.initials and strong.count >= 20 * max(weak.count, 1)
+            and len(wf) == 2 and len(sf) == 3 and wf[0] == sf[0] and wf[-1] == sf[-1]
+        ):
+            return "initial_subsequence"
         # (b) dropped first name, confirmed by overwhelming evidence: "Ersan Saner" -> "Hamza Ersan Saner"
         if (
             len(wt) == 2

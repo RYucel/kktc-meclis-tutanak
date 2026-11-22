@@ -391,3 +391,25 @@ def test_role_labels_are_generic_in_topic_profiles():
     from speaker_resolution import ROLE_TITLE_NAMES
 
     assert ROLE_TITLE_NAMES <= _GENERIC_SPEAKERS
+
+
+def test_letter_split_ocr_twin_and_vowel_residue():
+    stats = {
+        "Ekrem Ural": _st(5318, range(1975, 1986), docs=393),
+        "Ekrem Tyral": _st(173, range(1976, 1984), docs=11),
+        "Saadet Hanım": _st(1, [1980], docs=1),
+    }
+    r = SpeakerResolver(stats, {})
+    assert r.anchor_map.get("Ekrem Tyral") == "Ekrem Ural"
+    assert r.resolve("Ekrem Tîral", None, 1980).name == "Ekrem Ural"
+    for junk in ("Faridun Oaaar", "Alpay Uüduılın", "Ozel Tımısiıt"):
+        assert not r.is_plausible_person(junk)
+
+
+def test_stray_initial_with_dropped_middle_name():
+    stats = {
+        "Ferdi Sabit Soyer": _st(31509, range(1985, 2018)),
+        "M. Ferdi Soyer": _st(46, [1994, 1995], docs=6),
+    }
+    r = SpeakerResolver(stats, {})
+    assert r.anchor_map.get("M. Ferdi Soyer") == "Ferdi Sabit Soyer"
