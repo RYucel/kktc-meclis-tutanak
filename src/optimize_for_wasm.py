@@ -392,7 +392,8 @@ def main():
     global_speaker_counts: dict[str, int] = {e["n"]: e["s"] for e in speakers_list}
     print(
         f"   Speakers: {spk_summary['speakers_verified']:,} verified, {spk_summary['speakers_role_labels']:,} role labels, "
-        f"{spk_summary['speakers_unverified']:,} unverified (verified turn share {spk_summary['verified_turn_share']:.2%})"
+        f"{spk_summary['speakers_plausible']:,} plausible, {spk_summary['speakers_unverified']:,} unmatched "
+        f"(verified turn share {spk_summary['verified_turn_share']:.2%})"
     )
 
     index_payload = {

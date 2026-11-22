@@ -231,12 +231,14 @@ def _write_fixture(tmp: Path):
                      "text_source": "pdf_digital", "source_url": f"https://example.test/{doc}", "konusmacilar": []}
 
     for y in range(1986, 1990):
-        add("Derviş Eroğlu", "milletvekili_bakan", f"{y}-02-01", f"D{y}", 60)
-        add("Hakkı Atun", "baskan", f"{y}-02-01", f"D{y}", 40)
+        for half in ("a", "b"):  # anchors must recur across >= 5 documents
+            add("Derviş Eroğlu", "milletvekili_bakan", f"{y}-02-01", f"D{y}{half}", 30)
+            add("Hakkı Atun", "baskan", f"{y}-02-01", f"D{y}{half}", 20)
     add("Başbakandr . Dervişeroğlu", "milletvekili_bakan", "1988-03-01", "D1988b", 3)
     add("Heclis Başkanı Hakkı Atun", "baskan", "1988-03-01", "D1988b", 2)
     add("Kutlu Evren, Ünal Üstel", "katip", "1988-03-01", "D1988b", 2)
     add("Sesler", "diger", "1988-03-01", "D1988b", 1)
+    add("Fazıl Küçük", "milletvekili_bakan", "1960-08-16", "D1960", 1)
 
     data = tmp / "in"
     data.mkdir()
@@ -266,6 +268,7 @@ def test_recanonicalize_end_to_end(tmp_path):
     assert con.execute(f"SELECT COUNT(*) FROM read_parquet('{sp}')").fetchone()[0] == n_rows
     names = dict(con.execute(f"SELECT speaker_name, COUNT(*) FROM read_parquet('{sp}') GROUP BY 1").fetchall())
     assert "Başbakandr . Dervişeroğlu" not in names and names["Derviş Eroğlu"] == 243
+    assert names["Fazıl Küçük"] == 1
     assert names["Hakkı Atun"] == 162
     assert names["Katip"] == 2 and "Kutlu Evren, Ünal Üstel" not in names
     assert names["Sesler"] == 1
@@ -283,7 +286,101 @@ def test_recanonicalize_end_to_end(tmp_path):
     by_name = {e["n"]: e for e in idx["speakers"]}
     assert by_name["Derviş Eroğlu"].get("v") == 1
     assert by_name["Katip"].get("r") == 1
-    assert "v" not in by_name["Sesler"] and "r" not in by_name["Sesler"]
+    assert not {"v", "r", "p"} & set(by_name["Sesler"])
+    assert by_name["Fazıl Küçük"].get("p") == 1 and "v" not in by_name["Fazıl Küçük"]
     assert idx["stats"]["speakers_verified"] >= 2
     assert report["after"]["verified_turn_share"] > report["before"]["verified_turn_share"]
     assert report["turns_remapped_by_method"]["multi_person"] == 2
+
+
+# ---------------------------------------------------------------- review round 1 (PR #1 feedback)
+@pytest.fixture(scope="module")
+def review_resolver():
+    stats = {
+        "Naci Talat Usar": _st(11700, range(1975, 1991)),
+        "Haci T. Usar": _st(59, range(1981, 1990), docs=44),
+        "Özker Özgür": _st(8400, range(1975, 1999)),
+        "Czker Özgür": _st(74, range(1975, 1997), docs=43),
+        "Ümit Süleyman Onan": _st(2023, range(1960, 1981)),
+        "İkinci Başkan Vekili Ümit Süleyman": _st(461, [1975], docs=9),
+        "Mustafa Hacıahmetoğlu": _st(2341, range(1967, 1993)),
+        "Mustafa Hacıahmet": _st(110, range(1967, 1981), docs=46),
+        "Mustafa Akıncı": _st(3000, range(1976, 2010)),
+        "Hüseyin Özgürgün": _st(8700, range(1998, 2019)),
+        "Mustafa Akıncı Hüseyin Özgürgün": _st(204, [2008], docs=6),
+        "Neodet H. Ünal": _st(304, [1972], docs=1),
+        "Hakkı Atun": _st(17000, range(1976, 1999)),
+        "İrsen Küçük": _st(33000, range(1993, 2014)),
+        "Hakkı Atma": _st(79, [1987], docs=2),
+        "Fazıl Küçük": _st(1, [1960], docs=1),
+        "Emine Çolak": _st(51, [2015, 2016], docs=4),
+        "Türk Ajansı": _st(8, [1980], docs=3),
+        "Kenan Bqçwn": _st(1, [1980], docs=1),
+    }
+    return SpeakerResolver(stats, {})
+
+
+def test_single_document_labels_are_never_anchors(review_resolver):
+    assert "Neodet H. Ünal" not in review_resolver.anchors  # 304 turns, one session
+    assert "Neodet H. Ünal" not in review_resolver.verified_names()
+
+
+def test_two_people_on_one_label_are_never_an_anchor(review_resolver):
+    assert "Mustafa Akıncı Hüseyin Özgürgün" not in review_resolver.anchors
+    assert review_resolver.resolve("Mustafa Akıncı Hüseyin Özgürgün", "baskan", 2008).method == "multi_person"
+
+
+def test_first_letter_ocr_twins_merge_into_real_identity(review_resolver):
+    assert review_resolver.anchor_map.get("Haci T. Usar") == "Naci Talat Usar"
+    assert review_resolver.anchor_map.get("Czker Özgür") == "Özker Özgür"
+    # variants that used to be pulled to the ghost "Haci T. Usar" now reach the real person
+    assert review_resolver.resolve("Naci T. Usar L", None, 1985).name == "Naci Talat Usar"
+
+
+def test_short_form_resolves_to_existing_full_identity(review_resolver):
+    assert "Ümit Süleyman" not in review_resolver.anchors  # no duplicate identity next to "Ümit Süleyman Onan"
+    res = review_resolver.resolve("İkinci Başkan Vekili Ümit Süleyman", "baskan", 1975)
+    assert (res.name, res.method) == ("Ümit Süleyman Onan", "anchor_prefix")
+
+
+def test_truncated_surname_merges(review_resolver):
+    assert review_resolver.anchor_map.get("Mustafa Hacıahmet") == "Mustafa Hacıahmetoğlu"
+
+
+@pytest.mark.parametrize("name", ["Fazıl Küçük", "Emine Çolak"])
+def test_rare_real_people_are_plausible_not_ocr(review_resolver, name):
+    assert review_resolver.is_plausible_person(name)
+
+
+@pytest.mark.parametrize("name", ["Hakkı Atma", "Türk Ajansı", "Kenan Bqçwn", "Haci T. Usar", "Sesler"])
+def test_ocr_twins_and_phrases_are_not_plausible(review_resolver, name):
+    assert not review_resolver.is_plausible_person(name)
+
+
+def test_upload_requires_full_index_rebuild():
+    import recanonicalize
+
+    for argv in (["--upload", "--skip-aux"], ["--upload-ui"]):
+        with pytest.raises(SystemExit):
+            recanonicalize.run(recanonicalize.build_argparser().parse_args(argv))
+
+
+def test_deploy_refuses_stale_indices():
+    pytest.importorskip("huggingface_hub")
+    from deploy_space import local_is_stale
+
+    live = {"latest_date": "2026-06-22", "synced_at": "2026-11-20", "speeches": 1281298}
+    assert local_is_stale({"latest_date": "2026-06-22", "synced_at": "2026-11-01", "speeches": 1281298}, live)
+    assert local_is_stale({"latest_date": "2026-06-22", "synced_at": "2026-11-22", "speeches": 1200000}, live)
+    assert local_is_stale({"latest_date": "2026-06-22", "synced_at": "2026-11-22", "speeches": 1281298}, live) is None
+
+
+def test_truncation_rule_respects_real_surnames():
+    stats = {
+        "Ziya Öztürkler": _st(800, range(1990, 2000)),
+        "Mehmet Öztürk": _st(500, range(1990, 2000)),  # "Öztürk" is a surname in its own right
+        "Zaim Necatigil": _st(900, range(1976, 1990)),
+    }
+    r = SpeakerResolver(stats, {})
+    assert r.resolve("Ziya Öztürk", None, 1995) is None
+    assert r.resolve("Zaim Necati", None, 1983).name == "Zaim Necatigil"

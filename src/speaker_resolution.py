@@ -43,7 +43,14 @@ try:  # rapidfuzz is ~100x faster; difflib keeps the module dependency-free
         return [(c, s, i) for c, s, i in _rf_process.extract(query, choices, scorer=_rf_fuzz.ratio, limit=limit, score_cutoff=cutoff)]
 
 except ImportError:  # pragma: no cover - exercised only without rapidfuzz
+    import sys as _sys
     from difflib import SequenceMatcher
+
+    print(
+        "[speaker_resolution] rapidfuzz not installed: falling back to difflib (~100x slower). "
+        "Run `pip install -r requirements.txt`.",
+        file=_sys.stderr,
+    )
 
     def _ratio(a: str, b: str) -> float:
         return SequenceMatcher(None, a, b).ratio() * 100.0
@@ -140,7 +147,27 @@ NON_PERSON_TOKENS = {
     "mi", "olmasi", "mevcut", "degildir", "yani", "soyle", "evet", "hayir", "tamam", "efendim", "oturum",
     "birlesim", "gundem", "madde", "kisim", "bolum", "sunuslari", "baskanligin", "kurula", "konusmaya",
     "gorusulen", "gorusme", "gorusmeler", "oylama", "oylar", "kabul", "ret", "cekimser", "yasa", "tasari",
+    "ajansi", "parti", "partisi", "nevi", "gelirin", "gelirler", "sair", "hizmeti", "amme", "evrak", "gelen",
+    "sunulanlar", "teslim", "tarihi", "savciliga", "sureli", "ivedi", "konusmayiniz", "karsilikli", "kamu",
+    "calisanlarinin", "aylik", "bas", "kan", "the", "president", "onaya", "bilgiye", "suc", "yeri",
 }
+
+# Common Turkish / Turkish Cypriot first names: lets a rare but clean name ("Fazıl Küçük") count as
+# a plausible person instead of an OCR fragment. Folded (ASCII) form.
+COMMON_FIRST_NAMES = set("""
+ahmet mehmet mustafa ali hasan huseyin ibrahim ismail osman omer yusuf halil suleyman salih kemal
+fazil fuat nejat necdet nazif niyazi naci nail hakki halit haluk hamdi hami hilmi hikmet ihsan ilker
+irfan izzet kenan kutlu mahmut mithat muharrem murat musa necati nevzat orhan ozker ozkan ozer rauf raif
+recep rifat ruhi rustem sabri sadi sait salim sami sedat selim semsi sevket sinan sukru taner tahsin
+talat taskent tayyip tevfik turgut ugur umit unal vedat vehbi veli yilmaz zafer zaim zeki ziya erol ergun
+ergin erdal erdogan erhan ersin ertugrul esat eser fadil ferdi feridun fikri gunay guner hamza irsen
+izlem kudret olgun onder ozdil serdar sunat tufan yasar zorlu baki behic aydemir aziz arif atay aytac
+burhan cetin cemal dervis ekrem emin enver esber gungor kubilay nazim oguz ozgur sonay tunay turgay
+emine fatma ayse zehra hatice meryem sevgul sibel fazilet dogus jale gulsen ozlem nevzat resmiye
+""".split())
+
+# Characters that never occur in a clean Turkish name label (OCR / mojibake residue)
+_OCR_SIGNATURE_RE = re.compile(r"[îâûÎÂÛ0-9|/\\{}\[\]<>®@#$%&*_~^=+]|ıı|tj|[a-zçğıöşü][A-ZÇĞİÖŞÜ]")
 
 CONSTITUENCY_FOLDS = ("lefkosa", "gazimagusa", "magusa", "girne", "guzelyurt", "iskele", "lefke")
 
@@ -185,6 +212,31 @@ def ocr_norm(s: str) -> str:
 
 def _ocr_ratio(a: str, b: str) -> float:
     return max(_ratio(a, b), _ratio(ocr_norm(a), b))
+
+
+def _ocr_token_equal(a: str, b: str) -> bool:
+    """Single-token OCR equivalence: first-letter misread (Ö/C, N/H, F/P), dropped first letter, or close twin."""
+    if a == b:
+        return True
+    if len(a) >= 3 and len(a) == len(b) and a[1:] == b[1:]:
+        return True
+    if len(a) >= 3 and (a == b[1:] or a[1:] == b):
+        return True
+    return len(a) >= 4 and a[:1] == b[:1] and abs(len(a) - len(b)) <= 2 and _ocr_ratio(a, b) >= 80
+
+
+_VOWELS = set("aeiou")  # folded
+
+
+def _pronounceable(tok: str) -> bool:
+    """Turkish phonotactics: no 3-consonant runs, no word-initial cluster, enough vowels."""
+    if len(tok) < 3 or any(c in "qwx" for c in tok) or "jj" in tok:
+        return False
+    if tok[0] not in _VOWELS and tok[1] not in _VOWELS:
+        return False
+    if re.search(r"[^aeiou]{3,}", tok):
+        return False
+    return sum(c in _VOWELS for c in tok) / len(tok) >= 0.3
 
 
 def _is_initial(tok: str) -> bool:
@@ -264,6 +316,7 @@ class SpeakerResolver:
         rosters: dict | None = None,
         min_anchor_turns: int = 100,
         min_year_turns: int = 2,
+        min_anchor_docs: int = 5,
     ):
         self.stats = stats
         self.report: dict[str, list] = defaultdict(list)
@@ -283,8 +336,12 @@ class SpeakerResolver:
             in_roster = fk in r_years
             # Pre-1983 assemblies have no official roster: a clean name recurring across many
             # documents is trusted even below the turn threshold (e.g. "Ümit Süleyman").
-            recurring = st["count"] >= 40 and st.get("docs", 0) >= 5
-            if not in_roster and st["count"] < min_anchor_turns and not recurring:
+            # Non-roster anchors must recur across documents: a 300-turn OCR wreck from a single
+            # session ("Neodet H. Ünal", "Mustafa Akıncı Hüseyin Özgürgün") is not an identity.
+            docs = st.get("docs")
+            spread = docs is None or docs >= min_anchor_docs
+            recurring = st["count"] >= 40 and (docs or 0) >= min_anchor_docs
+            if not in_roster and not ((st["count"] >= min_anchor_turns and spread) or recurring):
                 continue
             if fk in seen_fk:  # spelling twin of a bigger anchor (handled by fold elsewhere)
                 continue
@@ -301,6 +358,12 @@ class SpeakerResolver:
 
         self._add_core_anchors(stats, anchors, min_anchor_turns)
 
+        # First names of trusted identities + common Turkish Cypriot first names (used by is_plausible_person)
+        self._first_names: set[str] = {fk.split()[0] for fk in r_years if fk} | COMMON_FIRST_NAMES
+        for a in anchors.values():
+            if a.full_tokens:
+                self._first_names.add(a.full_tokens[0])
+
         # Vocabulary of trusted name tokens: a "wrecked" token equal to one of these is a real name
         self._vocab: set[str] = set()
         for fk in r_years:
@@ -309,12 +372,17 @@ class SpeakerResolver:
             if a.count >= 1000:
                 self._vocab.update(t for t in a.full_tokens if len(t) >= 3)
 
+        self._drop_multi_person_anchors(anchors)
+
         self.anchor_map: dict[str, str] = {}  # demoted anchor name -> target anchor name
         self._consolidate(anchors)
         self.anchors = {n: a for n, a in anchors.items() if n not in self.anchor_map}
         self._by_ns: dict[str, Anchor] = {}
         for a in sorted(self.anchors.values(), key=lambda a: -a.count):
             self._by_ns.setdefault(a.ns, a)
+        # demoted twins keep pointing at their target, so their own OCR variants follow them
+        for weak_name, target in self.anchor_map.items():
+            self._by_ns.setdefault(anchors[weak_name].ns, self.anchors[target])
         self._by_surname: dict[str, list[Anchor]] = defaultdict(list)
         self._by_first: dict[str, list[Anchor]] = defaultdict(list)
         for a in self.anchors.values():
@@ -325,6 +393,22 @@ class SpeakerResolver:
         self._ns_keys = list(self._by_ns.keys())
         self._top2_cache: dict[str, tuple] = {}
         self._cache: dict[tuple, Resolution | None] = {}
+
+    def _drop_multi_person_anchors(self, anchors: dict[str, "Anchor"]) -> None:
+        """A 4+ token 'name' made of two other anchors is two people on one label, not an identity."""
+        by_ns = {a.ns: a for a in anchors.values() if len(a.full_tokens) in (2, 3)}
+        for nm, a in list(anchors.items()):
+            toks = a.full_tokens
+            if len(toks) < 4 or a.roster:
+                continue
+            for cut in range(2, len(toks) - 1):
+                left, right = "".join(toks[:cut]), "".join(toks[cut:])
+                hit_l = left in by_ns or any(_ratio(left, k) >= 92 for k in by_ns if abs(len(k) - len(left)) <= 2)
+                hit_r = right in by_ns or any(_ratio(right, k) >= 92 for k in by_ns if abs(len(k) - len(right)) <= 2)
+                if hit_l and hit_r:
+                    del anchors[nm]
+                    self.report["dropped_multi_person_anchors"].append([nm, a.count])
+                    break
 
     # ------------------------------------------------------------------ core anchors
     @classmethod
@@ -363,11 +447,14 @@ class SpeakerResolver:
             g["years"].update({int(y): c for y, c in st.get("years", {}).items()})
             g["variants"][nm] += st["count"]
         for key, g in agg.items():
-            if not (g["count"] >= min_turns or (g["count"] >= 40 and g["docs"] >= 5)):
+            if not (g["count"] >= 40 and g["docs"] >= 5):
                 continue
             ns = key.replace(" ", "")
             if ns in anchor_ns or any(_ratio(ns, a_ns) >= 88 for a_ns in anchor_ns if abs(len(a_ns) - len(ns)) <= 3):
                 continue  # already represented (the rescue step will map it)
+            core = key.split()
+            if any(a.full_tokens[: len(core)] == core and len(a.full_tokens) > len(core) for a in anchors.values()):
+                continue  # a fuller identity exists ("Ümit Süleyman" -> "Ümit Süleyman Onan")
             display = self._display_from_variants(key.split(), g["variants"])
             if not display or display in anchors:
                 continue
@@ -406,13 +493,20 @@ class SpeakerResolver:
                 if not weak.overlaps(strong):
                     continue
                 reason = self._same_person(weak, strong, self._vocab)
+                if reason == "surname_extension" and not self._unique_extension(weak, strong, anchors):
+                    reason = None
                 if reason:
                     best = (strong, reason)
                     break
             if not best:
                 continue
             strong, reason = best
-            # Initial-only variants resolve to the fuller spelling-without-initials form
+            # Initial-only variants resolve to the fuller spelling-without-initials form;
+            # a name missing its surname resolves to the full three-token form.
+            if reason == "surname_extension" and len(weak.full_tokens) > len(strong.full_tokens):
+                weak, strong = strong, weak
+                if weak.name in self.anchor_map or strong.name in self.anchor_map:
+                    continue
             if reason == "initial_variant" and len(weak.full_tokens) == len(weak.tokens) and len(strong.full_tokens) < len(strong.tokens):
                 weak, strong = strong, weak
                 if weak.name in self.anchor_map or strong.name in self.anchor_map:
@@ -432,6 +526,12 @@ class SpeakerResolver:
             self.anchor_map[k] = t
 
     @staticmethod
+    def _unique_extension(a: "Anchor", b: "Anchor", anchors: dict[str, "Anchor"]) -> bool:
+        short, full = (a, b) if len(a.full_tokens) < len(b.full_tokens) else (b, a)
+        ext = [x for x in anchors.values() if len(x.full_tokens) == 3 and x.full_tokens[:2] == short.full_tokens]
+        return len(ext) == 1 and ext[0] is full
+
+    @staticmethod
     def _same_person(weak: Anchor, strong: Anchor, vocab: frozenset | set = frozenset()) -> str | None:
         wt, st = weak.tokens, strong.tokens
         # (a) identical once single-letter initials are removed: "Osman N. Örek" == "Osman Örek".
@@ -440,6 +540,26 @@ class SpeakerResolver:
             if weak.initials and strong.initials and weak.initials != strong.initials:
                 return None
             return "initial_variant"
+        # (a2) same person with / without trailing surname: "Ümit Süleyman" == "Ümit Süleyman Onan".
+        #      Only when exactly one fuller anchor extends the shorter one (checked by the caller via
+        #      `_unique_extension`) and the fuller form carries a real share of the turns.
+        wf, sf = weak.full_tokens, strong.full_tokens
+        short, full = (wf, sf) if len(wf) < len(sf) else (sf, wf)
+        if (
+            len(short) == 2 and len(full) == 3 and full[:2] == short
+            and min(weak.count, strong.count) > 0
+            and (strong if len(sf) == 3 else weak).count >= 0.15 * (weak.count + strong.count)
+            and not weak.roster and not (strong.roster and len(sf) == 2)
+        ):
+            return "surname_extension"
+        # (a3) OCR-truncated surname: "Mustafa Hacıahmet" -> "Mustafa Hacıahmetoğlu"
+        if (
+            len(wf) == len(sf) >= 2 and wf[:-1] == sf[:-1] and len(wf[-1]) >= 5
+            and sf[-1].startswith(wf[-1]) and sf[-1] != wf[-1]
+            and strong.count >= 5 * max(weak.count, 1) and not weak.roster
+            and wf[-1] not in vocab
+        ):
+            return "truncated_surname"
         # (b) dropped first name, confirmed by overwhelming evidence: "Ersan Saner" -> "Hamza Ersan Saner"
         if (
             len(wt) == 2
@@ -478,6 +598,23 @@ class SpeakerResolver:
             and not (set(weak.full_tokens) - set(strong.full_tokens)) & vocab
         ):
             return "ocr_twin"
+        # (d2) token-aligned OCR twin incl. first-letter errors and initials of a 20x stronger anchor:
+        #      "Haci T. Usar" -> "Naci Talat Usar", "Czker Özgür" -> "Özker Özgür", "Ecep A. Gürler" -> "Recep Ali Gürler"
+        if not weak.roster and strong.count >= 20 * max(weak.count, 1) and len(wt) == len(st) >= 2:
+            exact = changed = 0
+            ok = True
+            for a_tok, b_tok in zip(wt, st):
+                if a_tok == b_tok:
+                    exact += 1
+                elif _is_initial(a_tok) and a_tok == b_tok[:1]:
+                    continue
+                elif _ocr_token_equal(a_tok, b_tok) and a_tok not in vocab:
+                    changed += 1
+                else:
+                    ok = False
+                    break
+            if ok and exact >= 1 and changed >= 1 and (wt[-1] == st[-1] or _ocr_token_equal(wt[-1], st[-1])):
+                return "ocr_aligned"
         # (e) one token exact, the other an OCR wreck of a 20x stronger anchor ("Hakkı Atuıı", "Ergtjn Vehbi")
         if strong.count >= 20 * max(weak.count, 1) and len(weak.full_tokens) == len(strong.full_tokens) == 2:
             (wf, wl), (sf, sl) = weak.full_tokens, strong.full_tokens
@@ -496,6 +633,49 @@ class SpeakerResolver:
 
     def verified_names(self) -> set[str]:
         return set(self.anchors) | ROLE_TITLE_NAMES
+
+    def is_plausible_person(self, name: str) -> bool:
+        """Clean, unresolved, single-person name that is simply rare (e.g. "Fazıl Küçük", "Emine Çolak").
+
+        Not an identity we can confirm, but not an OCR fragment either: the UI lists these normally
+        instead of badging them as OCR labels.
+        """
+        if name in self.anchors or name in ROLE_TITLE_NAMES or name in self.anchor_map:
+            return False
+        if not looks_like_person(name) or _OCR_SIGNATURE_RE.search(name):
+            return False
+        words = name.split()
+        # strict shape: 2–3 capitalised words, no initials, no punctuation ("Fazıl Küçük", "Emine Çolak")
+        if not (2 <= len(words) <= 3) or not all(re.fullmatch(r"[A-ZÇĞİÖŞÜ][a-zçğıöşü]{2,}", w) for w in words):
+            return False
+        ft = fold(name).split()
+        if any(t in NON_PERSON_TOKENS or t in TITLE_WORDS for t in ft):
+            return False
+        if not all(_pronounceable(t) for t in ft):
+            return False  # "Bqçwn", "Jhjrdtlran", "Yçhbt": OCR, not a name
+        if ft[0] not in self._first_names and self.stats.get(name, {}).get("count", 0) < 5:
+            return False  # unknown first name and almost never seen: likely a mis-parsed phrase
+        res = self.resolve(name)
+        if res is not None:
+            return False
+        ns = "".join(ft)
+        if _extract(ns, self._ns_keys, limit=1, cutoff=70.0):
+            return False  # too close to a known identity: an unresolved OCR twin ("Faridun Ousay")
+        # same first name as a known identity and a same-initial wreck of one of its other tokens:
+        # "Hakkı Atma" (Hakkı Atun), "Ümit Süıeymaıt" (Ümit Süleyman Onan), "Naci Tılat" (Naci Talat Usar)
+        for anc in self.anchors.values():
+            at = anc.full_tokens
+            shared = set(ft) & set(at)
+            if not shared:
+                continue
+            if set(ft) <= set(at):
+                return False  # a fragment of a known identity ("Süleyman Onan" of "Ümit Süleyman Onan")
+            for x in ft:
+                if x in shared:
+                    continue
+                if any(x != y and x[:1] == y[:1] and _ratio(x, y) >= 50 for y in at if y not in shared):
+                    return False
+        return True
 
     @staticmethod
     def _role_title(fk: str) -> str | None:
@@ -658,6 +838,13 @@ class SpeakerResolver:
             s, _, a = best
             return Resolution(a.name, "anchor_exact" if s >= 100 else "anchor_fuzzy") if a.name != name else None
 
+        # 3a. Shorter form of exactly one fuller identity active that year:
+        #     "Ümit Süleyman" -> "Ümit Süleyman Onan" (surname adopted later), "Zaim Necati" -> "Zaim Necatigil"
+        if year is not None:
+            pf = self._prefix_match(tokens, year)
+            if pf is not None:
+                return Resolution(pf.name, "anchor_prefix") if pf.name != name else None
+
         # 3b. Token-aligned rescue: one name token exact, the other a same-initial OCR wreck,
         #     and exactly one anchor active that year fits ("Hakkı Attın" -> "Hakkı Atun").
         if year is not None:
@@ -678,6 +865,30 @@ class SpeakerResolver:
             if len(cands) == 1 and real[0] not in PROTECTED_SURNAMES:
                 return Resolution(cands[0].name, "surname_temporal")
         return None
+
+    def _prefix_match(self, tokens: list[str], year: int) -> Anchor | None:
+        segs = [seg.split() for seg in " ".join(tokens).split("|")]
+        segs = [[t for t in seg if not any(_ratio(t, c) >= 80 for c in CONSTITUENCY_FOLDS)] for seg in segs]
+        segs = [[t for t in seg if len(t) >= 3] for seg in segs]
+        segs = [seg for seg in segs if seg]
+        if len(segs) != 1 or len(segs[0]) != 2:
+            return None
+        f, l = segs[0]
+        if any(a.full_tokens == [f, l] for a in self.anchors.values()):
+            return None
+        cands = []
+        for a in self.anchors.values():
+            ft = a.full_tokens
+            if a.surname in PROTECTED_SURNAMES or not a.active(year):
+                continue
+            if len(ft) == 3 and ft[:2] == [f, l]:
+                cands.append(a)
+            elif (
+                len(ft) == 2 and ft[0] == f and len(l) >= 5 and ft[1].startswith(l) and ft[1] != l
+                and l not in self._by_surname  # "Öztürk" is a surname in its own right, not "Öztürkler" cut short
+            ):
+                cands.append(a)
+        return cands[0] if len(cands) == 1 else None
 
     def _token_temporal(self, tokens: list[str], year: int) -> Anchor | None:
         segs = " ".join(tokens).split("|")

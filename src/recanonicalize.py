@@ -2,11 +2,15 @@
 
 Typical use (Linux/Windows, ~2–4 minutes for 1.28M turns):
 
-    # 1. dry run straight from the Hub, writes everything under data/recanon/ and prints a diff report
+    # 1. dry run straight from the Hub: Parquet under data/recanon/, Space JSON under space_static/,
+    #    audit report in data/parsed/speaker_resolution_report.json
     python src/recanonicalize.py --from-hub
 
-    # 2. happy with data/parsed/speaker_resolution_report.json?  push dataset + Space indices
-    python src/recanonicalize.py --from-hub --upload
+    # 2. happy with data/parsed/speaker_resolution_report.json?  push dataset + Space indices + UI
+    python src/recanonicalize.py --from-hub --upload --upload-ui
+
+Space JSON indices are written to space_static/ by default, so the committed copies never go stale
+(src/deploy_space.py uploads only the UI unless --with-indices, and refuses stale indices).
 
 What it does:
 1. Loads speeches/documents/speakers Parquet (local ``data/hf_dataset/data`` or ``--from-hub``).
@@ -83,6 +87,11 @@ def quality_metrics(con, sp_path: str, rosters: dict) -> dict:
 
 def run(args) -> dict:
     t0 = time.perf_counter()
+    if args.upload and args.skip_aux:
+        # terms/topics/speaker_topics/term shards would keep the old speaker names -> inconsistent tabs
+        raise SystemExit("--upload cannot be combined with --skip-aux: every Space index must be rebuilt together.")
+    if args.upload_ui and not args.upload:
+        raise SystemExit("--upload-ui requires --upload.")
     rosters = load_rosters(args.rosters)
 
     if args.from_hub:
@@ -246,11 +255,22 @@ def run(args) -> dict:
             folder_path=str(out_root), repo_id=args.dataset_repo, repo_type="dataset", commit_message=msg,
             allow_patterns=["data/*.parquet", "README.md", "terms_cache/**"],
         )
-        for fn in ("speakers_index.json", "terms_index.json", "topics_index.json", "speaker_topics.json"):
+        space_files = ["speakers_index.json", "terms_index.json", "topics_index.json", "speaker_topics.json"]
+        for fn in space_files:
             fp = space_dir / fn
-            if fp.exists():
-                api.upload_file(path_or_fileobj=str(fp), path_in_repo=fn, repo_id=args.space_repo, repo_type="space", commit_message=msg)
-        print("Uploaded dataset + Space indices.")
+            if not fp.exists():
+                raise SystemExit(f"Missing {fp}; refusing a partial Space upload.")
+        if args.upload_ui:
+            ui = ROOT / "space_static" / "index.html"
+            if (space_dir / "index.html").resolve() != ui.resolve():
+                shutil.copyfile(ui, space_dir / "index.html")
+            space_files.append("index.html")
+        # one commit for all Space files: the UI never sees a half-updated set of indices
+        api.upload_folder(
+            folder_path=str(space_dir), repo_id=args.space_repo, repo_type="space",
+            allow_patterns=space_files, commit_message=msg,
+        )
+        print(f"Uploaded dataset + Space files: {space_files}")
     return report
 
 
@@ -259,13 +279,17 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--from-hub", action="store_true", help="Download current Parquet files from the HF dataset")
     ap.add_argument("--data-dir", default=str(ROOT / "data" / "hf_dataset" / "data"), help="Local Parquet input dir")
     ap.add_argument("--out-dir", default=str(ROOT / "data" / "recanon"), help="Output dataset root (data/, README.md, terms_cache/)")
-    ap.add_argument("--space-dir", default=str(ROOT / "data" / "recanon" / "space"), help="Output dir for Space JSON indices")
+    ap.add_argument(
+        "--space-dir", default=str(ROOT / "space_static"),
+        help="Output dir for Space JSON indices (default space_static/, so the repo copy never goes stale)",
+    )
     ap.add_argument("--report", default=str(ROOT / "data" / "parsed" / "speaker_resolution_report.json"))
     ap.add_argument("--rosters", default=None, help="Path to official_rosters.json (default: data/official_rosters.json)")
     ap.add_argument("--dataset-repo", default=DATASET_REPO)
     ap.add_argument("--space-repo", default=SPACE_REPO)
     ap.add_argument("--skip-aux", action="store_true", help="Skip terms/topics/speaker_topics/term shard rebuild")
     ap.add_argument("--upload", action="store_true", help="Upload results to the HF dataset + Space")
+    ap.add_argument("--upload-ui", action="store_true", help="With --upload: also upload space_static/index.html")
     return ap
 
 

@@ -6,9 +6,11 @@ is now the single source of truth and adds two compact flags consumed by ``space
 
 * ``"v": 1`` — verified person (official roster member or high-confidence anchor identity)
 * ``"r": 1`` — generic role label ("Meclis Başkanı", "Katip", "İkinci Başkan" ...)
+* ``"p": 1`` — plausible person: a clean, rare name that matches no known identity
+  ("Fazıl Küçük", "Emine Çolak"); listed normally, never badged as an OCR label
 
-Entries without either flag are unverified OCR fragments; the UI hides them from autocomplete
-unless nothing verified matches. Older UIs simply ignore the extra keys.
+Entries without any flag are unmatched labels (mostly OCR fragments); the UI lists at most a few of
+them, muted and badged, below the flagged matches. Older UIs simply ignore the extra keys.
 """
 
 from __future__ import annotations
@@ -71,12 +73,25 @@ def build_speaker_entries(
     ).fetchall():
         timelines.setdefault(nm, []).append([yr, int(cnt)])
 
-    cols = {r[0] for r in con.execute(f"DESCRIBE SELECT * FROM read_parquet('{spk}')").fetchall()}
-    rv_col = "raw_variants" if "raw_variants" in cols else "NULL"
+    # Original labels per canonical speaker, most frequent first (speakers.parquet raw_variants is unordered)
+    variants: dict[str, list[str]] = {}
+    sp_cols = {r[0] for r in con.execute(f"DESCRIBE SELECT * FROM read_parquet('{sp}')").fetchall()}
+    if "speaker_name_parsed" in sp_cols:
+        for nm, v, _c in con.execute(
+            f"""
+            SELECT speaker_name, speaker_name_parsed, COUNT(*) AS c FROM read_parquet('{sp}')
+            WHERE speaker_name_parsed IS NOT NULL AND speaker_name_parsed <> speaker_name
+            GROUP BY 1, 2 ORDER BY 1, c DESC, 2
+            """
+        ).fetchall():
+            lst = variants.setdefault(nm, [])
+            if len(lst) < 40:
+                lst.append(v)
+
     rows = con.execute(
         f"""
         SELECT speaker_name, speech_count, word_count, doc_count,
-               first_date, last_date, titles, constituencies, {rv_col}
+               first_date, last_date, titles, constituencies
         FROM read_parquet('{spk}')
         ORDER BY speech_count DESC, speaker_name ASC
         """
@@ -85,7 +100,9 @@ def build_speaker_entries(
     entries: list[dict] = []
     n_verified = n_role = 0
     turns_verified = turns_total = 0
-    for nm, sc, wc, dc, fd, ld, titles, consts, raw_variants in rows:
+    n_plausible = 0
+    for nm, sc, wc, dc, fd, ld, titles, consts in rows:
+        raw_variants = variants.get(nm, [])
         base_f = fold(nm)
         is_role = nm in ROLE_TITLE_NAMES
         is_person = nm in verified and not is_role
@@ -119,6 +136,9 @@ def build_speaker_entries(
             entry["r"] = 1
             n_role += 1
             turns_verified += int(sc)
+        elif resolver.is_plausible_person(nm):
+            entry["p"] = 1
+            n_plausible += 1
         turns_total += int(sc)
         if int(sc) >= 5 and nm in timelines:
             entry["y"] = timelines[nm]
@@ -127,7 +147,8 @@ def build_speaker_entries(
     summary = {
         "speakers_verified": n_verified,
         "speakers_role_labels": n_role,
-        "speakers_unverified": len(entries) - n_verified - n_role,
+        "speakers_plausible": n_plausible,
+        "speakers_unverified": len(entries) - n_verified - n_role - n_plausible,
         "verified_turn_share": round(turns_verified / turns_total, 4) if turns_total else 0.0,
     }
     return entries, summary

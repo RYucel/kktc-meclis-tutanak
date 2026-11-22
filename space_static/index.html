@@ -966,25 +966,26 @@ function matchSpeakerTokens(foldedField, queryTokens) {
   return variants.some(v => queryTokens.every(tok => v.includes(tok)));
 }
 
-// Verified = official roster member / high-confidence identity (v) or generic role label (r).
-// Indexes built before the speaker-resolution pass carry no flags: treat every entry as verified.
+// Matched = verified identity (v: roster member / high-confidence), generic role label (r) or a
+// plausible rare person (p, e.g. "Fazıl Küçük"). Everything else is an unmatched label (mostly OCR).
+// Indexes built before the speaker-resolution pass carry no flags: treat every entry as matched.
 let speakerFlagsPresent = null;
-function isVerifiedSpeaker(s) {
-  if (speakerFlagsPresent === null) speakerFlagsPresent = speakersIndex.some(x => x.v || x.r);
-  return !speakerFlagsPresent || !!(s.v || s.r);
+function isMatchedSpeaker(s) {
+  if (speakerFlagsPresent === null) speakerFlagsPresent = speakersIndex.some(x => x.v || x.r || x.p);
+  return !speakerFlagsPresent || !!(s.v || s.r || s.p);
 }
 
-// Verified identities first (index is already sorted by speech count); unverified OCR fragments
-// only fill remaining slots so full-text recall is preserved without polluting the dropdown.
-function findSpeakerHits(tokens, limit, includeUnverified) {
-  const verified = [], unverified = [];
+// Matched entries first (index is sorted by speech count); unmatched labels are never hidden, only
+// pushed below: at most `maxUnmatched` when matches exist, all remaining slots otherwise.
+function findSpeakerHits(tokens, limit, maxUnmatched) {
+  const matched = [], unmatched = [];
   for (const s of speakersIndex) {
     if (!matchSpeakerTokens(s.f, tokens)) continue;
-    if (isVerifiedSpeaker(s)) { verified.push(s); if (verified.length >= limit) break; }
-    else if (unverified.length < limit) unverified.push(s);
+    if (isMatchedSpeaker(s)) { matched.push(s); if (matched.length >= limit) break; }
+    else if (unmatched.length < limit) unmatched.push(s);
   }
-  if (!includeUnverified) return verified.length ? verified : unverified.slice(0, Math.min(limit, 5));
-  return verified.concat(unverified).slice(0, limit);
+  const room = Math.max(0, limit - matched.length);
+  return matched.concat(unmatched.slice(0, matched.length ? Math.min(room, maxUnmatched) : room));
 }
 
 function resolveSpeakers(query) {
@@ -994,7 +995,7 @@ function resolveSpeakers(query) {
   const fq = foldAscii(q);
   if (!fq) return [];
   const tokens = fq.split(' ').filter(Boolean);
-  return findSpeakerHits(tokens, 20, true).map(s => s.n);
+  return findSpeakerHits(tokens, 20, 20).map(s => s.n);
 }
 
 function renderDossier(name) {
@@ -1172,7 +1173,7 @@ function renderDirectoryLanding() {
   $('pager').innerHTML = '';
   $('results-count').textContent = 'En çok söz alan siyasetçilerden birini seçin veya yukarıdan konuşmacı/kelime arayın.';
   const generic = new Set(['Meclis Başkanı', 'Katip', 'Geçici Başkan', 'Geçici Katip', 'Sesler']);
-  const top = speakersIndex.filter(s => !generic.has(s.n)).slice(0, 24);
+  const top = speakersIndex.filter(s => !generic.has(s.n) && !s.r && isMatchedSpeaker(s)).slice(0, 24);
   $('results').innerHTML = `
     <div class="dir-heading">
       <div>Öne Çıkan Konuşmacılar (1960–2026) <span>Tıklayarak tüm konuşmalarını anında listeleyin</span></div>
@@ -1979,11 +1980,11 @@ $('speaker').addEventListener('input', () => {
   if (v.length < 2) { dd.style.display = 'none'; return; }
   const fq = foldAscii(v);
   const tokens = fq.split(' ').filter(Boolean);
-  const hits = findSpeakerHits(tokens, 16, false);
+  const hits = findSpeakerHits(tokens, 16, 4);
   if (!hits.length) { dd.style.display = 'none'; return; }
   dd.innerHTML = hits.map(it => `
-    <div class="ac-item${isVerifiedSpeaker(it) ? '' : ' ac-unverified'}" data-name="${escHtml(it.n)}">
-      <span class="ac-name">${escHtml(it.n)}${isVerifiedSpeaker(it) ? '' : ' <span class="ac-badge" title="Taranmış eski tutanaklardan gelen, bir milletvekiliyle eşleştirilemeyen OCR etiketi">doğrulanmamış</span>'}${it.r ? ' <span class="ac-badge ac-role" title="Genel makam etiketi (kişi tespit edilemedi)">makam</span>' : ''}</span>
+    <div class="ac-item${isMatchedSpeaker(it) ? '' : ' ac-unverified'}" data-name="${escHtml(it.n)}">
+      <span class="ac-name">${escHtml(it.n)}${isMatchedSpeaker(it) ? '' : ' <span class="ac-badge" title="Resmî milletvekili listesiyle veya güçlü bir kimlikle eşleştirilemeyen etiket: nadir bir konuşmacı ya da taranmış tutanaktan kalan bir okuma hatası olabilir">eşleştirilmemiş</span>'}${it.r ? ' <span class="ac-badge ac-role" title="Genel makam etiketi (oturumu yöneten kişi tespit edilemedi)">makam</span>' : ''}</span>
       <span class="ac-meta">${it.s.toLocaleString('tr-TR')} söz · ${(it.a||'?').slice(0,4)}–${(it.b||'?').slice(0,4)}</span>
     </div>
   `).join('');
