@@ -82,6 +82,57 @@ def extract_docx(path: Path) -> dict:
     }
 
 
+_ALPHA_TOKEN_RE = re.compile(r"[A-Za-zÇĞİÖŞÜçğıöşüÂÎÛâîû]+")
+
+
+def looks_letter_spaced(text: str) -> bool:
+    """True when a page's text layer is letter-spaced ('h e r h a n g i b i r'): most alphabetic tokens are 1 char."""
+    toks = _ALPHA_TOKEN_RE.findall(text or "")
+    if len(toks) < 40:
+        return False
+    return sum(1 for t in toks if len(t) == 1) / len(toks) > 0.4
+
+
+def _join_line_tokens(ln: list) -> str:
+    """Join PyMuPDF word boxes of one visual line; glue letters whose gap is in the 'letter gap' cluster."""
+    toks = [w[4] for w in ln]
+    if len(toks) < 3 or sum(1 for t in toks if len(t) == 1) / len(toks) < 0.5:
+        return " ".join(toks)  # tokens are already real words: every gap is a word gap
+    hs = sorted(w[3] - w[1] for w in ln)
+    h = max(hs[len(hs) // 2], 1.0)
+    gaps = [(b[0] - a[2]) / h for a, b in zip(ln, ln[1:])]
+    srt = sorted(gaps)
+    thr, best = 0.6, 0.0
+    for x, y in zip(srt, srt[1:]):
+        jump = (y + 0.05) / (x + 0.05)
+        if jump > best and 0.1 <= (x + y) / 2 <= 1.5:
+            best, thr = jump, (x + y) / 2
+    if best < 1.6:
+        thr = 0.6
+    out = toks[0]
+    for g, t in zip(gaps, toks[1:]):
+        out += ("" if g < thr else " ") + t
+    return out
+
+
+def rebuild_letter_spaced_page(page) -> str:
+    """Rebuild a letter-spaced page from glyph geometry: cluster word boxes by baseline, then join by gap size."""
+    words = [w for w in page.get_text("words") if w[4].strip()]
+    if not words:
+        return ""
+    lines, cur, cur_y, cur_h = [], [], 0.0, 1.0
+    for w in sorted(words, key=lambda w: w[3]):
+        if cur and abs(w[3] - cur_y) <= 0.45 * cur_h:
+            cur.append(w)
+        else:
+            if cur:
+                lines.append(cur)
+            cur, cur_y, cur_h = [w], w[3], max(w[3] - w[1], 1.0)
+    if cur:
+        lines.append(cur)
+    return "\n".join(_join_line_tokens(sorted(ln, key=lambda w: w[0])) for ln in lines)
+
+
 def extract_pdf(path: Path) -> dict:
     import fitz
 
@@ -90,8 +141,14 @@ def extract_pdf(path: Path) -> dict:
         pages = []
         image_pages = 0
         empty_pages = 0
+        spaced_pages_fixed = 0
         for page in doc:
             t = page.get_text("text") or ""
+            if looks_letter_spaced(t):
+                rebuilt = rebuild_letter_spaced_page(page)
+                if rebuilt.strip():
+                    t = rebuilt
+                    spaced_pages_fixed += 1
             pages.append(t)
             if len(t.strip()) < 30:
                 empty_pages += 1
@@ -117,6 +174,7 @@ def extract_pdf(path: Path) -> dict:
         "total_chars": len(full_text),
         "empty_pages": empty_pages,
         "image_pages": image_pages,
+        "spaced_pages_fixed": spaced_pages_fixed,
     }
 
 
