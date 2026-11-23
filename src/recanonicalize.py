@@ -223,19 +223,28 @@ def run(args) -> dict:
         print("      Refreshing documents.konusmacilar...")
         doc_cols = {r[0] for r in con.execute(f"DESCRIBE SELECT * FROM read_parquet('{_p(src['documents'])}')").fetchall()}
         if "konusmacilar" in doc_cols:
-            con.execute(
-                f"""
-                COPY (
-                    SELECT d.* REPLACE (COALESCE(k.ks, d.konusmacilar) AS konusmacilar)
-                    FROM read_parquet('{_p(src['documents'])}') d
-                    LEFT JOIN (
-                        SELECT doc_id, list_sort(list_distinct(list(speaker_name))) AS ks
-                        FROM read_parquet('{_p(sp_out)}') GROUP BY doc_id
-                    ) k USING (doc_id)
-                    ORDER BY doc_id ASC
-                ) TO '{_p(tmp_doc)}' (FORMAT PARQUET, COMPRESSION ZSTD, ROW_GROUP_SIZE 128)
-                """
-            )
+            # Stream documents batch by batch: a JOIN + ORDER BY over the full-text column needs >1.5GB on small machines
+            import pyarrow.parquet as pq
+
+            ks = {
+                r[0]: r[1]
+                for r in con.execute(
+                    f"SELECT doc_id, list_sort(list_distinct(list(speaker_name))) FROM read_parquet('{_p(sp_out)}') GROUP BY doc_id"
+                ).fetchall()
+            }
+            pf = pq.ParquetFile(src["documents"])
+            schema = pf.schema_arrow
+            k_idx = schema.get_field_index("konusmacilar")
+            k_type = schema.field(k_idx).type
+            with pq.ParquetWriter(str(tmp_doc), schema, compression="zstd") as w:
+                for batch in pf.iter_batches(batch_size=128):
+                    ids = batch.column(batch.schema.get_field_index("doc_id")).to_pylist()
+                    old = batch.column(k_idx).to_pylist()
+                    new_vals = [ks.get(i, o) for i, o in zip(ids, old)]
+                    if pa.types.is_string(k_type) or pa.types.is_large_string(k_type):
+                        new_vals = [", ".join(v) if isinstance(v, list) else v for v in new_vals]
+                    batch = batch.set_column(k_idx, schema.field(k_idx), pa.array(new_vals, type=k_type))
+                    w.write_batch(batch, row_group_size=128)
             os.replace(tmp_doc, doc_out)
         elif Path(src["documents"]).resolve() != doc_out.resolve():
             shutil.copyfile(src["documents"], doc_out)
