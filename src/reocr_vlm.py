@@ -164,6 +164,8 @@ def main():
     ap.add_argument("--limit-docs", type=int, default=0)
     ap.add_argument("--pages-per-doc", type=int, default=0, help="Sample this many pages per document (0 = all)")
     ap.add_argument("--max-pages", type=int, default=0, help="Hard stop after this many new pages (cost guard)")
+    ap.add_argument("--max-usd", type=float, default=1.0,
+                    help="Stop when the estimated spend of this run reaches this many USD (default 1). Raise it deliberately for a full run.")
     ap.add_argument("--pilot", action="store_true", help="Write pilot_report.json + pilot_compare.md (before/after)")
     ap.add_argument("--in-price", type=float, default=0.0, help="USD per 1M input tokens (for the cost estimate)")
     ap.add_argument("--out-price", type=float, default=0.0, help="USD per 1M output tokens (for the cost estimate)")
@@ -206,7 +208,17 @@ def main():
     done = {"n": 0, "in": 0, "out": 0, "think": 0}
     t0 = time.perf_counter()
 
+    stop = threading.Event()
+
+    def spent() -> float:
+        return (done["in"] * args.in_price + done["out"] * args.out_price) / 1e6
+
+    if args.max_usd and not (args.in_price or args.out_price):
+        raise SystemExit(f"No price known for {args.model}: pass --in-price/--out-price so --max-usd can be enforced.")
+
     def work(job):
+        if stop.is_set():
+            return
         did, src, pno = job
         with pymupdf.open(str(src)) as d:
             png = render_png(d[pno], args.dpi)
@@ -222,8 +234,11 @@ def main():
             done["think"] += usage.get("think", 0)
             with usage_log.open("a", encoding="utf-8") as f:
                 f.write(json.dumps({"doc_id": did, "page": pno + 1, "model": args.model, **usage}, ensure_ascii=False) + "\n")
+            if args.max_usd and spent() >= args.max_usd and not stop.is_set():
+                stop.set()
+                print(f"   COST CAP: ~${spent():.2f} spent (--max-usd {args.max_usd}); stopping. Cached pages are kept.")
             if done["n"] % 25 == 0 or done["n"] == len(jobs):
-                print(f"   {done['n']:,}/{len(jobs):,} pages  tokens in={done['in']:,} out={done['out']:,} (thinking {done['think']:,})  {time.perf_counter() - t0:.0f}s")
+                print(f"   {done['n']:,}/{len(jobs):,} pages  tokens in={done['in']:,} out={done['out']:,} (thinking {done['think']:,}) ~${spent():.2f}  {time.perf_counter() - t0:.0f}s")
 
     errors = []
     with cf.ThreadPoolExecutor(max_workers=args.workers) as ex:
