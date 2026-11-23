@@ -241,13 +241,23 @@ def main():
                 print(f"   {done['n']:,}/{len(jobs):,} pages  tokens in={done['in']:,} out={done['out']:,} (thinking {done['think']:,}) ~${spent():.2f}  {time.perf_counter() - t0:.0f}s")
 
     errors = []
-    with cf.ThreadPoolExecutor(max_workers=args.workers) as ex:
-        futs = {ex.submit(work, j): j for j in jobs}
-        for f in cf.as_completed(futs):
-            try:
-                f.result()
-            except Exception as e:
-                errors.append(f"{futs[f][0]} p{futs[f][2] + 1}: {e}")
+    ex = cf.ThreadPoolExecutor(max_workers=args.workers)
+    futs = {ex.submit(work, j): j for j in jobs}
+    pending = set(futs)
+    try:
+        # short waits keep the main thread responsive so Ctrl+C works on Windows too
+        while pending:
+            finished, pending = cf.wait(pending, timeout=1.0, return_when=cf.FIRST_COMPLETED)
+            for f in finished:
+                try:
+                    f.result()
+                except Exception as e:
+                    errors.append(f"{futs[f][0]} p{futs[f][2] + 1}: {e}")
+    except KeyboardInterrupt:
+        stop.set()
+        print(f"\n   Stopped by user after {done['n']} pages (~${spent():.2f}). Cached pages are kept.")
+        os._exit(130)  # do not wait for in-flight requests
+    ex.shutdown(wait=True)
     if errors:
         print(f"   {len(errors)} pages failed (re-run to retry): {errors[:3]}")
 
