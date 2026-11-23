@@ -101,6 +101,18 @@ def build_speaker_entries(
     sp = Path(sp_path).as_posix()
     spk = Path(spk_path).as_posix()
     rosters = load_rosters() if rosters is None else rosters
+    # Roster spelling variants (e.g. Resmi Gazete Latin forms of 1960 Greek Cypriot members) stay searchable
+    roster_aliases: dict[str, set[str]] = {}
+    for term in rosters.values():
+        for mem in term.get("members", []):
+            for a in mem.get("aliases", []) or []:
+                if fold(a):
+                    roster_aliases.setdefault(mem["name"], set()).add(fold(a))
+    if roster_aliases:
+        merged = {k: set(v) for k, v in (extra_aliases or {}).items()}
+        for k, v in roster_aliases.items():
+            merged.setdefault(k, set()).update(v)
+        extra_aliases = merged
 
     resolver = SpeakerResolver(stats_from_parquet(con, sp), rosters)
     verified = resolver.verified_names()
