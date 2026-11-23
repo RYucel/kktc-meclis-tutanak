@@ -81,36 +81,63 @@ def make_client():
     return genai.Client(api_key=key)
 
 
-def transcribe(client, model: str, png: bytes, retries: int = 5) -> tuple[str, dict]:
+_think_choice: dict[str, int] = {}
+
+
+def _thinking_configs(types):
+    """Transcription needs no reasoning: try the lowest thinking setting the model accepts, then none."""
+    out = []
+    for kw in ({"thinking_level": "minimal"}, {"thinking_level": "low"}, {"thinking_budget": 0}):
+        try:
+            out.append(types.ThinkingConfig(**kw))
+        except Exception:  # older SDKs lack thinking_level
+            pass
+    out.append(None)
+    return out
+
+
+def transcribe(client, model: str, png: bytes, retries: int = 8) -> tuple[str, dict]:
+    import random
+
     from google.genai import types
 
-    delay = 4.0
-    for attempt in range(retries):
+    thinks = _thinking_configs(types)
+    delay = 10.0
+    attempt = 0
+    while True:
+        idx = _think_choice.get(model, 0)
+        cfg = types.GenerateContentConfig(temperature=0.0, thinking_config=thinks[idx]) if thinks[idx] else types.GenerateContentConfig(temperature=0.0)
         try:
             r = client.models.generate_content(
                 model=model,
                 contents=[types.Part.from_bytes(data=png, mime_type="image/png"), PROMPT],
-                config=types.GenerateContentConfig(temperature=0.0),
+                config=cfg,
             )
             u = r.usage_metadata
             usage = {
                 "in": getattr(u, "prompt_token_count", 0) or 0,
                 "out": (getattr(u, "candidates_token_count", 0) or 0) + (getattr(u, "thoughts_token_count", 0) or 0),
+                "think": getattr(u, "thoughts_token_count", 0) or 0,
             }
             text = (r.text or "").strip()
             if text.startswith("```"):
                 text = text.strip("`").split("\n", 1)[-1]
             return text, usage
-        except Exception as e:  # rate limits / transient errors
+        except Exception as e:
             code = getattr(e, "code", None) or getattr(e, "status_code", None)
+            if code == 400 and idx < len(thinks) - 1 and "think" in str(e).lower():
+                with _lock:  # model rejects this thinking setting: fall back to the next one
+                    _think_choice[model] = max(_think_choice.get(model, 0), idx + 1)
+                continue
             if isinstance(code, int) and 400 <= code < 500 and code not in (408, 429):
                 raise SystemExit(f"Gemini API error {code} (not retried): {str(e)[:300]}")
-            if attempt == retries - 1:
+            attempt += 1
+            if attempt >= retries:
                 raise
-            print(f"      retry in {delay:.0f}s: {str(e)[:120]}")
-            time.sleep(delay)
-            delay *= 2
-    raise RuntimeError("unreachable")
+            wait = delay * (1 + random.random() * 0.5)
+            print(f"      retry in {wait:.0f}s: {str(e)[:100]}")
+            time.sleep(wait)
+            delay = min(delay * 2, 120)
 
 
 def pick_pages(n: int, k: int) -> list[int]:
@@ -133,7 +160,7 @@ def main():
                     help=f"Gemini model id (default {DEFAULT_MODEL}; cheaper: gemini-3.1-flash-lite, gemini-2.5-flash-lite)")
     ap.add_argument("--list-models", action="store_true", help="Print the model ids your API key can use and exit")
     ap.add_argument("--dpi", type=int, default=200)
-    ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--limit-docs", type=int, default=0)
     ap.add_argument("--pages-per-doc", type=int, default=0, help="Sample this many pages per document (0 = all)")
     ap.add_argument("--max-pages", type=int, default=0, help="Hard stop after this many new pages (cost guard)")
@@ -176,7 +203,7 @@ def main():
 
     client = make_client()
     usage_log = out / "usage.jsonl"
-    done = {"n": 0, "in": 0, "out": 0}
+    done = {"n": 0, "in": 0, "out": 0, "think": 0}
     t0 = time.perf_counter()
 
     def work(job):
@@ -192,10 +219,11 @@ def main():
             done["n"] += 1
             done["in"] += usage["in"]
             done["out"] += usage["out"]
+            done["think"] += usage.get("think", 0)
             with usage_log.open("a", encoding="utf-8") as f:
                 f.write(json.dumps({"doc_id": did, "page": pno + 1, "model": args.model, **usage}, ensure_ascii=False) + "\n")
             if done["n"] % 25 == 0 or done["n"] == len(jobs):
-                print(f"   {done['n']:,}/{len(jobs):,} pages  tokens in={done['in']:,} out={done['out']:,}  {time.perf_counter() - t0:.0f}s")
+                print(f"   {done['n']:,}/{len(jobs):,} pages  tokens in={done['in']:,} out={done['out']:,} (thinking {done['think']:,})  {time.perf_counter() - t0:.0f}s")
 
     errors = []
     with cf.ThreadPoolExecutor(max_workers=args.workers) as ex:
