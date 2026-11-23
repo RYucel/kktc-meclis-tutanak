@@ -3400,7 +3400,7 @@
       "https://www.cylaw.org/KDP/data/1960_1_279.pdf",
       "https://en.wikipedia.org/wiki/1960_Cypriot_by-elections"
     ],
-    "note": "50 sandalye (35 Rum, 15 Türk). 4 üye 16 Ağustos 1960'ta bakan olunca sandalyeleri 25 Eylül 1960 ara seçimleriyle dolduruldu; liste her ikisini de içerir. Rum üyelerin adları Resmi Gazete'deki Latin yazımıyla verilmiştir.",
+    "note": "50 sandalye (35 Rum, 15 Türk). 4 üye 16 Ağustos 1960'ta bakan olunca sandalyeleri 25 Eylül 1960 ara seçimleriyle dolduruldu; liste her ikisini de içerir. Rum üyelerin adları Kıbrıs Türk basınında yaygın Türkçe yazımla verilmiş; Resmi Gazete'deki Latin yazımı 'aliases' alanında.",
     "members": [
       {
         "name": "Osman Örek",
@@ -3563,137 +3563,148 @@
         ]
       },
       {
-        "name": "Glafkos Clerides",
+        "name": "Glafkos Klerides",
         "constituency": "Lefkoşa",
         "party": "",
         "community": "Rum",
         "note": "Temsilciler Meclisi Reisi",
         "aliases": [
-          "Glafkos Klerides",
+          "Glafkos Clerides",
           "Glafkos Kliridis",
           "Glavkos Clerides"
         ]
       },
       {
-        "name": "Michalakis Savvides",
+        "name": "Mihalakis Savvidis",
         "constituency": "Lefkoşa",
         "party": "",
         "community": "Rum",
         "note": "",
         "aliases": [
-          "Mihalakis Savvidis",
+          "Michalakis Savvides",
           "Mihailidis Savvidis"
         ]
       },
       {
-        "name": "Petros Stylianou",
+        "name": "Petros Stilyanu",
         "constituency": "Lefkoşa",
         "party": "",
         "community": "Rum",
         "note": "",
         "aliases": [
+          "Petros Stylianou",
           "Petros Stilianu"
         ]
       },
       {
-        "name": "Georghios Tombazos",
+        "name": "Yorgos Tombazos",
         "constituency": "Lefkoşa",
         "party": "",
         "community": "Rum",
         "note": "",
         "aliases": [
-          "Yorgos Tombazos"
+          "Georghios Tombazos"
         ]
       },
       {
-        "name": "Nicos Koshis",
-        "constituency": "Lefkoşa",
-        "party": "",
-        "community": "Rum",
-        "note": "",
-        "aliases": []
-      },
-      {
-        "name": "Lellos Demetriades",
+        "name": "Nikos Koşis",
         "constituency": "Lefkoşa",
         "party": "",
         "community": "Rum",
         "note": "",
         "aliases": [
-          "Lellos Dimitriadis"
+          "Nicos Koshis"
         ]
       },
       {
-        "name": "Vassos Lyssarides",
+        "name": "Lellos Dimitriadis",
         "constituency": "Lefkoşa",
         "party": "",
         "community": "Rum",
         "note": "",
         "aliases": [
-          "Vasos Lisaridis"
+          "Lellos Demetriades"
         ]
       },
       {
-        "name": "Haridimos Hadjicharos",
-        "constituency": "Lefkoşa",
-        "party": "",
-        "community": "Rum",
-        "note": "",
-        "aliases": []
-      },
-      {
-        "name": "Constantinos Phanos",
+        "name": "Vasos Lisaridis",
         "constituency": "Lefkoşa",
         "party": "",
         "community": "Rum",
         "note": "",
         "aliases": [
-          "Konstantinos Fanos"
+          "Vassos Lyssarides"
         ]
       },
       {
-        "name": "Josef Yiamakis",
-        "constituency": "Lefkoşa",
-        "party": "",
-        "community": "Rum",
-        "note": "",
-        "aliases": []
-      },
-      {
-        "name": "Andreas Ziartides",
+        "name": "Haridimos Hacıharos",
         "constituency": "Lefkoşa",
         "party": "",
         "community": "Rum",
         "note": "",
         "aliases": [
-          "Andreas Ziartidis"
+          "Haridimos Hadjicharos"
         ]
       },
       {
-        "name": "Ezekias Papaioannou",
+        "name": "Konstantinos Fanos",
         "constituency": "Lefkoşa",
         "party": "",
         "community": "Rum",
         "note": "",
         "aliases": [
-          "Ezekias Papayoannu"
+          "Constantinos Phanos"
         ]
       },
       {
-        "name": "Andreas Papadopoullos",
+        "name": "Yosif Yamakis",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Josef Yiamakis"
+        ]
+      },
+      {
+        "name": "Andreas Ziartidis",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Andreas Ziartides"
+        ]
+      },
+      {
+        "name": "Ezekias Papayoannu",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Ezekias Papaioannou"
+        ]
+      },
+      {
+        "name": "Andreas Papadopulos",
         "constituency": "Limasol",
         "party": "",
         "community": "Rum",
         "note": "16 Ağustos 1960'ta Ulaştırma ve Bayındırlık Bakanı oldu; sandalyesi 25 Eylül 1960 ara seçimiyle dolduruldu",
-        "aliases": []
+        "aliases": [
+          "Andreas Papadopoullos"
+        ]
       },
       {
-        "name": "Antonios Anastasiades",
+        "name": "Antonios Anastasiadis",
         "constituency": "Limasol",
         "party": "",
         "community": "Rum",
         "note": "",
-        "aliases": []
+        "aliases": [
+          "Antonios Anastasiades"
+        ]
       },
       {
         "name": "Emilios Frangos",
@@ -3707,73 +3718,87 @@
         ]
       },
       {
-        "name": "Christodoulos Michaelides",
-        "constituency": "Limasol",
-        "party": "",
-        "community": "Rum",
-        "note": "",
-        "aliases": []
-      },
-      {
-        "name": "Lefkios Rodosthenous",
-        "constituency": "Limasol",
-        "party": "",
-        "community": "Rum",
-        "note": "",
-        "aliases": []
-      },
-      {
-        "name": "Stelios Michaelides",
+        "name": "Hristodulos Mihailidis",
         "constituency": "Limasol",
         "party": "",
         "community": "Rum",
         "note": "",
         "aliases": [
+          "Christodoulos Michaelides"
+        ]
+      },
+      {
+        "name": "Lefkios Rodostenus",
+        "constituency": "Limasol",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Lefkios Rodosthenous"
+        ]
+      },
+      {
+        "name": "Stelyos Mihailidis",
+        "constituency": "Limasol",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Stelios Michaelides",
           "Stelyos Mihailides",
           "Stelios Mihailidis"
         ]
       },
       {
-        "name": "John Potamitis",
+        "name": "Con Potamitis",
         "constituency": "Limasol",
         "party": "",
         "community": "Rum",
         "note": "",
         "aliases": [
+          "John Potamitis",
           "John Phaedon Potamitis"
         ]
       },
       {
-        "name": "Daphnis Panayides",
+        "name": "Dafnis Panayidis",
         "constituency": "Limasol",
         "party": "",
         "community": "Rum",
         "note": "25 Eylül 1960 ara seçimiyle girdi",
-        "aliases": []
+        "aliases": [
+          "Daphnis Panayides"
+        ]
       },
       {
-        "name": "Pavlos Pavlou",
+        "name": "Pavlos Pavlu",
         "constituency": "Mağusa",
         "party": "",
         "community": "Rum",
         "note": "",
-        "aliases": []
+        "aliases": [
+          "Pavlos Pavlou"
+        ]
       },
       {
-        "name": "Nikos Angelides",
+        "name": "Nikos Angelidis",
         "constituency": "Mağusa",
         "party": "",
         "community": "Rum",
         "note": "",
-        "aliases": []
+        "aliases": [
+          "Nikos Angelides"
+        ]
       },
       {
-        "name": "Costas Christodoulides",
+        "name": "Kostas Hristodulidis",
         "constituency": "Mağusa",
         "party": "",
         "community": "Rum",
         "note": "",
-        "aliases": []
+        "aliases": [
+          "Costas Christodoulides"
+        ]
       },
       {
         "name": "Andreas Karseras",
@@ -3784,44 +3809,54 @@
         "aliases": []
       },
       {
-        "name": "Georghios Santis",
+        "name": "Yorgos Santis",
         "constituency": "Mağusa",
         "party": "",
         "community": "Rum",
         "note": "",
-        "aliases": []
+        "aliases": [
+          "Georghios Santis"
+        ]
       },
       {
-        "name": "Panayiotis Toumazis",
+        "name": "Panayotis Tumazis",
         "constituency": "Mağusa",
         "party": "",
         "community": "Rum",
         "note": "",
-        "aliases": []
+        "aliases": [
+          "Panayiotis Toumazis"
+        ]
       },
       {
-        "name": "Charalambos Michaelides",
+        "name": "Haralambos Mihailidis",
         "constituency": "Mağusa",
         "party": "",
         "community": "Rum",
         "note": "",
-        "aliases": []
+        "aliases": [
+          "Charalambos Michaelides"
+        ]
       },
       {
-        "name": "Soterios Yiannakis",
+        "name": "Sotiris Yannakis",
         "constituency": "Larnaka",
         "party": "",
         "community": "Rum",
         "note": "",
-        "aliases": []
+        "aliases": [
+          "Soterios Yiannakis"
+        ]
       },
       {
-        "name": "Yeorghios Tzirkotis",
+        "name": "Yorgos Cirkotis",
         "constituency": "Larnaka",
         "party": "",
         "community": "Rum",
         "note": "",
-        "aliases": []
+        "aliases": [
+          "Yeorghios Tzirkotis"
+        ]
       },
       {
         "name": "Stavros Poskotis",
@@ -3832,56 +3867,65 @@
         "aliases": []
       },
       {
-        "name": "Chrysses Demetriades",
+        "name": "Hrisis Dimitriadis",
         "constituency": "Baf",
         "party": "",
         "community": "Rum",
         "note": "",
         "aliases": [
+          "Chrysses Demetriades",
           "Hrisis Dimitriyadis"
         ]
       },
       {
-        "name": "Georghios Ioannides",
-        "constituency": "Baf",
-        "party": "",
-        "community": "Rum",
-        "note": "",
-        "aliases": []
-      },
-      {
-        "name": "Herodotos Nicolaides",
+        "name": "Yorgos Yoannidis",
         "constituency": "Baf",
         "party": "",
         "community": "Rum",
         "note": "",
         "aliases": [
-          "İrodotos Nikolaidis"
+          "Georghios Ioannides"
         ]
       },
       {
-        "name": "Panikos Sivitanides",
+        "name": "İrodotos Nikolaidis",
         "constituency": "Baf",
         "party": "",
         "community": "Rum",
         "note": "",
-        "aliases": []
+        "aliases": [
+          "Herodotos Nicolaides"
+        ]
       },
       {
-        "name": "Andreas Yiangou",
+        "name": "Panikos Sivitanidis",
+        "constituency": "Baf",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Panikos Sivitanides"
+        ]
+      },
+      {
+        "name": "Andreas Yangu",
         "constituency": "Girne",
         "party": "",
         "community": "Rum",
         "note": "",
-        "aliases": []
+        "aliases": [
+          "Andreas Yiangou"
+        ]
       },
       {
-        "name": "Fedias Paraskevaides",
+        "name": "Fidias Paraskevaidis",
         "constituency": "Girne",
         "party": "",
         "community": "Rum",
         "note": "",
-        "aliases": []
+        "aliases": [
+          "Fedias Paraskevaides"
+        ]
       }
     ]
   }

@@ -448,7 +448,7 @@ def test_manual_aliases_fix_1960_labels_scoped_by_meclis():
     ]
     n = apply_manual_aliases(recs, rules)
     assert n["manual_alias"] == 3
-    assert recs[0]["speaker_name"] == "Vassos Lyssarides" and recs[0]["canon_method"] == "manual_alias"
+    assert recs[0]["speaker_name"] == "Vasos Lisaridis" and recs[0]["canon_method"] == "manual_alias"
     assert recs[1]["speaker_name"] == "Ümit Süleyman Onan"
     assert recs[2]["speaker_name"] == TEXT_LABEL and recs[2]["speaker_role"] is None
     assert recs[3]["speaker_name"] == "K. Deniz" and recs[4]["speaker_name"] == "Meclis Başkanı"
@@ -458,7 +458,7 @@ def test_manual_alias_targets_are_on_the_1960_roster():
     from speaker_resolution import fold, load_manual_aliases, load_rosters
 
     roster = {fold(m["name"]) for m in load_rosters()["KC"]["members"]}
-    extra = {"spyros kyprianou"}  # Foreign Minister, spoke in the House but was not a member
+    extra = {"spiros kiprianu"}  # Foreign Minister, spoke in the House but was not a member
     for r in load_manual_aliases():
         if r["meclis"] == "KC" and r["to"] != "__text__":
             assert fold(r["to"]) in roster | extra, r["to"]
@@ -475,3 +475,25 @@ def test_doc_override_reclassifies_communal_chamber_sitting():
     from parse_speakers import doc_overrides
 
     assert doc_overrides()["Kıbrıs Cumhuriyeti/18 Ekim 1960.pdf"]["meclis"] == "TCM"
+
+
+def test_roster_aliases_become_search_aliases(tmp_path):
+    duckdb = pytest.importorskip("duckdb")
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+    from speaker_index import build_speaker_entries
+
+    rows = [{"speaker_name": "Vasos Lisaridis", "speaker_name_parsed": "B. Ayzzap I Ahz", "speaker_role": "milletvekili_bakan",
+             "speaker_title": None, "constituency": "Lefkoşa", "tarih": "1960-12-30", "doc_id": f"d{i}", "word_count": 100} for i in range(6)]
+    sp = tmp_path / "sp.parquet"
+    pq.write_table(pa.Table.from_pylist(rows), sp)
+    con = duckdb.connect()
+    con.execute(f"""CREATE TABLE spk AS SELECT speaker_name, COUNT(*) speech_count, SUM(word_count) word_count, COUNT(DISTINCT doc_id) doc_count,
+                   MIN(tarih) first_date, MAX(tarih) last_date, list_distinct(list(speaker_title)) titles, list_distinct(list(constituency)) constituencies
+                   FROM read_parquet('{sp.as_posix()}') GROUP BY 1""")
+    spk = tmp_path / "spk.parquet"
+    con.execute(f"COPY spk TO '{spk.as_posix()}' (FORMAT PARQUET)")
+    rosters = {"KC": {"meclis": "KC", "years": [1960, 1963], "members": [{"name": "Vasos Lisaridis", "aliases": ["Vassos Lyssarides"]}]}}
+    entries, _ = build_speaker_entries(con, str(sp), str(spk), rosters=rosters)
+    e = next(x for x in entries if x["n"] == "Vasos Lisaridis")
+    assert "vassos lyssarides" in e["f"]
