@@ -83,12 +83,66 @@ def score_text(text: str, vocab: set[str]) -> dict:
     return {"words": len(words), "oov": round(r_oov, 4), "mixed": round(r_mixed, 4), "frag": round(r_frag, 4), "score": round(score, 4)}
 
 
+def _norm(w: str) -> str:
+    """Same normalisation the Space applies to queries: Turkish lowercase, dotless i folded to i."""
+    return tr_lower(w).replace("ı", "i")
+
+
+def _deletes(w: str) -> set[str]:
+    return {w[:i] + w[i + 1:] for i in range(len(w))}
+
+
+def build_ocr_variants(con, docs: Path, out: Path, min_word_n: int = 20, min_var_n: int = 2, max_per_word: int = 8) -> dict:
+    """Map frequent clean words to OCR-damaged spellings seen in scanned documents (edit distance 1, unique target).
+
+    The Space ORs these variants into a search term, so 'karşı' also finds 'karjı' / 'karsı' / 'kar şı'-free
+    one-off misreads. Keys and values use the query normalisation (_norm).
+    """
+    vocab = {}
+    for w, n in con.execute(
+        f"SELECT word, n FROM read_parquet('{_p(out / 'vocab.parquet')}')"
+    ).fetchall():
+        k = _norm(w)
+        vocab[k] = vocab.get(k, 0) + n
+    frequent = {w: n for w, n in vocab.items() if n >= min_word_n and len(w) >= 5}
+    del_index: dict[str, set[str]] = {}
+    for w in frequent:
+        for d in _deletes(w) | {w}:
+            del_index.setdefault(d, set()).add(w)
+    oov = con.execute(
+        f"""
+        SELECT w, COUNT(*) n FROM (
+          SELECT unnest(regexp_extract_all(replace(lower(replace(replace(text,'İ','i'),'I','ı')),'ı','i'), '[a-zçğıöşüâîû]+')) AS w
+          FROM read_parquet('{_p(docs)}') WHERE text_source LIKE 'pdf%'
+        ) WHERE length(w) >= 4 GROUP BY w HAVING COUNT(*) >= {min_var_n}
+        """
+    ).fetchall()
+    variants: dict[str, list[tuple[str, int]]] = {}
+    for tok, n in oov:
+        if tok in vocab:
+            continue
+        cands = set(del_index.get(tok, ()))  # tok is a deletion of w (missing letter)
+        for d in _deletes(tok):
+            cands |= del_index.get(d, set())  # substitution (shared deletion) or extra letter (d == w)
+        cands = {c for c in cands if abs(len(c) - len(tok)) <= 1}
+        if len(cands) == 1:
+            variants.setdefault(cands.pop(), []).append((tok, n))
+    result = {
+        w: [t for t, _ in sorted(vs, key=lambda x: -x[1])[:max_per_word]]
+        for w, vs in variants.items()
+        if sum(n for _, n in vs) >= 3
+    }
+    (out / "ocr_variants.json").write_text(json.dumps(result, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    return result
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--data-dir", default="data/hf_dataset/data")
     ap.add_argument("--out", default="data/ocr_quality")
     ap.add_argument("--memory-limit", default="1.5GB")
     ap.add_argument("--worst", type=int, default=50)
+    ap.add_argument("--variants", action="store_true", help="Also build ocr_variants.json for OCR-tolerant search")
     args = ap.parse_args()
     t0 = time.perf_counter()
     out = Path(args.out)
@@ -146,6 +200,9 @@ def main():
     (out / "noisy_docs.txt").write_text("\n".join(noisy) + "\n", encoding="utf-8")
     summary["noisy_docs"] = len(noisy)
     (out / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1), encoding="utf-8")
+    if args.variants:
+        v = build_ocr_variants(con, docs, out)
+        print(f"ocr_variants.json: {len(v):,} words, {sum(len(x) for x in v.values()):,} variants")
     print(f"scored {len(rows):,} documents in {time.perf_counter() - t0:.0f}s -> {out}")
 
 
