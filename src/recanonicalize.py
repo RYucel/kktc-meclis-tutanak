@@ -85,6 +85,22 @@ def quality_metrics(con, sp_path: str, rosters: dict) -> dict:
     }
 
 
+class _State:
+    """Per-step progress in <out-dir>/recanon_state.json so an interrupted run resumes (--resume)."""
+
+    def __init__(self, path: Path, resume: bool):
+        self.path = path
+        self.data = json.loads(path.read_text(encoding="utf-8")) if (resume and path.exists()) else {}
+
+    def done(self, step: str) -> bool:
+        return bool(self.data.get("steps", {}).get(step))
+
+    def mark(self, step: str, **extra):
+        self.data.setdefault("steps", {})[step] = True
+        self.data.update(extra)
+        self.path.write_text(json.dumps(self.data, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
 def run(args) -> dict:
     t0 = time.perf_counter()
     if args.upload and args.skip_aux:
@@ -114,6 +130,8 @@ def run(args) -> dict:
     space_dir.mkdir(parents=True, exist_ok=True)
     report_path = Path(args.report)
     report_path.parent.mkdir(parents=True, exist_ok=True)
+    state = _State(out_root / "recanon_state.json", args.resume)
+    map_path = out_root / "name_map.json"
 
     con = duckdb.connect(":memory:")
     # Bounded memory: sorting 1.3M speech texts must spill to disk instead of exhausting small machines
@@ -124,18 +142,37 @@ def run(args) -> dict:
     con.execute("SET preserve_insertion_order=false")
     if args.threads:
         con.execute(f"SET threads={int(args.threads)}")
-    print("[1/5] Measuring current speaker quality...")
-    before = quality_metrics(con, src["speeches"], rosters)
-    print(f"      before: {before}")
 
-    print("[2/5] Resolving (speaker, role, year) groups...")
-    stats = stats_from_parquet(con, src["speeches"])
-    resolver = SpeakerResolver(stats, rosters)
-    mapping = resolve_groups(con, src["speeches"], resolver)
+    sp_out = out_data / "speeches.parquet"
+    doc_out = out_data / "documents.parquet"
+    spk_out = out_data / "speakers.parquet"
+    tmp_sp = out_data / "speeches.parquet.tmp"
+    tmp_doc = out_data / "documents.parquet.tmp"
+
+    # ---- 1-2. measure + resolve (cached for --resume)
+    if state.done("resolve") and map_path.exists():
+        cached = json.loads(map_path.read_text(encoding="utf-8"))
+        before, mapping, resolver_report, n_anchors = cached["before"], cached["mapping"], cached["report"], cached["anchors"]
+        print("[1-2/5] Using cached resolution from a previous run")
+    else:
+        print("[1/5] Measuring current speaker quality...")
+        before = quality_metrics(con, src["speeches"], rosters)
+        print(f"      before: {before}")
+        print("[2/5] Resolving (speaker, role, year) groups...")
+        stats = stats_from_parquet(con, src["speeches"])
+        resolver = SpeakerResolver(stats, rosters)
+        mapping = resolve_groups(con, src["speeches"], resolver)
+        resolver_report = {k: v for k, v in resolver.report.items()}
+        n_anchors = len(resolver.anchors)
+        map_path.write_text(
+            json.dumps({"before": before, "mapping": mapping, "report": resolver_report, "anchors": n_anchors}, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        state.mark("resolve")
     by_method = Counter()
     for m in mapping:
         by_method[m["method"]] += m["n"]
-    print(f"      anchors={len(resolver.anchors):,} anchor_merges={len(resolver.report.get('anchor_merges', [])):,} "
+    print(f"      anchors={n_anchors:,} anchor_merges={len(resolver_report.get('anchor_merges', [])):,} "
           f"groups_remapped={len(mapping):,} turns_remapped={sum(by_method.values()):,} {dict(by_method)}")
 
     map_tbl = pa.Table.from_pylist(
@@ -147,117 +184,140 @@ def run(args) -> dict:
     )
     con.register("name_map", map_tbl)
 
-    sp_out = out_data / "speeches.parquet"
-    doc_out = out_data / "documents.parquet"
-    spk_out = out_data / "speakers.parquet"
-    tmp_sp = out_data / "speeches.parquet.tmp"
-    tmp_doc = out_data / "documents.parquet.tmp"
-
-    print("[3/5] Rewriting speeches.parquet + documents.parquet...")
-    sp_cols = {r[0] for r in con.execute(f"DESCRIBE SELECT * FROM read_parquet('{_p(src['speeches'])}')").fetchall()}
-    parsed_expr = (
-        "COALESCE(s.speaker_name_parsed, s.speaker_name) AS speaker_name_parsed" if "speaker_name_parsed" in sp_cols else None
-    )
-    replace_parts = [
-        "COALESCE(m.new_name, s.speaker_name) AS speaker_name",
-        "COALESCE(m.method, s.canon_method) AS canon_method" if "canon_method" in sp_cols else None,
-        parsed_expr,
-    ]
-    replace_sql = ", ".join(p for p in replace_parts if p)
-    con.execute(
-        f"""
-        COPY (
-            SELECT s.* REPLACE ({replace_sql})
-            FROM read_parquet('{_p(src['speeches'])}') s
-            LEFT JOIN name_map m
-              ON s.speaker_name = m.old_name
-             AND s.speaker_role IS NOT DISTINCT FROM m.role
-             AND TRY_CAST(substr(s.tarih, 1, 4) AS INTEGER) IS NOT DISTINCT FROM m.yr
-            ORDER BY speaker_name ASC, tarih DESC NULLS LAST, turn_index ASC
-        ) TO '{_p(tmp_sp)}' (FORMAT PARQUET, COMPRESSION ZSTD, ROW_GROUP_SIZE 32768)
-        """
-    )
-    n_in = con.execute(f"SELECT COUNT(*) FROM read_parquet('{_p(src['speeches'])}')").fetchone()[0]
-    n_out = con.execute(f"SELECT COUNT(*) FROM read_parquet('{_p(tmp_sp)}')").fetchone()[0]
-    if n_in != n_out:
-        raise RuntimeError(f"Row count changed during rewrite: {n_in} -> {n_out}")
-    os.replace(tmp_sp, sp_out)
-
-    doc_cols = {r[0] for r in con.execute(f"DESCRIBE SELECT * FROM read_parquet('{_p(src['documents'])}')").fetchall()}
-    if "konusmacilar" in doc_cols:
+    # ---- 3a. speeches
+    if state.done("speeches") and sp_out.exists():
+        print("[3/5] speeches.parquet already rewritten (resume)")
+    else:
+        print("[3/5] Rewriting speeches.parquet...")
+        sp_cols = {r[0] for r in con.execute(f"DESCRIBE SELECT * FROM read_parquet('{_p(src['speeches'])}')").fetchall()}
+        replace_parts = [
+            "COALESCE(m.new_name, s.speaker_name) AS speaker_name",
+            "COALESCE(m.method, s.canon_method) AS canon_method" if "canon_method" in sp_cols else None,
+            "COALESCE(s.speaker_name_parsed, s.speaker_name) AS speaker_name_parsed" if "speaker_name_parsed" in sp_cols else None,
+        ]
+        replace_sql = ", ".join(p for p in replace_parts if p)
         con.execute(
             f"""
             COPY (
-                SELECT d.* REPLACE (COALESCE(k.ks, d.konusmacilar) AS konusmacilar)
-                FROM read_parquet('{_p(src['documents'])}') d
-                LEFT JOIN (
-                    SELECT doc_id, list_sort(list_distinct(list(speaker_name))) AS ks
-                    FROM read_parquet('{_p(sp_out)}') GROUP BY doc_id
-                ) k USING (doc_id)
-                ORDER BY doc_id ASC
-            ) TO '{_p(tmp_doc)}' (FORMAT PARQUET, COMPRESSION ZSTD, ROW_GROUP_SIZE 128)
+                SELECT s.* REPLACE ({replace_sql})
+                FROM read_parquet('{_p(src['speeches'])}') s
+                LEFT JOIN name_map m
+                  ON s.speaker_name = m.old_name
+                 AND s.speaker_role IS NOT DISTINCT FROM m.role
+                 AND TRY_CAST(substr(s.tarih, 1, 4) AS INTEGER) IS NOT DISTINCT FROM m.yr
+                ORDER BY speaker_name ASC, tarih DESC NULLS LAST, turn_index ASC
+            ) TO '{_p(tmp_sp)}' (FORMAT PARQUET, COMPRESSION ZSTD, ROW_GROUP_SIZE 32768)
             """
         )
-        os.replace(tmp_doc, doc_out)
-    elif Path(src["documents"]).resolve() != doc_out.resolve():
-        shutil.copyfile(src["documents"], doc_out)
+        n_in = con.execute(f"SELECT COUNT(*) FROM read_parquet('{_p(src['speeches'])}')").fetchone()[0]
+        n_out = con.execute(f"SELECT COUNT(*) FROM read_parquet('{_p(tmp_sp)}')").fetchone()[0]
+        if n_in != n_out:
+            raise RuntimeError(f"Row count changed during rewrite: {n_in} -> {n_out}")
+        os.replace(tmp_sp, sp_out)
+        state.mark("speeches")
 
-    print("[4/5] Rebuilding speakers.parquet, dataset card and Space indices...")
+    # ---- 3b. documents.konusmacilar
+    if state.done("documents") and doc_out.exists():
+        print("      documents.parquet already rewritten (resume)")
+    else:
+        print("      Refreshing documents.konusmacilar...")
+        doc_cols = {r[0] for r in con.execute(f"DESCRIBE SELECT * FROM read_parquet('{_p(src['documents'])}')").fetchall()}
+        if "konusmacilar" in doc_cols:
+            con.execute(
+                f"""
+                COPY (
+                    SELECT d.* REPLACE (COALESCE(k.ks, d.konusmacilar) AS konusmacilar)
+                    FROM read_parquet('{_p(src['documents'])}') d
+                    LEFT JOIN (
+                        SELECT doc_id, list_sort(list_distinct(list(speaker_name))) AS ks
+                        FROM read_parquet('{_p(sp_out)}') GROUP BY doc_id
+                    ) k USING (doc_id)
+                    ORDER BY doc_id ASC
+                ) TO '{_p(tmp_doc)}' (FORMAT PARQUET, COMPRESSION ZSTD, ROW_GROUP_SIZE 128)
+                """
+            )
+            os.replace(tmp_doc, doc_out)
+        elif Path(src["documents"]).resolve() != doc_out.resolve():
+            shutil.copyfile(src["documents"], doc_out)
+        state.mark("documents")
+
+    # ---- 4. speakers + card + Space indices
     from optimize_for_wasm import EXTRA_SEARCH_ALIASES, build_terms_index, export_term_shards
     from sync_incremental import rebuild_speakers_and_card
 
     index_out = space_dir / "speakers_index.json"
-    rebuild_speakers_and_card(
-        con, sp_out, doc_out, spk_out, out_root / "README.md", index_out, args.dataset_repo,
-        extra_aliases={k: set(v) for k, v in EXTRA_SEARCH_ALIASES.items()},
-    )
+    if state.done("speakers") and spk_out.exists() and index_out.exists():
+        print("[4/5] speakers.parquet + speakers_index.json already built (resume)")
+    else:
+        print("[4/5] Rebuilding speakers.parquet, dataset card and speakers_index.json...")
+        rebuild_speakers_and_card(
+            con, sp_out, doc_out, spk_out, out_root / "README.md", index_out, args.dataset_repo,
+            extra_aliases={k: set(v) for k, v in EXTRA_SEARCH_ALIASES.items()},
+        )
+        state.mark("speakers")
     if not args.skip_aux:
         from analyze_topics import build_speaker_topics, build_topics_index
 
-        spk_cnt = {r[0]: int(r[1]) for r in con.execute(f"SELECT speaker_name, speech_count FROM read_parquet('{_p(spk_out)}')").fetchall()}
         rp = Path(args.rosters) if args.rosters else ROOT / "data" / "official_rosters.json"
-        (space_dir / "terms_index.json").write_text(
-            json.dumps(build_terms_index(con, sp_out.as_posix(), spk_cnt, rp), ensure_ascii=False, separators=(",", ":")),
-            encoding="utf-8",
-        )
-        (space_dir / "topics_index.json").write_text(
-            json.dumps(build_topics_index(con, sp_out.as_posix()), ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
-        )
-        (space_dir / "speaker_topics.json").write_text(
-            json.dumps(build_speaker_topics(con, sp_out.as_posix()), ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
-        )
-        export_term_shards(con, sp_out.as_posix(), out_root / "terms_cache")
+        if not state.done("terms"):
+            spk_cnt = {r[0]: int(r[1]) for r in con.execute(f"SELECT speaker_name, speech_count FROM read_parquet('{_p(spk_out)}')").fetchall()}
+            (space_dir / "terms_index.json").write_text(
+                json.dumps(build_terms_index(con, sp_out.as_posix(), spk_cnt, rp), ensure_ascii=False, separators=(",", ":")),
+                encoding="utf-8",
+            )
+            state.mark("terms")
+        if not state.done("topics"):
+            (space_dir / "topics_index.json").write_text(
+                json.dumps(build_topics_index(con, sp_out.as_posix()), ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
+            )
+            state.mark("topics")
+        if not state.done("speaker_topics"):
+            (space_dir / "speaker_topics.json").write_text(
+                json.dumps(build_speaker_topics(con, sp_out.as_posix()), ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
+            )
+            state.mark("speaker_topics")
+        if not state.done("shards"):
+            export_term_shards(con, sp_out.as_posix(), out_root / "terms_cache")
+            state.mark("shards")
 
-    after = quality_metrics(con, sp_out.as_posix(), rosters)
-    print(f"      after:  {after}")
-
-    agg: dict[tuple, int] = Counter()
-    for m in mapping:
-        agg[(m["old_name"], m["new_name"], m["method"])] += m["n"]
-    report = {
-        "before": before,
-        "after": after,
-        "turns_remapped_by_method": dict(by_method),
-        "anchors": len(resolver.anchors),
-        "anchor_merges": resolver.report.get("anchor_merges", []),
-        "core_anchors": resolver.report.get("core_anchors", []),
-        "multi_person_labels": resolver.report.get("multi_person", []),
-        "mappings": [
-            {"from": a, "to": b, "method": meth, "turns": n}
-            for (a, b, meth), n in sorted(agg.items(), key=lambda kv: -kv[1])
-        ],
-    }
-    report_path.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
+    if state.done("report") and report_path.exists():
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        print(f"[5/5] Report already written: {report_path}")
+    else:
+        after = quality_metrics(con, sp_out.as_posix(), rosters)
+        print(f"      after:  {after}")
+        agg: dict[tuple, int] = Counter()
+        for m in mapping:
+            agg[(m["old_name"], m["new_name"], m["method"])] += m["n"]
+        report = {
+            "before": before,
+            "after": after,
+            "turns_remapped_by_method": dict(by_method),
+            "anchors": n_anchors,
+            "anchor_merges": resolver_report.get("anchor_merges", []),
+            "core_anchors": resolver_report.get("core_anchors", []),
+            "dropped_multi_person_anchors": resolver_report.get("dropped_multi_person_anchors", []),
+            "multi_person_labels": resolver_report.get("multi_person", []),
+            "mappings": [
+                {"from": a, "to": b, "method": meth, "turns": n}
+                for (a, b, meth), n in sorted(agg.items(), key=lambda kv: -kv[1])
+            ],
+        }
+        report_path.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
+        state.mark("report")
+        print(f"[5/5] Report: {report_path} ({len(report['mappings']):,} distinct mappings) in {time.perf_counter() - t0:.1f}s")
     con.close()
-    print(f"[5/5] Report: {report_path} ({len(report['mappings']):,} distinct mappings) in {time.perf_counter() - t0:.1f}s")
 
     if args.upload:
+        incomplete = [s for s in ("speeches", "documents", "speakers", "terms", "topics", "speaker_topics", "shards") if not state.done(s)]
+        if incomplete and args.resume:
+            raise SystemExit(f"Refusing to upload: steps not finished: {incomplete}")
         from huggingface_hub import HfApi
 
         api = HfApi()
         msg = (
             f"Speaker resolution: {sum(by_method.values()):,} turns re-attributed, "
-            f"verified share {before['verified_turn_share']:.2%} -> {after['verified_turn_share']:.2%}"
+            f"verified share {report['before']['verified_turn_share']:.2%} -> {report['after']['verified_turn_share']:.2%}"
         )
         api.upload_folder(
             folder_path=str(out_root), repo_id=args.dataset_repo, repo_type="dataset", commit_message=msg,
@@ -302,6 +362,7 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--memory-limit", default="1.5GB", help="DuckDB memory limit (spills to --temp-dir beyond it)")
     ap.add_argument("--temp-dir", default=None, help="DuckDB spill directory (default: <out-dir>/.duckdb_tmp)")
     ap.add_argument("--threads", type=int, default=0, help="DuckDB threads (0 = DuckDB default)")
+    ap.add_argument("--resume", action="store_true", help="Skip steps already finished in <out-dir>/recanon_state.json")
     ap.add_argument("--upload", action="store_true", help="Upload results to the HF dataset + Space")
     ap.add_argument("--upload-ui", action="store_true", help="With --upload: also upload space_static/index.html + og-image.png")
     return ap

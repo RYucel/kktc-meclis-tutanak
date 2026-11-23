@@ -413,3 +413,21 @@ def test_stray_initial_with_dropped_middle_name():
     }
     r = SpeakerResolver(stats, {})
     assert r.anchor_map.get("M. Ferdi Soyer") == "Ferdi Sabit Soyer"
+
+
+def test_recanonicalize_resume_skips_finished_steps(tmp_path, capsys):
+    pytest.importorskip("duckdb")
+    import recanonicalize
+
+    data, _ = _write_fixture(tmp_path)
+    out = tmp_path / "out"
+    argv = ["--data-dir", str(data), "--out-dir", str(out), "--space-dir", str(out / "space"),
+            "--report", str(out / "report.json"), "--rosters", str(tmp_path / "none.json"), "--skip-aux", "--resume"]
+    first = recanonicalize.run(recanonicalize.build_argparser().parse_args(argv))
+    state = json.loads((out / "recanon_state.json").read_text(encoding="utf-8"))
+    assert {"resolve", "speeches", "documents", "speakers", "report"} <= set(state["steps"])
+    capsys.readouterr()
+    second = recanonicalize.run(recanonicalize.build_argparser().parse_args(argv))
+    log = capsys.readouterr().out
+    assert "cached resolution" in log and "already rewritten" in log and "already built" in log
+    assert second["after"] == first["after"]
