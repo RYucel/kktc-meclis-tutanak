@@ -7,3 +7,4 @@ data/*
 *.tmp
 !data/speaker_aliases.json
 !data/doc_overrides.json
+!data/cm_bios_terms.json
