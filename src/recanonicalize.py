@@ -116,6 +116,14 @@ def run(args) -> dict:
     report_path.parent.mkdir(parents=True, exist_ok=True)
 
     con = duckdb.connect(":memory:")
+    # Bounded memory: sorting 1.3M speech texts must spill to disk instead of exhausting small machines
+    tmp_dir = Path(args.temp_dir) if args.temp_dir else out_root / ".duckdb_tmp"
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+    con.execute(f"SET memory_limit='{args.memory_limit}'")
+    con.execute(f"SET temp_directory='{_p(tmp_dir)}'")
+    con.execute("SET preserve_insertion_order=false")
+    if args.threads:
+        con.execute(f"SET threads={int(args.threads)}")
     print("[1/5] Measuring current speaker quality...")
     before = quality_metrics(con, src["speeches"], rosters)
     print(f"      before: {before}")
@@ -291,6 +299,9 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--dataset-repo", default=DATASET_REPO)
     ap.add_argument("--space-repo", default=SPACE_REPO)
     ap.add_argument("--skip-aux", action="store_true", help="Skip terms/topics/speaker_topics/term shard rebuild")
+    ap.add_argument("--memory-limit", default="1.5GB", help="DuckDB memory limit (spills to --temp-dir beyond it)")
+    ap.add_argument("--temp-dir", default=None, help="DuckDB spill directory (default: <out-dir>/.duckdb_tmp)")
+    ap.add_argument("--threads", type=int, default=0, help="DuckDB threads (0 = DuckDB default)")
     ap.add_argument("--upload", action="store_true", help="Upload results to the HF dataset + Space")
     ap.add_argument("--upload-ui", action="store_true", help="With --upload: also upload space_static/index.html + og-image.png")
     return ap
