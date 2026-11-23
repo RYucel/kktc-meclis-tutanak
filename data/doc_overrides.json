@@ -1,0 +1,4 @@
+{
+  "_doc": "Per-document metadata corrections applied in parse_document. The 18 Ekim 1960 sitting in the 'Kıbrıs Cumhuriyeti' folder is a Türk Cemaat Meclisi sitting (Rauf Raif Denktaş presiding; Cemaat Meclisi staff and budget bills).",
+  "Kıbrıs Cumhuriyeti/18 Ekim 1960.pdf": {"meclis": "TCM"}
+}
