@@ -1646,7 +1646,9 @@ function renderActiveTermBody() {
   if (termFilterDistrict && !districts.includes(termFilterDistrict)) termFilterDistrict = '';
 
   const officialCnt = term.members.filter(m => m.o === 1).length;
-  const sourceTag = term.official
+  const sourceTag = term.official && term.partial
+    ? `<span class="tag olive" title="cm.gov.ct.tr eski milletvekili özgeçmişlerinden derlendi; özgeçmişi olmayan üyeler eksik olabilir">Meclis Özgeçmişlerinden Derlenen Üye Listesi (${officialCnt} kişi · eksik olabilir)</span>`
+    : term.official
     ? `<span class="tag olive">Resmî Dönem Milletvekili Listesi (${officialCnt} vekil)</span>`
     : `<span class="tag">Tutanak Arşivinden Derlenen Dönem Konuşmacıları (${term.members.length} kişi)</span>`;
 
@@ -1763,7 +1765,7 @@ function renderTermMemberCards(term) {
     if (elected.length) {
       html += `
         <div class="mp-section-hdr">
-          Dönem Milletvekilleri (${elected.length})
+          ${term.partial ? 'Özgeçmişe Göre Dönem Üyeleri' : 'Dönem Milletvekilleri'} (${elected.length})
           <span>Konuşmalarını görmek için vekilin kartına tıklayın</span>
         </div>
         <div class="mp-grid">${elected.map(renderCard).join('')}</div>
@@ -1772,8 +1774,8 @@ function renderTermMemberCards(term) {
     if (others.length) {
       html += `
         <div class="mp-section-hdr" style="margin-top:26px">
-          Diğer Konuşmacılar · Dışarıdan Bakanlar &amp; Cumhurbaşkanı (${others.length})
-          <span>Bu dönem tutanaklarında söz alan diğer resmî konuşmacılar</span>
+          ${term.partial ? `Listede Bulunmayan Konuşmacılar (${others.length})` : `Diğer Konuşmacılar · Dışarıdan Bakanlar &amp; Cumhurbaşkanı (${others.length})`}
+          <span>${term.partial ? 'Özgeçmişi bulunmayan üyeler ve dışarıdan bakanlar bu bölümde olabilir' : 'Bu dönem tutanaklarında söz alan diğer resmî konuşmacılar'}</span>
         </div>
         <div class="mp-grid">${others.map(renderCard).join('')}</div>
       `;

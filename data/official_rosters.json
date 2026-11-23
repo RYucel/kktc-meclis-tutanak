@@ -4299,12 +4299,15 @@
         ]
       },
       {
-        "name": "Ekrem Yusuf Avcıoğlu",
+        "name": "Ekrem Y. Avcıoğlu",
         "constituency": "Limasol",
         "party": "",
         "note": "",
         "evidence": "5 Temmuz 1970 seçimlerinde, Limasol bölgesinden Temsilciler Meclisi Türk Üyeliği’ne seçildi.",
-        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Avciogluey.doc"
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Avciogluey.doc",
+        "aliases": [
+          "Ekrem Yusuf Avcıoğlu"
+        ]
       },
       {
         "name": "Erol Kazım Andaç",
@@ -4454,15 +4457,14 @@
         "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Denktasrr.doc"
       },
       {
-        "name": "Sobutay Ali Ratip Irıkoglu",
+        "name": "Sobutay Ali Ratip",
         "constituency": "Baf",
         "party": "",
         "note": "",
         "evidence": "5 Temmuz 1970 seçimlerinde Baf bölgesinden Temsilciler Meclisi Türk üyeliğine seçildi.",
         "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Ratip-ali.doc",
         "aliases": [
-          "Irikoglu",
-          "Sobutay Ali Ratip"
+          "Irikoglu"
         ]
       },
       {
@@ -4595,12 +4597,15 @@
         "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Acarkan.doc"
       },
       {
-        "name": "Ekrem Yusuf Avcıoğlu",
+        "name": "Ekrem Y. Avcıoğlu",
         "constituency": "",
         "party": "",
         "note": "",
         "evidence": "13 Şubat 1975 tarihinde yapılan seçimlerde yeniden milletvekili seçilen Sn.",
-        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Avciogluey.doc"
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Avciogluey.doc",
+        "aliases": [
+          "Ekrem Yusuf Avcıoğlu"
+        ]
       },
       {
         "name": "Fatma Sezer",
@@ -4762,15 +4767,14 @@
         ]
       },
       {
-        "name": "Sobutay Ali Ratip Irıkoglu",
+        "name": "Sobutay Ali Ratip",
         "constituency": "",
         "party": "",
         "note": "",
         "evidence": "13 Şubat 1975 tarihinde yapılan seçimlerde yeniden milletvekili seçilmiş, 3 Temmuz 1976 tarihinde milletvekilliği sona ermiştir.",
         "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Ratip-ali.doc",
         "aliases": [
-          "Irikoglu",
-          "Sobutay Ali Ratip"
+          "Irikoglu"
         ]
       },
       {
@@ -4785,12 +4789,15 @@
         ]
       },
       {
-        "name": "Turgut Mustafa Yenağralı",
+        "name": "Turgut Mustafa",
         "constituency": "",
         "party": "",
         "note": "",
         "evidence": "Turgut Mustafa Yenağralı 13 Şubat 1975 tarihinde oluşturulan KTFD kurucu Meclisinde milletvekili olarak görev almış 24 Şubat 1975 tarihinde yemin ederek göreve başlamıştır.",
-        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/yenagralı.doc"
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/yenagralı.doc",
+        "aliases": [
+          "Turgut Mustafa Yenağralı"
+        ]
       },
       {
         "name": "Zaim Necatigil",
@@ -5054,7 +5061,7 @@
         ]
       },
       {
-        "name": "Osman N. Örek",
+        "name": "Osman Örek",
         "constituency": "Lefkoşa",
         "party": "UBP",
         "note": "",
@@ -5915,7 +5922,7 @@
         "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/8508905_BILGEHAN.doc"
       },
       {
-        "name": "Osman N. Örek",
+        "name": "Osman Örek",
         "constituency": "",
         "party": "",
         "note": "",

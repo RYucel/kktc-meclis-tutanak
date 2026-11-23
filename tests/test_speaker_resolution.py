@@ -497,3 +497,45 @@ def test_roster_aliases_become_search_aliases(tmp_path):
     entries, _ = build_speaker_entries(con, str(sp), str(spk), rosters=rosters)
     e = next(x for x in entries if x["n"] == "Vasos Lisaridis")
     assert "vassos lyssarides" in e["f"]
+
+
+def _terms_fixture(tmp_path, rows, rosters):
+    duckdb = pytest.importorskip("duckdb")
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
+    sp = tmp_path / "sp.parquet"
+    pq.write_table(pa.Table.from_pylist(rows), sp)
+    rp = tmp_path / "rosters.json"
+    rp.write_text(json.dumps(rosters, ensure_ascii=False), encoding="utf-8")
+    from optimize_for_wasm import build_terms_index
+
+    cnt = {}
+    for r in rows:
+        cnt[r["speaker_name"]] = cnt.get(r["speaker_name"], 0) + 1
+    return build_terms_index(duckdb.connect(), sp.as_posix(), cnt, rp)
+
+
+def _rows(meclis, donem, name, title, n, docs=3, year="1977"):
+    return [{"meclis": meclis, "donem": donem, "speaker_name": name, "speaker_title": title, "constituency": None,
+             "doc_id": f"{meclis}{donem}-{i % docs}", "tarih": f"{year}-01-0{1 + i % 9}", "word_count": 50} for i in range(n)]
+
+
+def test_partial_roster_never_labels_non_members(tmp_path):
+    rows = _rows("KTFD", 1, "İrsen Küçük", "Tarım, Doğal Kaynaklar ve Enerji Bakanı", 12) + _rows("KTFD", 1, "Alpay Durduran", None, 2)
+    rosters = {"KTFD:1": {"meclis": "KTFD", "donem": 1, "partial": True, "years": [1976, 1981],
+                          "members": [{"name": "İrsen Küçük", "constituency": "Lefkoşa", "party": "UBP", "note": ""}]}}
+    term = next(t for t in _terms_fixture(tmp_path, rows, rosters)["terms"] if t["id"] == "KTFD:1")
+    assert term["official"] and term["partial"]
+    by = {m["n"]: m for m in term["members"]}
+    assert by["İrsen Küçük"]["o"] == 1
+    assert by["Alpay Durduran"]["o"] == 0 and by["Alpay Durduran"]["nt"] == ""  # missing from bios != not a member
+
+
+def test_complete_roster_labels_outside_minister(tmp_path):
+    rows = _rows("KKTC", 7, "Ünal Üstel", None, 10, year="2010") + _rows("KKTC", 7, "Dış Bakan Örnek", "Dışişleri Bakanı", 10, year="2010")
+    rosters = {"KKTC:7": {"meclis": "KKTC", "donem": 7, "members": [{"name": "Ünal Üstel", "constituency": "Gazimağusa", "party": "UBP", "note": ""}]}}
+    term = next(t for t in _terms_fixture(tmp_path, rows, rosters)["terms"] if t["id"] == "KKTC:7")
+    by = {m["n"]: m for m in term["members"]}
+    assert not term["partial"]
+    assert by["Dış Bakan Örnek"]["nt"] == "Bakan, milletvekili değil"

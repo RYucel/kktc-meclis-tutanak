@@ -201,6 +201,15 @@ def build_terms_index(
                     return None, gnm
         return None, off_name
 
+    def non_member_note(title: str) -> str:
+        """Label for someone who spoke in a term with a complete official roster but was not on it."""
+        t = fold_ascii(title or "")
+        if "muavin" in t or "cumhurbaskan" in t:
+            return "Üye değil (cumhurbaşkanlığı makamı)"
+        if "bakan" in t:
+            return "Bakan, milletvekili değil"
+        return "Resmi üye listesinde yok"
+
     terms_out = []
     for meclis, donem, label, years, group_label in TERM_CATALOG:
         key_tuple = (meclis, donem)
@@ -240,13 +249,18 @@ def build_terms_index(
                         "nt": note,
                     }
                 )
-            # Also add significant non-roster speakers in this term (e.g. external Ministers, President, by-election MPs)
+            # Also add significant non-roster speakers in this term (e.g. external Ministers, President, by-election MPs).
+            # Partial rosters (pre-1985, rebuilt from biographies) miss some members, so keep the looser
+            # historical thresholds there and never label anyone "not a member".
+            partial = bool(off_entry.get("partial"))
+            min_turns = 1 if docs_cnt <= 5 else (2 if docs_cnt <= 40 else 3)
             for sp in term_spks:
                 if sp["n"] in used_names:
                     continue
                 if not is_displayable_person(sp["n"]):
                     continue
-                if sp["s"] >= 8 and sp["d"] >= 2:
+                keep = (sp["s"] >= min_turns or sp["d"] >= 2) if partial else (sp["s"] >= 8 and sp["d"] >= 2)
+                if keep:
                     used_names.add(sp["n"])
                     members.append(
                         {
@@ -259,7 +273,7 @@ def build_terms_index(
                             "ts": int(global_speaker_counts.get(sp["n"], sp["s"])),
                             "w": sp["w"],
                             "d": sp["d"],
-                            "nt": "",
+                            "nt": "" if partial else non_member_note(sp["t"]),
                         }
                     )
         else:
@@ -304,6 +318,7 @@ def build_terms_index(
                 "min_date": min_d,
                 "max_date": max_d,
                 "official": bool(off_entry),
+                "partial": bool(off_entry and off_entry.get("partial")),
                 "members": members,
             }
         )

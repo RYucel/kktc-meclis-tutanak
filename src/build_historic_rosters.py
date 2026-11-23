@@ -37,6 +37,14 @@ NAME_FIX = {
     "Haluk Avni": "Haluk Avni Akman",
     "Nevzat S Uzunoğlu": "Nevzat S. Uzunoğlu",
 }
+# Biography / mp_bios names -> canonical speaker names used in the published dataset
+LIVE_NAME = {
+    "Osman N. Örek": "Osman Örek",
+    "Ekrem Yusuf Avcıoğlu": "Ekrem Y. Avcıoğlu",
+    "Sobutay Ali Ratip Irıkoglu": "Sobutay Ali Ratip",
+    "Turgut Mustafa Yenağralı": "Turgut Mustafa",
+    "Ersan Saner": "Hamza Ersan Saner",
+}
 
 
 def build() -> dict:
@@ -48,6 +56,7 @@ def build() -> dict:
         if p.get("alias_of"):
             continue
         name = url2name.get((p.get("doc_url") or "").lower()) or NAME_FIX.get(p["name"], p["name"])
+        name = LIVE_NAME.get(name, name)
         for tid, ev in (p.get("terms") or {}).items():
             if tid not in out:
                 continue
