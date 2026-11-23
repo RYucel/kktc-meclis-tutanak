@@ -3381,5 +3381,508 @@
         "note": "Resmî cm.gov.ct.tr"
       }
     ]
+  },
+  "KC": {
+    "meclis": "KC",
+    "donem": null,
+    "years": [
+      1960,
+      1963
+    ],
+    "label": "Kıbrıs Cumhuriyeti Temsilciler Meclisi (1960)",
+    "source": [
+      "https://www.cylaw.org/KDP/data/1960_1_247.pdf",
+      "https://www.cylaw.org/KDP/data/1960_1_249.pdf",
+      "https://www.cylaw.org/KDP/data/1960_1_250.pdf",
+      "https://www.cylaw.org/KDP/data/1960_1_273.pdf",
+      "https://www.cylaw.org/KDP/data/1960_1_275.pdf",
+      "https://www.cylaw.org/KDP/data/1960_1_277.pdf",
+      "https://www.cylaw.org/KDP/data/1960_1_279.pdf",
+      "https://en.wikipedia.org/wiki/1960_Cypriot_by-elections"
+    ],
+    "note": "50 sandalye (35 Rum, 15 Türk). 4 üye 16 Ağustos 1960'ta bakan olunca sandalyeleri 25 Eylül 1960 ara seçimleriyle dolduruldu; liste her ikisini de içerir. Rum üyelerin adları Resmi Gazete'deki Latin yazımıyla verilmiştir.",
+    "members": [
+      {
+        "name": "Osman Örek",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Türk",
+        "note": "16 Ağustos 1960'ta Savunma Bakanı oldu; sandalyesi 25 Eylül 1960 ara seçimiyle dolduruldu",
+        "aliases": [
+          "Osman Nuri Örek"
+        ]
+      },
+      {
+        "name": "Fazıl Plümer",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Türk",
+        "note": "16 Ağustos 1960'ta Tarım Bakanı oldu; sandalyesi 25 Eylül 1960 ara seçimiyle dolduruldu",
+        "aliases": [
+          "Mustafa Fazıl Plümer"
+        ]
+      },
+      {
+        "name": "Halit Ali Rıza",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Türk",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Selçuk Şakir Somek",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Türk",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Ümit Süleyman Onan",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Türk",
+        "note": "",
+        "aliases": [
+          "Ümit Süleyman"
+        ]
+      },
+      {
+        "name": "İbrahim Orhan",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Türk",
+        "note": "25 Eylül 1960 ara seçimiyle girdi",
+        "aliases": []
+      },
+      {
+        "name": "Kemal Deniz",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Türk",
+        "note": "25 Eylül 1960 ara seçimiyle girdi",
+        "aliases": []
+      },
+      {
+        "name": "Orhan Müderrisoğlu",
+        "constituency": "Larnaka",
+        "party": "",
+        "community": "Türk",
+        "note": "Temsilciler Meclisi Reis Vekili",
+        "aliases": [
+          "Orhan Doğan Müderrisoğlu"
+        ]
+      },
+      {
+        "name": "Necdet Hüseyin",
+        "constituency": "Larnaka",
+        "party": "",
+        "community": "Türk",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Ahmet Mithat Berberoğlu",
+        "constituency": "Girne",
+        "party": "",
+        "community": "Türk",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Hüseyin Derviş",
+        "constituency": "Limasol",
+        "party": "",
+        "community": "Türk",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Ramadan Cemil",
+        "constituency": "Limasol",
+        "party": "",
+        "community": "Türk",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Burhan Nalbandoğlu",
+        "constituency": "Mağusa",
+        "party": "",
+        "community": "Türk",
+        "note": "",
+        "aliases": [
+          "Burhan Nalbantoğlu"
+        ]
+      },
+      {
+        "name": "Niyazi Manyera",
+        "constituency": "Mağusa",
+        "party": "",
+        "community": "Türk",
+        "note": "16 Ağustos 1960'ta Sağlık Bakanı oldu; sandalyesi 25 Eylül 1960 ara seçimiyle dolduruldu",
+        "aliases": []
+      },
+      {
+        "name": "Hasan Güvener",
+        "constituency": "Mağusa",
+        "party": "",
+        "community": "Türk",
+        "note": "",
+        "aliases": [
+          "Hasan Adnan Güvener"
+        ]
+      },
+      {
+        "name": "Nebil Nabi",
+        "constituency": "Mağusa",
+        "party": "",
+        "community": "Türk",
+        "note": "25 Eylül 1960 ara seçimiyle girdi",
+        "aliases": [
+          "Nebil Nabi Beyin"
+        ]
+      },
+      {
+        "name": "Halit Kazım Şemsettin",
+        "constituency": "Baf",
+        "party": "",
+        "community": "Türk",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Aziz Altay",
+        "constituency": "Baf",
+        "party": "",
+        "community": "Türk",
+        "note": "",
+        "aliases": [
+          "Ahmet Aziz Altay"
+        ]
+      },
+      {
+        "name": "Glafkos Clerides",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "Temsilciler Meclisi Reisi",
+        "aliases": [
+          "Glafkos Klerides",
+          "Glafkos Kliridis",
+          "Glavkos Clerides"
+        ]
+      },
+      {
+        "name": "Michalakis Savvides",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Mihalakis Savvidis",
+          "Mihailidis Savvidis"
+        ]
+      },
+      {
+        "name": "Petros Stylianou",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Petros Stilianu"
+        ]
+      },
+      {
+        "name": "Georghios Tombazos",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Yorgos Tombazos"
+        ]
+      },
+      {
+        "name": "Nicos Koshis",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Lellos Demetriades",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Lellos Dimitriadis"
+        ]
+      },
+      {
+        "name": "Vassos Lyssarides",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Vasos Lisaridis"
+        ]
+      },
+      {
+        "name": "Haridimos Hadjicharos",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Constantinos Phanos",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Konstantinos Fanos"
+        ]
+      },
+      {
+        "name": "Josef Yiamakis",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Andreas Ziartides",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Andreas Ziartidis"
+        ]
+      },
+      {
+        "name": "Ezekias Papaioannou",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Ezekias Papayoannu"
+        ]
+      },
+      {
+        "name": "Andreas Papadopoullos",
+        "constituency": "Limasol",
+        "party": "",
+        "community": "Rum",
+        "note": "16 Ağustos 1960'ta Ulaştırma ve Bayındırlık Bakanı oldu; sandalyesi 25 Eylül 1960 ara seçimiyle dolduruldu",
+        "aliases": []
+      },
+      {
+        "name": "Antonios Anastasiades",
+        "constituency": "Limasol",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Emilios Frangos",
+        "constituency": "Limasol",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Emilios Frangos",
+          "Aim. Frangos"
+        ]
+      },
+      {
+        "name": "Christodoulos Michaelides",
+        "constituency": "Limasol",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Lefkios Rodosthenous",
+        "constituency": "Limasol",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Stelios Michaelides",
+        "constituency": "Limasol",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Stelyos Mihailides",
+          "Stelios Mihailidis"
+        ]
+      },
+      {
+        "name": "John Potamitis",
+        "constituency": "Limasol",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "John Phaedon Potamitis"
+        ]
+      },
+      {
+        "name": "Daphnis Panayides",
+        "constituency": "Limasol",
+        "party": "",
+        "community": "Rum",
+        "note": "25 Eylül 1960 ara seçimiyle girdi",
+        "aliases": []
+      },
+      {
+        "name": "Pavlos Pavlou",
+        "constituency": "Mağusa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Nikos Angelides",
+        "constituency": "Mağusa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Costas Christodoulides",
+        "constituency": "Mağusa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Andreas Karseras",
+        "constituency": "Mağusa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Georghios Santis",
+        "constituency": "Mağusa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Panayiotis Toumazis",
+        "constituency": "Mağusa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Charalambos Michaelides",
+        "constituency": "Mağusa",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Soterios Yiannakis",
+        "constituency": "Larnaka",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Yeorghios Tzirkotis",
+        "constituency": "Larnaka",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Stavros Poskotis",
+        "constituency": "Larnaka",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Chrysses Demetriades",
+        "constituency": "Baf",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "Hrisis Dimitriyadis"
+        ]
+      },
+      {
+        "name": "Georghios Ioannides",
+        "constituency": "Baf",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Herodotos Nicolaides",
+        "constituency": "Baf",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": [
+          "İrodotos Nikolaidis"
+        ]
+      },
+      {
+        "name": "Panikos Sivitanides",
+        "constituency": "Baf",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Andreas Yiangou",
+        "constituency": "Girne",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      },
+      {
+        "name": "Fedias Paraskevaides",
+        "constituency": "Girne",
+        "party": "",
+        "community": "Rum",
+        "note": "",
+        "aliases": []
+      }
+    ]
   }
 }

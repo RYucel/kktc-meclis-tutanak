@@ -292,9 +292,17 @@ def load_rosters(path: Path | str | None = None) -> dict:
 
 
 def roster_years(rosters: dict) -> dict[str, set[int]]:
-    """Folded roster name -> active years from official term windows."""
+    """Folded roster name -> active years from official term windows (or an explicit 'years': [y0, y1])."""
     out: dict[str, set[int]] = defaultdict(set)
     for key, term in (rosters or {}).items():
+        yrs = term.get("years")
+        if isinstance(yrs, list) and len(yrs) == 2 and all(isinstance(y, int) for y in yrs):
+            for mem in term.get("members", []):
+                for nm in [mem.get("name", "")]:
+                    fk = fold(nm)
+                    if fk:
+                        out[fk].update(range(yrs[0], yrs[1] + 1))
+            continue
         donem = term.get("donem")
         if not isinstance(donem, int) or donem not in KKTC_TERM_YEARS:
             m = re.match(r"KKTC:(\d+)", key)
@@ -1009,8 +1017,59 @@ def apply_to_records(records: list[dict], resolver: SpeakerResolver) -> Counter:
     return methods
 
 
-def resolve_records(records: list[dict], rosters: dict | None = None, base_stats: dict | None = None) -> dict:
-    """Convenience wrapper: build a resolver (optionally seeded with existing corpus stats) and apply it."""
+ALIASES_PATH = Path(__file__).resolve().parent.parent / "data" / "speaker_aliases.json"
+TEXT_LABEL = "Tutanak Metni"
+
+
+def load_manual_aliases(path: Path | str | None = None) -> list[dict]:
+    """Hand-checked label fixes (data/speaker_aliases.json), compiled to folded label sets."""
+    p = Path(path) if path else ALIASES_PATH
+    if not p.exists():
+        return []
+    rules = []
+    for r in json.loads(p.read_text(encoding="utf-8")).get("rules", []):
+        labels = {fold(x) for x in r.get("labels", []) if fold(x)}
+        if labels and r.get("to"):
+            rules.append({**r, "_labels": labels})
+    return rules
+
+
+def apply_manual_aliases(records: list[dict], rules: list[dict] | None = None) -> Counter:
+    """Apply manual alias rules in place; marks touched records with canon_method='manual_alias'."""
+    rules = load_manual_aliases() if rules is None else rules
+    methods: Counter = Counter()
+    if not rules:
+        return methods
+    for r in records:
+        keys = {fold(r.get("speaker_raw") or ""), fold(r.get("speaker_name") or ""), fold(r.get("speaker_name_parsed") or "")} - {""}
+        y = _year(r.get("tarih"))
+        for rule in rules:
+            if rule.get("meclis") and rule["meclis"] != r.get("meclis"):
+                continue
+            yrs = rule.get("years")
+            if yrs and (y is None or not (yrs[0] <= y <= yrs[1])):
+                continue
+            if not (keys & rule["_labels"]):
+                continue
+            if not r.get("speaker_name_parsed"):
+                r["speaker_name_parsed"] = r.get("speaker_name")
+            if rule["to"] == "__text__":
+                r["speaker_name"], r["speaker_role"] = TEXT_LABEL, None
+            else:
+                r["speaker_name"] = rule["to"]
+                if rule.get("role"):
+                    r["speaker_role"] = rule["role"]
+            r["canon_method"] = "manual_alias"
+            methods["manual_alias"] += 1
+            break
+    return methods
+
+
+def resolve_records(records: list[dict], rosters: dict | None = None, base_stats: dict | None = None,
+                    aliases: list[dict] | None = None) -> dict:
+    """Convenience wrapper: apply manual aliases, then build a resolver (optionally seeded with corpus stats) and apply it."""
+    manual = apply_manual_aliases(records, aliases)
+    pending = [r for r in records if r.get("canon_method") != "manual_alias"]
     stats = stats_from_records(records)
     if base_stats:
         merged = {k: {"count": v["count"], "years": Counter(v["years"]), "docs": v.get("docs", 0)} for k, v in base_stats.items()}
@@ -1021,7 +1080,8 @@ def resolve_records(records: list[dict], rosters: dict | None = None, base_stats
             m["docs"] += v.get("docs", 0)
         stats = merged
     resolver = SpeakerResolver(stats, rosters)
-    methods = apply_to_records(records, resolver)
+    methods = apply_to_records(pending, resolver)
+    methods.update(manual)
     return {
         "method_counts": dict(methods),
         "anchors": len(resolver.anchors),

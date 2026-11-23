@@ -684,7 +684,22 @@ def merge_wrapped_pdf_speaker_lines(lines: list[str]) -> list[str]:
     return out
 
 
+_DOC_OVERRIDES: dict | None = None
+
+
+def doc_overrides() -> dict:
+    """Per-document metadata corrections (data/doc_overrides.json), keyed by local_rel_path."""
+    global _DOC_OVERRIDES
+    if _DOC_OVERRIDES is None:
+        p = Path(__file__).resolve().parent.parent / "data" / "doc_overrides.json"
+        _DOC_OVERRIDES = {k: v for k, v in json.loads(p.read_text(encoding="utf-8")).items() if not k.startswith("_")} if p.exists() else {}
+    return _DOC_OVERRIDES
+
+
 def parse_document(doc: dict) -> tuple[dict, list[dict]]:
+    ov = doc_overrides().get(doc.get("local_rel_path") or "")
+    if ov:
+        doc = {**doc, **ov}
     text = fix_turkish_mojibake(doc.get("text") or "")
     lines = text.splitlines()
     is_pdf = (doc.get("text_source") or "").startswith("pdf")

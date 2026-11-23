@@ -431,3 +431,47 @@ def test_recanonicalize_resume_skips_finished_steps(tmp_path, capsys):
     log = capsys.readouterr().out
     assert "cached resolution" in log and "already rewritten" in log and "already built" in log
     assert second["after"] == first["after"]
+
+
+def test_manual_aliases_fix_1960_labels_scoped_by_meclis():
+    from speaker_resolution import TEXT_LABEL, apply_manual_aliases, load_manual_aliases
+
+    rules = load_manual_aliases()
+    recs = [
+        {"meclis": "KC", "tarih": "1960-12-30", "speaker_raw": "B. AYZZAP I AHZ", "speaker_name": "B. Ayzzap I Ahz", "speaker_role": "milletvekili_bakan"},
+        {"meclis": "KC", "tarih": "1960-12-30", "speaker_raw": "Ü. SÜLEYMAN", "speaker_name": "Tjmit Süleyman", "speaker_role": "milletvekili_bakan"},
+        {"meclis": "KC", "tarih": "1960-11-15", "speaker_raw": "İçme Suyu Temini Projeleri", "speaker_name": "İçme Suyu Temini Projeleri", "speaker_role": "milletvekili_bakan"},
+        # same label outside the rule's meclis must stay untouched
+        {"meclis": "KKTC", "tarih": "1990-01-01", "speaker_raw": "K. DENİZ", "speaker_name": "K. Deniz", "speaker_role": "milletvekili_bakan"},
+        # TCM rule is limited to 1960-1963
+        {"meclis": "TCM", "tarih": "1970-01-01", "speaker_raw": "Başkan", "speaker_name": "Meclis Başkanı", "speaker_role": "baskan"},
+    ]
+    n = apply_manual_aliases(recs, rules)
+    assert n["manual_alias"] == 3
+    assert recs[0]["speaker_name"] == "Vassos Lyssarides" and recs[0]["canon_method"] == "manual_alias"
+    assert recs[1]["speaker_name"] == "Ümit Süleyman Onan"
+    assert recs[2]["speaker_name"] == TEXT_LABEL and recs[2]["speaker_role"] is None
+    assert recs[3]["speaker_name"] == "K. Deniz" and recs[4]["speaker_name"] == "Meclis Başkanı"
+
+
+def test_manual_alias_targets_are_on_the_1960_roster():
+    from speaker_resolution import fold, load_manual_aliases, load_rosters
+
+    roster = {fold(m["name"]) for m in load_rosters()["KC"]["members"]}
+    extra = {"spyros kyprianou"}  # Foreign Minister, spoke in the House but was not a member
+    for r in load_manual_aliases():
+        if r["meclis"] == "KC" and r["to"] != "__text__":
+            assert fold(r["to"]) in roster | extra, r["to"]
+
+
+def test_roster_years_reads_explicit_window():
+    from speaker_resolution import roster_years
+
+    yrs = roster_years({"KC": {"meclis": "KC", "donem": None, "years": [1960, 1963], "members": [{"name": "Halit Ali Rıza"}]}})
+    assert yrs["halit ali riza"] == {1960, 1961, 1962, 1963}
+
+
+def test_doc_override_reclassifies_communal_chamber_sitting():
+    from parse_speakers import doc_overrides
+
+    assert doc_overrides()["Kıbrıs Cumhuriyeti/18 Ekim 1960.pdf"]["meclis"] == "TCM"
