@@ -9,6 +9,7 @@ Pilot (a few pages from each listed document, with a before/after comparison):
   python src/reocr_vlm.py --docs data/ocr_quality/noisy_docs.txt --limit-docs 20 --pages-per-doc 3 --pilot
 Full run:
   python src/reocr_vlm.py --docs data/ocr_quality/noisy_docs.txt --workers 8
+Pages are cached per model under data/reocr/<model>/, so two models can be compared on the same pages.
 """
 from __future__ import annotations
 
@@ -38,6 +39,17 @@ PROMPT = (
     "- Sadece sayfa metnini ver; açıklama, markdown veya kod bloğu ekleme."
 )
 _lock = threading.Lock()
+DEFAULT_MODEL = "gemini-3.8-flash"
+# USD per 1M tokens (input, output), standard tier, from ai.google.dev pricing (Nov 2026); batch is half
+PRICES = {
+    "gemini-3.8-flash": (0.75, 3.75),
+    "gemini-3.6-flash": (0.75, 3.75),
+    "gemini-3-flash-preview": (0.50, 3.00),
+    "gemini-2.5-flash": (0.30, 2.50),
+    "gemini-3.5-flash-lite": (0.30, 2.50),
+    "gemini-3.1-flash-lite": (0.25, 1.50),
+    "gemini-2.5-flash-lite": (0.10, 0.40),
+}
 
 
 def doc_key(doc_id: str) -> str:
@@ -90,6 +102,9 @@ def transcribe(client, model: str, png: bytes, retries: int = 5) -> tuple[str, d
                 text = text.strip("`").split("\n", 1)[-1]
             return text, usage
         except Exception as e:  # rate limits / transient errors
+            code = getattr(e, "code", None) or getattr(e, "status_code", None)
+            if isinstance(code, int) and 400 <= code < 500 and code not in (408, 429):
+                raise SystemExit(f"Gemini API error {code} (not retried): {str(e)[:300]}")
             if attempt == retries - 1:
                 raise
             print(f"      retry in {delay:.0f}s: {str(e)[:120]}")
@@ -113,8 +128,10 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--docs", required=True)
     ap.add_argument("--raw-dir", default="data/raw")
-    ap.add_argument("--out", default="data/reocr")
-    ap.add_argument("--model", default=os.environ.get("KKTC_VLM_MODEL", "gemini-flash-latest"))
+    ap.add_argument("--out", default=None, help="Cache dir (default data/reocr/<model>)")
+    ap.add_argument("--model", default=os.environ.get("KKTC_VLM_MODEL", DEFAULT_MODEL),
+                    help=f"Gemini model id (default {DEFAULT_MODEL}; cheaper: gemini-3.1-flash-lite, gemini-2.5-flash-lite)")
+    ap.add_argument("--list-models", action="store_true", help="Print the model ids your API key can use and exit")
     ap.add_argument("--dpi", type=int, default=200)
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--limit-docs", type=int, default=0)
@@ -124,8 +141,15 @@ def main():
     ap.add_argument("--in-price", type=float, default=0.0, help="USD per 1M input tokens (for the cost estimate)")
     ap.add_argument("--out-price", type=float, default=0.0, help="USD per 1M output tokens (for the cost estimate)")
     args = ap.parse_args()
+    if args.list_models:
+        for m in make_client().models.list():
+            if "generateContent" in (getattr(m, "supported_actions", None) or ["generateContent"]):
+                print(m.name.removeprefix("models/"))
+        return
+    if not (args.in_price or args.out_price) and args.model in PRICES:
+        args.in_price, args.out_price = PRICES[args.model]
 
-    out = Path(args.out)
+    out = Path(args.out or f"data/reocr/{args.model}")
     out.mkdir(parents=True, exist_ok=True)
     doc_ids = [ln.strip() for ln in Path(args.docs).read_text(encoding="utf-8").splitlines() if ln.strip()]
     if args.limit_docs:
