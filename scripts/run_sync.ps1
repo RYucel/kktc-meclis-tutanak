@@ -15,8 +15,9 @@ if ((Test-Path $LogFile) -and ((Get-Item $LogFile).Length -gt 2MB)) {
 $ts = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 Add-Content -Path $LogFile -Value "`n==================== $ts ===================="
 
-# Locate Python cleanly
-$PythonExe = (Get-Command python -ErrorAction SilentlyContinue).Source
+# Locate Python: prefer the project's own virtual environment (.venv), then the global python
+$VenvPython = Join-Path $RepoRoot ".venv\Scripts\python.exe"
+$PythonExe = if (Test-Path $VenvPython) { $VenvPython } else { (Get-Command python -ErrorAction SilentlyContinue).Source }
 if (-not $PythonExe) {
     $PythonExe = "C:\Users\SuperComputers\AppData\Local\Programs\Python\Python312\python.exe"
 }
