@@ -7,3 +7,4 @@ rapidfuzz>=3.6.0
 beautifulsoup4>=4.12.0
 pytest>=8.0.0
 pywin32>=306; platform_system == "Windows"
+google-genai  # optional: reocr_vlm.py (vision-model re-OCR)
