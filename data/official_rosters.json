@@ -3928,5 +3928,2132 @@
         ]
       }
     ]
+  },
+  "TCM": {
+    "meclis": "TCM",
+    "donem": null,
+    "years": [
+      1960,
+      1970
+    ],
+    "label": "Türk Cemaat Meclisi (1960–1970)",
+    "partial": true,
+    "source": "https://cm.gov.ct.tr/GecmisMiletvekilleri",
+    "members": [
+      {
+        "name": "Ahmet Faiz Salih",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Ahmet Faiz Salih 28 Temmuz 1960 tarihinde Türk Cemaat Meclisinden milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Salih a f.doc"
+      },
+      {
+        "name": "Ahmet Mehmet Mutallip",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Ahmet Mehmet MUTALLİP 28 Temmuz 1960 tarihinde Türk Cemaat Meclisinden milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/mutallip.doc",
+        "aliases": [
+          "Ahmet Mehmet Mutallıp"
+        ]
+      },
+      {
+        "name": "Ahmet Tevfik Turan",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Ahmet Tevfik Turan 28 Temmuz 1960 tarihinde Türk Cemaat Meclisinden milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek milletvekilliği görevine başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Turan.doc"
+      },
+      {
+        "name": "Ali Niyazi Fikret",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1960’da Kurulan Kıbrıs Cumhuriyeti’nin ilk Seçiminde Girne’ den Türk Cemaat Meclisi üyesi seçildi ve Maarif Üyesi (Milli Eğitim Bakanı) olarak iki yıl görevini sürdürdü.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/dralifikret.doc",
+        "aliases": [
+          "Ali Niyazi Fıkret"
+        ]
+      },
+      {
+        "name": "Ayhan Mehmet Çiftçioğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Ayhan Mehmet Çiftçioğlu 28 Temmuz 1960 tarihinde Türk Cemaat Meclisinden milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ciftcioglu.a.doc"
+      },
+      {
+        "name": "Behiç Kalkan",
+        "constituency": "Baf",
+        "party": "",
+        "note": "",
+        "evidence": "1961 ve 1970 seçimlerinde, Baf bölgesinden Türk Cemaat Meclisi Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Kalkanbe.doc"
+      },
+      {
+        "name": "Behçet Mirata",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1960 yılında kurulan Kıbrıs Cumhuriyeti'nde Türk Cemaat Meclisi üyeliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Mirata.doc"
+      },
+      {
+        "name": "Cemal Özden",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Cemal ÖZDEN 4 Ağustos 1960 tarihinde Türk Cemaat Meclisinden milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Ozden.doc"
+      },
+      {
+        "name": "Cengiz Ratip",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "10 Eylül 1961 tarihinde Türk Cemaat Meclisinde milletvekili olarak göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Ratip Cengiz.doc"
+      },
+      {
+        "name": "Davut Hüseyin Dinçer",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Davut Hüseyin Dinçer 28 Temmuz 1960 tarihinde Türk Cemaat Meclisine milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Dincer.doc"
+      },
+      {
+        "name": "Halil Fikret",
+        "constituency": "Girne",
+        "party": "",
+        "note": "",
+        "evidence": "28 Temmuz 1960 tarihinde Türk Cemaat Meclisine Girne bölgesinden üye olarak seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Fikreth.doc"
+      },
+      {
+        "name": "Hasan Niyazi Öztoprak",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "23 Ekim 1960 tarihinde Türk Cemaat Meclisinde milletvekili olarak göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Oztoprak HN.doc"
+      },
+      {
+        "name": "Hasan Raif",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Hasan Raif 28 Temmuz 1960 tarihinde Türk Cemaat Meclisinden milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Raif h.doc"
+      },
+      {
+        "name": "Hazım Remzi",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "28 Temmuz 1960 tarihinde Türk Cemaat Meclisinden milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Remzi h.doc"
+      },
+      {
+        "name": "Kadriye Ahmet Herkeci",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "28 Temmuz 1960 tarihinde oluşturulan Türk Cemaat Meclisine milletvekili seçilmiş.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/hacibulgurK.doc",
+        "aliases": [
+          "Kadriye Ahmet Herkecı",
+          "hacibulgur"
+        ]
+      },
+      {
+        "name": "Kemal Karaderi",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "28 Temmuz 1960 tarihinde Türk Cemaat Meclisine Mağusa dan milletvekili seçilmiş, 18 Temmuz 1970 tarihine kadar milletvekilliği görevini sürdürmüştür.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Karaderi.doc"
+      },
+      {
+        "name": "Macit Hakkı Yusuf",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "4 Ağustos 1960 tarihinde Türk Cemaat Meclisine milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek milletvekilliği görevine başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/yusuf.doc"
+      },
+      {
+        "name": "Mehmet Asım Behçet",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "28 Temmuz 1960 tarihinde oluşturulan Türk Cemaat Meclisine milletvekili seçilmiş.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/BehcetMA.doc"
+      },
+      {
+        "name": "Mehmet Derviş Kayımbaşoğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Mehmet Derviş KAYIMBAŞOĞLU 28 Temmuz 1960 Türk Cemaat Meclisinden milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Kayimbasoglu.doc",
+        "aliases": [
+          "Mehmet Derviş Kayımbasoglu"
+        ]
+      },
+      {
+        "name": "Mehmet Kemal Mustafa Şefik",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Mehmet Kemal Mustafa Şefik 28 Temmuz 1960 tarihinde Türk Cemaat Meclisinden milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Sefik.doc"
+      },
+      {
+        "name": "Mehmet Zeki",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Mehmet Zeki Müderrisoğlu 28 Temmuz 1960 tarihinde Türk Cemaat Meclisine milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/muderrisoglu z.doc",
+        "aliases": [
+          "müderrisoglu"
+        ]
+      },
+      {
+        "name": "Mustafa Hacıahmetoğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1960’da, Türk Cemaat Meclisi Üyesi, 1970’de milletvekili olarak seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/HACIAHMET.doc"
+      },
+      {
+        "name": "Naim Adiloğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "28 Temmuz 1960 tarihinde Türk Cemaat Meclisine milletvekili seçilmiş, 16 Ağustos 1960 tarihinde de yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/6680148_Adiloglu N.doc"
+      },
+      {
+        "name": "Namık Ramadan Konat",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Namık Ramadan KONAT 23 Ekim 1960 tarihinde Türk Cemaat Meclisinde milletvekili olarak göreve başlamış, 18 Temmuz 1970 tarihinde milletvekilliği görevi sona ermiştir.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Konat.doc"
+      },
+      {
+        "name": "Necdet H. Ünel",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "note": "",
+        "evidence": "1960 seçimlerinde Türk Cemaat Meclisi Üyeliğine seçildi ve Meclis’in Asbaşkanlığı’na getirildi, 1961 yılı sonunda bu görevinden istifa ett 5 Temmuz 1970 seçimlerinde, Lefkoşa bölgesinden Temsilciler Meclisi Türk Üyeliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Unelnh.doc",
+        "aliases": [
+          "Necdet Himmet Ünel"
+        ]
+      },
+      {
+        "name": "Orhan Zihni Bilgehan",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1960 yılında Türk Cemaat Meclisi Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/8508905_BILGEHAN.doc"
+      },
+      {
+        "name": "Osman Mehmet Dağlı",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "28 Temmuz 1960 tarihinde Türk Cemaat Meclisinden milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/dagli o m.doc"
+      },
+      {
+        "name": "Ragıp Mehmet Malyalı",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Ragıp Mehmet MALYALI 28 Temmuz 1960 tarihinde Türk Cemaat Meclisine milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Malyali.doc"
+      },
+      {
+        "name": "Rauf Raif Denktaş",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1960 yılında Türk Cemaat Meclisi Başkanlığı ile İcra Komitesi Başkanlığı’na seçilmesi nedeniyle, Kıbrıs Türk Kurumları Federasyonu’ndaki görevinden istifa etti.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Denktasrr.doc"
+      },
+      {
+        "name": "Sonder Hakkı Süleyman",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "note": "",
+        "evidence": "HAKKI SÜLEYMAN SONDER Avukat Hakkı Süleyman Sonder 29-07-1960 tarihli seçim ile Türk Cemaat Meclisi Üyeliğine Lefkoşa’dan seçilmiş , bu görevi 18-7-1970 tarihine kadar sürdürmüştür.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/4903456_Sonder.doc"
+      },
+      {
+        "name": "Talat Yurdakul",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1961 yılında, Türk Cemaat Meclisi Kurulu’nca, Sosyal İşler Dairesi Müdürlüğü’ne atandı, bu görevini 10 yıl sürdürdü.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Yurdakult.doc"
+      },
+      {
+        "name": "Vecdet Haci Yahya Oktekin",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Vecdet (Hacıyahya)Oktekin 28 Temmuz 1960 tarihinde Türk Cemaat Meclisinden milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Oktekin vecdet.doc",
+        "aliases": [
+          "Hacıyahya"
+        ]
+      },
+      {
+        "name": "Zekai Ereş",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Ekim 1961 yılında yapılan ara seçimle Türk Cemaat Meclisi Üyeliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ERES.doc"
+      },
+      {
+        "name": "İbrahim Orhan",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "İbrahim ORHAN 28 Temmuz 1960 tarihind e Türk Cemaat Meclisinden milletvekili seçilmiş, 16 Ağustos 1960 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/orhan.doc"
+      },
+      {
+        "name": "İsmail Beyzade",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "İsmail Beyzade 28 Temmuz 1960 tarihinde Türk Cemaat Meclisinden milletvekili seçilmiş.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Beyzade.doc"
+      }
+    ]
+  },
+  "KTY:2": {
+    "meclis": "KTY",
+    "donem": 2,
+    "years": [
+      1970,
+      1975
+    ],
+    "label": "Kıbrıs Türk Yönetimi 2. Dönem (1970–1975)",
+    "partial": true,
+    "source": "https://cm.gov.ct.tr/GecmisMiletvekilleri",
+    "members": [
+      {
+        "name": "Ahmet Aziz Kazım",
+        "constituency": "Baf",
+        "party": "",
+        "note": "",
+        "evidence": "40 yıl hizmetten sonra, 1970 yılında, Aydın İlkokulu Başöğretmenliğinden emekliye ayrı 5 Temmuz 1970 seçimlerinde Baf bölgesinden Türk Cemaat Meclisi Üyeliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Kazimah.doc"
+      },
+      {
+        "name": "Ali Süha",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde, Lefkoşa bölgesinden Türk Cemaat Meclisi Üyeliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Suhaali.doc"
+      },
+      {
+        "name": "Ayhan Halit Acarkan",
+        "constituency": "Limasol",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde Limasol bölgesinden, Türk Cemaat Meclisi Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Acarkan.doc"
+      },
+      {
+        "name": "Behiç Kalkan",
+        "constituency": "Baf",
+        "party": "",
+        "note": "",
+        "evidence": "1961 ve 1970 seçimlerinde, Baf bölgesinden Türk Cemaat Meclisi Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Kalkanbe.doc"
+      },
+      {
+        "name": "Burhan Nalbandoğlu",
+        "constituency": "Gazimağusa",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1970 seçimlerinde Mağusa bölgesinden Temsilciler Meclisi Türk Üyeliği’ne ve 1976 seçimlerinde Toplumcu Kurtuluş Partisi’nden Kıbrıs Türk Federe Meclisi Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Nalbantoglu.doc",
+        "aliases": [
+          "Burhan Nalbantoğlu"
+        ]
+      },
+      {
+        "name": "Ekrem Y. Avcıoğlu",
+        "constituency": "Limasol",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde, Limasol bölgesinden Temsilciler Meclisi Türk Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Avciogluey.doc",
+        "aliases": [
+          "Ekrem Yusuf Avcıoğlu"
+        ]
+      },
+      {
+        "name": "Erol Kazım Andaç",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "note": "",
+        "evidence": "İngilizce ve Rumca bilmektedir 5 Temmuz 1970'de yapılan genel seçimlerde Lefkoşa bölgesinden Temsilciler Meclisi Üyeliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Andacek.doc"
+      },
+      {
+        "name": "Fuat Veziroğlu",
+        "constituency": "Gazimağusa",
+        "party": "",
+        "note": "",
+        "evidence": "1970 yılında, Mağusa bölgesinden Türk Cemaat Meclisi Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/vezirogluf.doc"
+      },
+      {
+        "name": "Haluk Avni Akman",
+        "constituency": "Larnaka",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde, Larnaka bölgesinden Temsilciler Meclisi Türk Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Avnihaluk.doc",
+        "aliases": [
+          "Haluk Avni"
+        ]
+      },
+      {
+        "name": "Hasan Güvener",
+        "constituency": "Gazimağusa",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde, yine Mağusa bölgesinden Temsilciler Meclisi Türk Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Guvenerhas.doc",
+        "aliases": [
+          "Hasan Adnan Güvener"
+        ]
+      },
+      {
+        "name": "Hüseyin M. Gültekin",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1970 yılında Türk Cemaat Meclisi Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Gultekin.DOC",
+        "aliases": [
+          "Hüseyin Muzaffer Gültekin"
+        ]
+      },
+      {
+        "name": "Hüseyin M. Sarrı",
+        "constituency": "Gazimağusa",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde Mağusa bölgesinden Türk Cemaat Meclisi Üyeliği’ne seçildi, Meclis’in İdari İşler Komitesi Üyeliğinde bulundu.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Sarihm.doc",
+        "aliases": [
+          "Hüseyin Mehmet Sarrı"
+        ]
+      },
+      {
+        "name": "Kemal Deniz",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde yeniden Temsilciler Meclisi Türk Üyeliği’ne seçildi, Meclis’in Maliye ve İktisadi İşler Komitesi Üyeliğinde bulundu.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Denizmk.doc",
+        "aliases": [
+          "Mehmet Kemal Deniz"
+        ]
+      },
+      {
+        "name": "Mehmet Küçük",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde, Lefkoşa bölgesinden Temsilciler Meclisi Türk Üyeliği’ne seçildi, Meclis’in İdare Amirliğinde bulunduğu gibi İdari İşler Komitesinde Başkanlık yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Kucukmeh.doc",
+        "aliases": [
+          "Mehmet Ahmet Küçük"
+        ]
+      },
+      {
+        "name": "Mustafa Güryel",
+        "constituency": "Larnaka",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde Larnaka bölgesinden Temsilciler Meclisi Türk Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Guryelmus.doc"
+      },
+      {
+        "name": "Mustafa Hacıahmetoğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1960’da, Türk Cemaat Meclisi Üyesi, 1970’de milletvekili olarak seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/HACIAHMET.doc"
+      },
+      {
+        "name": "Mustafa Çağatay",
+        "constituency": "Limasol",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde, Limasol bölgesinden seçimlere katıldı ve Türk Cemaat Meclisi üyesi oldu.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CAGATAY.doc"
+      },
+      {
+        "name": "Necdet H. Ünel",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "note": "",
+        "evidence": "1960 seçimlerinde Türk Cemaat Meclisi Üyeliğine seçildi ve Meclis’in Asbaşkanlığı’na getirildi, 1961 yılı sonunda bu görevinden istifa ett 5 Temmuz 1970 seçimlerinde, Lefkoşa bölgesinden Temsilciler Meclisi Türk Üyeliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Unelnh.doc",
+        "aliases": [
+          "Necdet Himmet Ünel"
+        ]
+      },
+      {
+        "name": "Nejat Konuk",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 tarihinde yapılan genel seçimlerde Lefkoşa bölgesinden Türk Cemaat Meclisi’ne üye seçildi ve 18 Temmuz 1970 tarihinde yeniden teşkilatlanan Yürütme Kurulu’nda yine Adalet ve İçişleri Üyeliği’ne atandı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/KONUKN.doc",
+        "aliases": [
+          "Osman Nejat Konuk"
+        ]
+      },
+      {
+        "name": "Nevzat S. Uzunoğlu",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde, Lefkoşa bölgesinden Türk Cemaat Meclisi Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Uzunoglunev.doc",
+        "aliases": [
+          "Nevzat S Uzunoğlu"
+        ]
+      },
+      {
+        "name": "Rauf Raif Denktaş",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 tarihinde yapılan genel seçimlerde Türk Cemaat Meclisi’ne tekrar üye seçildi ve oybirliği ile Meclis Başkanlığı görevine getirildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Denktasrr.doc"
+      },
+      {
+        "name": "Sobutay Ali Ratip",
+        "constituency": "Baf",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde Baf bölgesinden Temsilciler Meclisi Türk üyeliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Ratip-ali.doc",
+        "aliases": [
+          "Irikoglu"
+        ]
+      },
+      {
+        "name": "Talat Yurdakul",
+        "constituency": "Larnaka",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçiml erinde, Larnaka bölgesinden Türk Cemaat Meclisi Üyeliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Yurdakult.doc"
+      },
+      {
+        "name": "Ziya Rızkı",
+        "constituency": "Limasol",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 tarihindeki seçimlerde, Limasol bölgesinden Temsilciler Meclisi Türk Üyeliği’ne seçildi ve 1975’te oluşan ilk Kurucu Meclis’te görev aldı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Rizki-zm.doc",
+        "aliases": [
+          "Ziya Mehmet Rızkı"
+        ]
+      },
+      {
+        "name": "Özker Yaşın",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 seçimlerinde, Lefkoşa bölgesinden Türk Cemaat Meclisi’ne üye seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Yasinmo.doc",
+        "aliases": [
+          "Mustafa Özker Yaşın"
+        ]
+      },
+      {
+        "name": "Ümit Süleyman Onan",
+        "constituency": "",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1970 seçimlerinde Lefkoşa bölg esinden Temsilciler Meclisi Türk Üyeliği’ne ve 1976 seçimlerinde de Ulusal Birlik Partisi’nden yine Lefkoşa milletvekilliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Onanus.doc"
+      },
+      {
+        "name": "İsmail Bozkurt",
+        "constituency": "Larnaka",
+        "party": "",
+        "note": "",
+        "evidence": "Bu görevde iken 5 Temmuz 1970 seçimlerine katıldı ve Larnaka Bölgesinden Türk Cemaat Meclisi Üyeliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/BOZKURTI.doc",
+        "aliases": [
+          "Ismail Bozkurt"
+        ]
+      },
+      {
+        "name": "İsmet Kotak",
+        "constituency": "Gazimağusa",
+        "party": "",
+        "note": "",
+        "evidence": "1970 seçimlerinde, Mağusa bölgesinden Temsilciler Meclisi Türk Üyeliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/KOTAK.doc"
+      }
+    ]
+  },
+  "KTFD_KM:1": {
+    "meclis": "KTFD_KM",
+    "donem": 1,
+    "years": [
+      1975,
+      1976
+    ],
+    "label": "KTFD Kurucu Meclisi (1975–1976)",
+    "partial": true,
+    "source": "https://cm.gov.ct.tr/GecmisMiletvekilleri",
+    "members": [
+      {
+        "name": "Ahmet Atamsoy",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975’te, Kıbrıs Türk Federe Devleti Kurucu Meclisi üyeliği, 1983’te Kuzey Kıbrıs Türk Cumhuriyeti Kurucu Meclisi üyeliği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ATAMSOY.doc",
+        "aliases": [
+          "Ahmet Yusuf Atamsoy"
+        ]
+      },
+      {
+        "name": "Ahmet Aziz Kazım",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde yeniden milletvekili seçilen Kazım, evli olup beş çocuk babası idi, İngilizce ve Rumca bilmekteydi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Kazimah.doc"
+      },
+      {
+        "name": "Ahmet Mithat Berberoğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 ve 13 Şubat 1975 tarihlerinde yeniden Milletvekili seçilen Sn Berberoğlu’nun görevi 18 Mart 1975 tarihinde sona ermiştir.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/BERBEROGLU a.doc"
+      },
+      {
+        "name": "Ahmet Raşit Mustafa",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde oluşturulan KTFD kurucu Meclisinde milletvekili olarak görev almış 24 Şubat 1975 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/mustafa.doc"
+      },
+      {
+        "name": "Ali Süha",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde oluşturulan KTFD kurucu Meclisine ve 13 Ekim 1991 tarihindeki seçimlerde de yeniden milletvekili seçilen Sn Ali Süha’ nın milletvekilliği görevi 25 Aralık 1993 tarihinde sona ermiştir.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Suhaali.doc"
+      },
+      {
+        "name": "Alpay Durduran",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Şubat 1975’de, Kıbrıs Türk Mimar ve Mühendisler Odası Birlği’nin temsilcisi seçildi ve bu sıfatla Kıbrıs Türk Federe Devleti Kurucu Meclisi’nde görev yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/DURDURAN.DOC"
+      },
+      {
+        "name": "Ayhan Halit Acarkan",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1975 yılında oluşturulan Kurucu Mecliste de görev aldı ve bu görevi 3 Temmuz 1976 tarihine kadar sürdürdü.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Acarkan.doc"
+      },
+      {
+        "name": "Ekrem Y. Avcıoğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde yapılan seçimlerde yeniden milletvekili seçilen Sn.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Avciogluey.doc",
+        "aliases": [
+          "Ekrem Yusuf Avcıoğlu"
+        ]
+      },
+      {
+        "name": "Fatma Sezer",
+        "constituency": "",
+        "party": "CTP",
+        "note": "",
+        "evidence": "1975’te politikaya atılıp 13 Şubat 1975 tarihinde oluşturulan KTFD kurucu Meclisinde görev almıştır . Halkçı Parti, Toplumcu Kurtuluş Partisi, Cumhuriyetçi Türk Partisi'nde siyasi faaliyette bulundu.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Rasit f.doc",
+        "aliases": [
+          "Azgın",
+          "Fatma N Raşit",
+          "SEZER"
+        ]
+      },
+      {
+        "name": "Fuat Veziroğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1975’te, Kıbrıs Türk Federe Devleti Kurucu Meclisi’nde de görev aldı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/vezirogluf.doc"
+      },
+      {
+        "name": "Hakkı Süha",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde oluşturulan KTFD kurucu Meclisinde 24 Şubat 1975 tarihinde yemin ederek milletvekilliğine başlamış olup 3 Temmuz 1976 tarihinde de milletvekilliği görevi sona ermiştir.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Suha H.doc"
+      },
+      {
+        "name": "Halil Fikret",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 ve 13 Şubat 1975 tarihli seçimlerde milletvekilliği görevine seçilen Sn Fikret, Meclis’in Maliye ve İktisadi İşler Komitesi üyeliğinde bulundu.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Fikreth.doc"
+      },
+      {
+        "name": "Haluk Avni Akman",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde yapılan seçimlerde yeniden milletvekili seçilen S. Avni’nin, milletvekilliği görevi 3 Temmuz 1976 tarihinde sona erdi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Avnihaluk.doc",
+        "aliases": [
+          "Haluk Avni"
+        ]
+      },
+      {
+        "name": "Hüseyin M. Gültekin",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1975'de Kıbrıs Türk Federe Devleti Kurucu Meclisi’nde ve 6.12.1983'de oluşan KKTC Kurucu Meclis’inde görev aldı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Gultekin.DOC",
+        "aliases": [
+          "Hüseyin Muzaffer Gültekin"
+        ]
+      },
+      {
+        "name": "Hüseyin M. Sarrı",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde yapılan seçimlerde yeniden milletvekili seçilen Sn.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Sarihm.doc",
+        "aliases": [
+          "Hüseyin Mehmet Sarrı"
+        ]
+      },
+      {
+        "name": "Kaya Bekiroğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde oluşturulan KTFD kurucu Meclisine milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/BEKIROGL.DOC"
+      },
+      {
+        "name": "Mehmet Eşref",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde oluşturulan KTFD kurucu Meclisinde görev almış ve 3 Temmuz 1976 tarihine kadar bu görevi sürdürmüştür.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Esref.doc"
+      },
+      {
+        "name": "Mustafa Akıncı",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1975 yılında oluşturulan Kurucu Meclis’te, Kurucu Meclis üyesi olarak görev yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/akinci.doc"
+      },
+      {
+        "name": "Mustafa Salih Toros",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde oluşturulan KTFD kurucu Meclisine milletvekili seçilmiş, 24 Şubat 1975 tarihinde yemin ederek milletvekilliği görevine başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/toros.doc"
+      },
+      {
+        "name": "Mustafa Çağatay",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "24 Şubat 1975’te teşekkül eden Kurucu Meclis’te, Federe Devlet’in Anayasasını hazırlamak için oluşturulan komitenin üyesi ve sözcüsü olarak görev yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CAGATAY.doc"
+      },
+      {
+        "name": "Naci Talat Usar",
+        "constituency": "",
+        "party": "CTP",
+        "note": "",
+        "evidence": "1975 yılında, Cumhuriyetçi Türk Partisi’nin temsilcisi olarak Kurucu Meclis’e girdi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/USARNACI.doc"
+      },
+      {
+        "name": "Necati Taşkın",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde oluşturulan KTFD kurucu Meclisine milletvekili seçilmiş, 24 Şubat 1 975 tarihinde yemin ederek milletvekilliğine başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Taskin n.doc"
+      },
+      {
+        "name": "Nejat Konuk",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "24 Şubat 1975'de teşekkül eden ilk Kurucu Meclis’e, Bakanlar Kurulu’nu temsilen üye seçilen Konuk, daha sonra Ulusal Birlik Partisinin Genel Sekreterliği'ne getirildi ve 1976 seçiml erinde Lefkoşa bölgesinden UBP adayı olarak Meclis’e girdi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/KONUKN.doc",
+        "aliases": [
+          "Osman Nejat Konuk"
+        ]
+      },
+      {
+        "name": "Osman Civisilli",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde oluşturulan KTFD kurucu Meclisinde milletvekili olarak görev almış 24 Şubat 1975 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Civisillio.doc",
+        "aliases": [
+          "Osman Mustafa Cıvısıllı"
+        ]
+      },
+      {
+        "name": "Rauf Unsal",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Rauf Ünsal 13 Şubat 1975 tarihinde oluşturulan KTFD kurucu Meclisinde, 24 Şubat 1975 tarihinde yemin ederek milletvekilliğine başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Unsal.doc",
+        "aliases": [
+          "Rauf Ünsal"
+        ]
+      },
+      {
+        "name": "Sobutay Ali Ratip",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975 tarihinde yapılan seçimlerde yeniden milletvekili seçilmiş, 3 Temmuz 1976 tarihinde milletvekilliği sona ermiştir.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Ratip-ali.doc",
+        "aliases": [
+          "Irikoglu"
+        ]
+      },
+      {
+        "name": "Turgut Ali",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "22 Şubat 1975 tarihli Olağanüstü Genel Kurulunda yapılan seçim sonucunda Kıbrıs Türk Federe Devleti Kurucu Meclisinde Çift çiler Birliğini temsil etti.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Ali.doc",
+        "aliases": [
+          "Turgut Alı"
+        ]
+      },
+      {
+        "name": "Turgut Mustafa",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Turgut Mustafa Yenağralı 13 Şubat 1975 tarihinde oluşturulan KTFD kurucu Meclisinde milletvekili olarak görev almış 24 Şubat 1975 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/yenagralı.doc",
+        "aliases": [
+          "Turgut Mustafa Yenağralı"
+        ]
+      },
+      {
+        "name": "Zaim Necatigil",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1975’te oluşturulan Kıbrıs Türk Federe Devleti Kurucu Meclisi’ne Kıbrıs Türk Barosu’nu temsilen seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Necatigil.doc"
+      },
+      {
+        "name": "Ziya Rızkı",
+        "constituency": "Limasol",
+        "party": "",
+        "note": "",
+        "evidence": "5 Temmuz 1970 tarihindeki seçimlerde, Limasol bölgesinden Temsilciler Meclisi Türk Üyeliği’ne seçildi ve 1975’te oluşan ilk Kurucu Meclis’te görev aldı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Rizki-zm.doc",
+        "aliases": [
+          "Ziya Mehmet Rızkı"
+        ]
+      },
+      {
+        "name": "Özel Tahsin",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1975 yılında TÜRK-SEN'i temsilen Kurucu Meclise girdi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Tahsinoz.doc"
+      },
+      {
+        "name": "Özker Özgür",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1975 yılında, Kıbrıs Türk Federe Devleti Kurucu Meclisi’nde, Orta Eğitim Öğretmenler Sendikası’nı temsilen görev aldı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/OZGUROZK.DOC"
+      }
+    ]
+  },
+  "KTFD:1": {
+    "meclis": "KTFD",
+    "donem": 1,
+    "years": [
+      1976,
+      1981
+    ],
+    "label": "KTFD 1. Dönem (1976–1981)",
+    "partial": true,
+    "source": "https://cm.gov.ct.tr/GecmisMiletvekilleri",
+    "members": [
+      {
+        "name": "Ali Atun",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "20 Haziran 1976 genel seçim lerinde, Ulusal Birlik Partisi’nden milletvekili adayı oldu ve Mağusa bölgesinden milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ATUNALI.doc",
+        "aliases": [
+          "Ali Rıfat Atun"
+        ]
+      },
+      {
+        "name": "Alpay Durduran",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1976 ve 1981 genel seçimlerinde Toplumcu Kurtuluş Partisi’nden, Lefkoşa bölgesi milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/DURDURAN.DOC"
+      },
+      {
+        "name": "Alper Y. Orhon",
+        "constituency": "",
+        "party": "HP",
+        "note": "",
+        "evidence": "1976 seçimlerinde, Genel Başkanı bulunduğu Halkçı Parti’den aday olarak milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Orhonalper.doc",
+        "aliases": [
+          "Alper Yusuf Orhon"
+        ]
+      },
+      {
+        "name": "Ata Atun",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "20 Haziran 1976 seçimlerinde Ulusal Birlik Partisi’nden aday olarak Mağusa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Atunata.doc"
+      },
+      {
+        "name": "Burhan Nalbandoğlu",
+        "constituency": "Gazimağusa",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1970 seçimlerinde Mağusa bölgesinden Temsilciler Meclisi Türk Üyeliği’ne ve 1976 seçimlerinde Toplumcu Kurtuluş Partisi’nden Kıbrıs Türk Federe Meclisi Üyeliği’ne seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Nalbantoglu.doc",
+        "aliases": [
+          "Burhan Nalbantoğlu"
+        ]
+      },
+      {
+        "name": "Derviş Eroğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 Genel Seçimlerinde Ulusal Birlik Partisi’nden Gazimağusa Milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Eroglu.doc"
+      },
+      {
+        "name": "Ekrem Ural",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1976 ve 1981 genel seçimlerinde, Toplumcu Kurtuluş Partisi’nden Lefkoşa milletvekili oldu ve Temmuz 1981'de Kı brıs Türk Federe Meclisi Başkan Yardımcılığı görevine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/URAL.DOC"
+      },
+      {
+        "name": "Enver Emin",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 ve 1981 genel seçimlerinde, Ulusal Birlik Partisi’nden Lefkoşa bölgesi milletvekilliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/EMIN.doc"
+      },
+      {
+        "name": "Erdinç Behçet Gurçag",
+        "constituency": "Güzelyurt",
+        "party": "UBP",
+        "note": "",
+        "evidence": "Daha sonra Girne-Güzelyurt Bölgesi, halkla ilişkiler sorumluluğunu ü stlendi. . 1976 seçimlerinde, Ulusal Birlik Partisi’nden Girne milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Gurcage.doc",
+        "aliases": [
+          "Erdinç Behçet Gürçağ"
+        ]
+      },
+      {
+        "name": "Erol Kazım Andaç",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 Haziranına kadar Ulaştırma Bakanı olarak görev yapan Erol Kazım Andaç, 20 Haziran 1976 genel seçimlerinde Ulusal Birlik Partisi’nden Lefkoşa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Andacek.doc"
+      },
+      {
+        "name": "Fuat Veziroğlu",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1976’da Toplumcu Kurtuluş Partisi’nden Lefkoşa bölgesi adayı olarak Kıbrıs Türk Federe Devleti Meclisi’ne milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/vezirogluf.doc"
+      },
+      {
+        "name": "Gozel Halim",
+        "constituency": "Girne",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1976 ve 1981 seçimlerinde, Toplumcu Kurtuluş Partisi’nden Girne bölgesi milletvekilliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/HALIMG.doc",
+        "aliases": [
+          "Gözel Halim"
+        ]
+      },
+      {
+        "name": "Hakkı Atun",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "20 Haziran 1976 genel ve 28 Haziran 1981 tarihli genel seçimlerinde milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ATUNHAK.doc"
+      },
+      {
+        "name": "Hasan Murat",
+        "constituency": "Gazimağusa",
+        "party": "",
+        "note": "",
+        "evidence": "1976 seçimlerine, UBP adayı olarak Mağusa'dan katıldı ve Kıbrıs Türk Federe Meclisi Üyesi oldu.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Murath.doc"
+      },
+      {
+        "name": "Hüseyin Curcioğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "20 Haziran 1976 tarihinde Ulusal Birlik Partisi’nden Mağusa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CURCIOGL.doc"
+      },
+      {
+        "name": "Kenan Atakol",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "20 Haziran 1976, 28 Haziran 1981 genel seçimlerinde milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ATAKOL.doc"
+      },
+      {
+        "name": "Mehmet Altınay",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 genel seçimlerine, Ulusal Birlik Partisi Mağusa Bölgesi adayı olarak katıldı ve milletvekili seçildi, ilk kurulan kabinede Ekonomi ve Maliye Bakanı olarak görev aldı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/5863226_ALTINAY.doc"
+      },
+      {
+        "name": "Mehmet Bayram",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976,1981,1985 ve 1990 Genel Seçimlerinde Ulusal Birlik Partisi’nden Gazi Mağusa Milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/bayram.doc"
+      },
+      {
+        "name": "Mehmet Oztürk",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 yılı genel seçimlerinde Ulusal Birlik Partisi’nden aday olarak Mağusa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Ozturkme.doc",
+        "aliases": [
+          "Mehmet Öztürk"
+        ]
+      },
+      {
+        "name": "Mustafa Hacıahmetoğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1976, 1981 seçimlerinde de milletvekili seçilen sayın Hacıahmetoğlu, 6.12.1983'de oluşan Kurucu Meclisin de üyesi idi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/HACIAHMET.doc"
+      },
+      {
+        "name": "Mustafa Çağatay",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": "",
+        "evidence": "Haziran 1976 seçimlerine, Girne’den, Ulusal Birlik Partisi adayı olarak katıldı ve seçimleri kazanarak Meclis’e girdi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CAGATAY.doc"
+      },
+      {
+        "name": "Naci Talat Usar",
+        "constituency": "Gazimağusa",
+        "party": "",
+        "note": "",
+        "evidence": "1976, 1981 ve 1985 seçimlerinde Mağusa bölgesinden CTP milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/USARNACI.doc"
+      },
+      {
+        "name": "Orhan Zihni Bilgehan",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "Haziran 1976’da genel seçimlere katılmak için bu görevinden de ayrıldı ve Ulusal Birlik Partisi’nden Mağusa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/8508905_BILGEHAN.doc"
+      },
+      {
+        "name": "Osman Civisilli",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "20 Haziran 1976 yılı genel seçimlerinde Ulusal Birlik Partisi adayı olarak Mağusa bölgesinden milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Civisillio.doc",
+        "aliases": [
+          "Osman Mustafa Cıvısıllı"
+        ]
+      },
+      {
+        "name": "Osman Örek",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 genel seçimlerinde Ulusal Birlik Partisi’nden Lefkoşa milletvekili olarak Meclis’e girdi ve Kıbrıs Türk Federe Meclisi’nin Meclis Başkanlığı’na seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Orekosm.doc",
+        "aliases": [
+          "Osman Nuri Örek"
+        ]
+      },
+      {
+        "name": "Oğuz Ramadan Korhan",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": "",
+        "evidence": "28 Aralık 1975'den 5 Temmuz 1976 ya kadar Tarım Bakanlığı görevini yaptı ve 1976 seçimlerinde Ulusal Birlik Partisi’nden aday olarak Girne bölgesinden milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Korhanor.doc",
+        "aliases": [
+          "Oguz Ramadan Korhan"
+        ]
+      },
+      {
+        "name": "Raif R. Denktaş",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 seçimlerinde Ulusal Birlik Partisi’nden Lefkoşa milletvekili seçildi ve 1976-1981 döneminde milletvekilliği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Denktasraif.doc",
+        "aliases": [
+          "Raif Denktaş"
+        ]
+      },
+      {
+        "name": "Recep Ali Gürler",
+        "constituency": "",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 yılı genel seçimlerine Ulusal Birlik Partisi’nden aday olarak milletvekilliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Gurlerra.doc"
+      },
+      {
+        "name": "Tansel Fikri",
+        "constituency": "",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 yılı genel seçimlerinde, Ulusal Birlik Partisi adayı olarak milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Fikrit.doc",
+        "aliases": [
+          "Tansel Fıkrı"
+        ]
+      },
+      {
+        "name": "Vedat Çelik",
+        "constituency": "Girne",
+        "party": "UBP",
+        "note": "",
+        "evidence": "20 Haziran 1976 yılı genel seçimlerinde, Ulusal Birlik Partisi’nden Girne milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Celikve.doc"
+      },
+      {
+        "name": "Yüksel Tüccaroğlu",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976'da yapılan genel seçimlerde Halkçı Parti’den, 1985 genel seçimlerinde de Ulusal Birlik Partisi’nden Lefkoşa milletvekili seçildi Tüccaroğlu, evli olup bir çocuk babasıdır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Tuccaroglu.doc"
+      },
+      {
+        "name": "Özel Tahsin",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 ve 1981 seçimlerinde Ulusal Birlik Partisi’nden Lefkoşa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Tahsinoz.doc"
+      },
+      {
+        "name": "Ümit Süleyman Onan",
+        "constituency": "",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1970 seçimlerinde Lefkoşa bölg esinden Temsilciler Meclisi Türk Üyeliği’ne ve 1976 seçimlerinde de Ulusal Birlik Partisi’nden yine Lefkoşa milletvekilliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Onanus.doc"
+      },
+      {
+        "name": "İrsen Küçük",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 ve 1981 Genel Seçimlerinde Ulusal Birlik Partisin’den Lefkoşa Milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/kucuk.doc"
+      },
+      {
+        "name": "İsmail Bozkurt",
+        "constituency": "",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1976, 1981 ve 1985 genel seçimlerinde Toplumcu Kurtuluş Partisi’nden milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/BOZKURTI.doc",
+        "aliases": [
+          "Ismail Bozkurt"
+        ]
+      },
+      {
+        "name": "Şemsi Kazım",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 yılı genel seçimlerinde Ulusal Birlik Partisi’nden aday olarak Lefkoşa bölgesinden milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Kazims.doc",
+        "aliases": [
+          "Semsi Kazım"
+        ]
+      }
+    ]
+  },
+  "KTFD:2": {
+    "meclis": "KTFD",
+    "donem": 2,
+    "years": [
+      1981,
+      1983
+    ],
+    "label": "KTFD 2. Dönem (1981–1983)",
+    "partial": true,
+    "source": "https://cm.gov.ct.tr/GecmisMiletvekilleri",
+    "members": [
+      {
+        "name": "Ali Atun",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "28 Haziran 1981 genel seçimlerinde, yeniden Ulusal Birlik Partisi’nden Mağusa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ATUNALI.doc",
+        "aliases": [
+          "Ali Rıfat Atun"
+        ]
+      },
+      {
+        "name": "Ali Volkan",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1981 seçimlerinde Toplumcu Kurtuluş Partisi’nden aday olarak Lefkoşa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/VOLKAN.doc"
+      },
+      {
+        "name": "Alpay Durduran",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1976 ve 1981 genel seçimlerinde Toplumcu Kurtuluş Partisi’nden, Lefkoşa bölgesi milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/DURDURAN.DOC"
+      },
+      {
+        "name": "Derviş Eroğlu",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1981, 1985, 1990, 1993, 1998 yıllarında yapılan Genel Seçimlerde Ulusal Birlik Partisi’nden Gazimağusa Milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Eroglu.doc"
+      },
+      {
+        "name": "Ekrem Ural",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1976 ve 1981 genel seçimlerinde, Toplumcu Kurtuluş Partisi’nden Lefkoşa milletvekili oldu ve Temmuz 1981'de Kı brıs Türk Federe Meclisi Başkan Yardımcılığı görevine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/URAL.DOC"
+      },
+      {
+        "name": "Enver Emin",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 ve 1981 genel seçimlerinde, Ulusal Birlik Partisi’nden Lefkoşa bölgesi milletvekilliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/EMIN.doc"
+      },
+      {
+        "name": "Erdal Süreç",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1981 seçimlerinde, Toplumcu Kurtuluş Partisi’nden Lefkoşa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Surecer.doc"
+      },
+      {
+        "name": "Ergün Vehbi",
+        "constituency": "",
+        "party": "CTP",
+        "note": "",
+        "evidence": "1981 ve 1985’de yapılan genel seçimlerde Cumhuriyetçi Türk Partisi’nden milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/2885896_ergün vehbi.doc"
+      },
+      {
+        "name": "Esat Varoglu",
+        "constituency": "",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1981 genel seçimlerinde Toplumcu Kurtuluş Partisi’nden milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Varoglue.doc",
+        "aliases": [
+          "Esat Varoğlu"
+        ]
+      },
+      {
+        "name": "Eşber Serakıncı",
+        "constituency": "",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1981 genel seçimlerinde Ulusal Birlik Partisi’nden milletvekili seçildi ve Ticaret, Sanayi ve Enerji Bakanlığı ile İçişleri ve İskan Bakanlığı yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/serakincies.doc",
+        "aliases": [
+          "Esber Serakıncı"
+        ]
+      },
+      {
+        "name": "Fadıl Çağda",
+        "constituency": "Girne",
+        "party": "CTP",
+        "note": "",
+        "evidence": "28 Haziran 1981 tarihinde Cumhuriyetçi Türk Partisi’nden Girne milletvekili milletvekili seçilmiş, 13 Temmuz 1981 tarihinde yemin ederek göreve başlamıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CAGDAFAD.doc",
+        "aliases": [
+          "Fadil Çağda"
+        ]
+      },
+      {
+        "name": "Fuat Veziroğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1981 yılında TKP milletvekili olarak yeniden seçilen, ancak 1983’te partisinden istifa eden Veziroğlu, 6.12.1983 tarihinde oluşan KKTC Kurucu Meclisi’nde Kıbrıs Demokrasi Partisi’nin üyesi olarak görev aldı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/vezirogluf.doc"
+      },
+      {
+        "name": "Gozel Halim",
+        "constituency": "Girne",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1976 ve 1981 seçimlerinde, Toplumcu Kurtuluş Partisi’nden Girne bölgesi milletvekilliğine seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/HALIMG.doc",
+        "aliases": [
+          "Gözel Halim"
+        ]
+      },
+      {
+        "name": "Hakkı Atun",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "20 Haziran 1976 genel ve 28 Haziran 1981 tarihli genel seçimlerinde milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ATUNHAK.doc"
+      },
+      {
+        "name": "Hasan Ozbaflı",
+        "constituency": "Girne",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1981 genel seçimlerinde Toplumcu Kurtuluş Partisi’nden aday olarak, Girne bölgesinden milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/OZBAFLI.DOC",
+        "aliases": [
+          "Hasan Özbaflı"
+        ]
+      },
+      {
+        "name": "Hüseyin Angolemli",
+        "constituency": "Gazimağusa",
+        "party": "",
+        "note": "",
+        "evidence": "1981 Genel Seçimlerine katılarak, Toplumcu Kurtuluş Partsi’nden Gazimağusa Milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/2379196_HÜSEYİN ANGOLEMLİ.docx"
+      },
+      {
+        "name": "Hüseyin Celal",
+        "constituency": "Gazimağusa",
+        "party": "",
+        "note": "",
+        "evidence": "13 Temmuz 1981 seçimlerinde Mağusa bölgesinden milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CELAL.doc"
+      },
+      {
+        "name": "Kenan Atakol",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "20 Haziran 1976, 28 Haziran 1981 genel seçimlerinde milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ATAKOL.doc"
+      },
+      {
+        "name": "Mehmet Altınay",
+        "constituency": "Gazimağusa",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1981 ve 1985 genel seçimlerinde Toplumcu Kurtuluş Partisi’nden Mağusa Bölgesi milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/5863226_ALTINAY.doc"
+      },
+      {
+        "name": "Mehmet Bayram",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976,1981,1985 ve 1990 Genel Seçimlerinde Ulusal Birlik Partisi’nden Gazi Mağusa Milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/bayram.doc"
+      },
+      {
+        "name": "Mehmet Civa",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": "",
+        "evidence": "On yıl Cumhuriyetçi Türk Partisi’nin çeşitli yönetim kademelerinde görev aldı, Merkez Yönetim Kurulu Üyeliği yaptı . 13 Temmuz 1981 tarihinde Cumhuriyetçi Türk Partisi’nden Lefkoşa milletvekili seçilmiş, 2 Aralık 1983 tarihinde oluşturulan KKTC Kurucu Meclisi ile 23 Haziran 1985 tarihindeki seçimler",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CIVA.doc"
+      },
+      {
+        "name": "Mustafa Hacıahmetoğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1976, 1981 seçimlerinde de milletvekili seçilen sayın Hacıahmetoğlu, 6.12.1983'de oluşan Kurucu Meclisin de üyesi idi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/HACIAHMET.doc"
+      },
+      {
+        "name": "Mustafa Karpaslı",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "13 Temmuz 1981 tarihinde Ulusal Birlik Partisi’nden Mağusa bölgesi milletvekili seçildi . 2 Aralık 1983 tarihinde oluşturulan KKTC Kurucu Meclisi ile 23 Haziran 1985, 6 Mayıs 1990 tarihli secimleri kazanarak aralıksız sürdürdüğü milletvekilliği görevi 25 Aralık 1993 tarihinde sona ermiştir.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/KARPASLI.doc"
+      },
+      {
+        "name": "Mustafa Çağatay",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "28 Haziran 1981 seçimlerinde tekrar milletvekiliği kazandı, seçimleri müteakip yeniden hükümeti kurmakla görevlendirildi ve II. Çağatay (Azınlık) Hükümetini kurdu.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CAGATAY.doc"
+      },
+      {
+        "name": "Naci Talat Usar",
+        "constituency": "Gazimağusa",
+        "party": "",
+        "note": "",
+        "evidence": "1976, 1981 ve 1985 seçimlerinde Mağusa bölgesinden CTP milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/USARNACI.doc"
+      },
+      {
+        "name": "Nazif Borman",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Temmuz 1981 tarihinde milletvekili seçilmiş, 6 Aralık 1983 tarihinde milletvekilliği sona ermiştir.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/BORMANN.doc"
+      },
+      {
+        "name": "Nejat Konuk",
+        "constituency": "Lefkoşa",
+        "party": "DHP",
+        "note": "",
+        "evidence": "1981 seçimlerinde, Demokratik Halk Partisi, Lefkoşa milletvekili olarak Meclise girdi ve 1982’de Kıbrıs Türk Federe Devleti Meclis Başkanı seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/KONUKN.doc",
+        "aliases": [
+          "Osman Nejat Konuk"
+        ]
+      },
+      {
+        "name": "Orhan Zihni Bilgehan",
+        "constituency": "Gazimağusa",
+        "party": "",
+        "note": "",
+        "evidence": "1981 genel seçimlerinde yeniden Mağusa milletvekili olarak Meclis’e girdi ve aynı yıl Yüksek Adliye Kurulu Üyeliği’ne de seçilerek iki görevi birlikte yürüttü.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/8508905_BILGEHAN.doc"
+      },
+      {
+        "name": "Oğuz Ramadan Korhan",
+        "constituency": "",
+        "party": "UBP",
+        "note": "",
+        "evidence": "28 Haziran 1981 seçimlerinde Ulusal Birlik Partisi’nden milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Korhanor.doc",
+        "aliases": [
+          "Oguz Ramadan Korhan"
+        ]
+      },
+      {
+        "name": "Salih Coşar",
+        "constituency": "Lefkoşa",
+        "party": "",
+        "note": "",
+        "evidence": "1981, 1985, 1990, 1993 Genel Seçimlerinde UBP’den Lefkoşa Milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/6328375_SALİH COŞAR ÖZGEÇMİŞ.docx"
+      },
+      {
+        "name": "Taşkent Atasayan",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "13 Temmuz 1981, 2 Aralık 1983 tarihinde oluşan KKTC Kurucu Meclisine milletvekili seçilmiş, 23 Haziran 1985, 6 Mayıs 1990 tarihli secimlerde de Ulusal Birlik Partisi’nden Mağusa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/atasayant.doc",
+        "aliases": [
+          "Taskent Atasayan"
+        ]
+      },
+      {
+        "name": "Özel Tahsin",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 ve 1981 seçimlerinde Ulusal Birlik Partisi’nden Lefkoşa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Tahsinoz.doc"
+      },
+      {
+        "name": "İbrahim Koreli",
+        "constituency": "Lefkoşa",
+        "party": "TKP",
+        "note": "",
+        "evidence": "13 Temmuz 1981 tarihli genel seçimlerde Toplumcu Kurtuluş Partisi’nden Lefkoşa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/5149222_İBRAHİM  KORELİ.docx",
+        "aliases": [
+          "Ibrahim Koreli"
+        ]
+      },
+      {
+        "name": "İrsen Küçük",
+        "constituency": "Lefkoşa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "1976 ve 1981 Genel Seçimlerinde Ulusal Birlik Partisin’den Lefkoşa Milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/kucuk.doc"
+      },
+      {
+        "name": "İsmail Bozkurt",
+        "constituency": "",
+        "party": "TKP",
+        "note": "",
+        "evidence": "1976, 1981 ve 1985 genel seçimlerinde Toplumcu Kurtuluş Partisi’nden milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/BOZKURTI.doc",
+        "aliases": [
+          "Ismail Bozkurt"
+        ]
+      },
+      {
+        "name": "İsmet Kotak",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1981 ve 1990 genel seçimlerinde, milletvekili olarak yeniden Meclis’e girdi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/KOTAK.doc"
+      }
+    ]
+  },
+  "KKTC_KM:1": {
+    "meclis": "KKTC_KM",
+    "donem": 1,
+    "years": [
+      1983,
+      1985
+    ],
+    "label": "KKTC Kurucu Meclisi (1983–1985)",
+    "partial": true,
+    "source": "https://cm.gov.ct.tr/GecmisMiletvekilleri",
+    "members": [
+      {
+        "name": "Ahmet Atamsoy",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "13 Şubat 1975’te, Kıbrıs Türk Federe Devleti Kurucu Meclisi üyeliği, 1983’te Kuzey Kıbrıs Türk Cumhuriyeti Kurucu Meclisi üyeliği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ATAMSOY.doc",
+        "aliases": [
+          "Ahmet Yusuf Atamsoy"
+        ]
+      },
+      {
+        "name": "Ahmet Otüken",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis’in üyelerindendi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/OTUKEN-AH.DOC",
+        "aliases": [
+          "Ahmet Ötüken"
+        ]
+      },
+      {
+        "name": "Ahmet Yaşar Akar",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "2.12.1983’de oluşan Kurucu Meclis’e milletvekili seçilmişt ir.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/AKARAHMT.DOC"
+      },
+      {
+        "name": "Ali Atun",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Kuzey Kıbrıs Türk Cumhuriyeti’nin ilanı üzerine, Aralık 1983’te oluşturulan Kurucu Meclis’in üyesi olarak hizmetlerine devam etti.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ATUNALI.doc",
+        "aliases": [
+          "Ali Rıfat Atun"
+        ]
+      },
+      {
+        "name": "Ali Bilgi",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşturulan Kurucu Meclise üye seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/BILGIALI.doc",
+        "aliases": [
+          "Ali Bılgı"
+        ]
+      },
+      {
+        "name": "Ali Volkan",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Kuzey Kıbrıs Türk Cumhuriyeti’nin ilanı üzerine, 1983’te oluşturuşan Kurucu Meclis’te üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/VOLKAN.doc"
+      },
+      {
+        "name": "Ata Öncel Onar",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Kuzey Kıbrıs Türk Cumhuriyeti’nin ilanı üzerine, Aralık 1983'de oluşan Kurucu Meclis’te üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ONARATA.doc"
+      },
+      {
+        "name": "Aytaç Beşeşler",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1983'de oluşturulan Kurucu Mecliste üyelik yaptı 13Aralık1983 -19 Temmuz1985 tarihleri arasında Turizm ve Sosyal Yardım Bakanı olarak görev yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/besesler.doc"
+      },
+      {
+        "name": "Baki Topaloğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşturulan Kurucu Meclis’te üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/TOPAL.doc",
+        "aliases": [
+          "Baki Topaloglu"
+        ]
+      },
+      {
+        "name": "Derviş Eroğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1983 yılında oluşturulan Kurucu Meclis’te Kurucu Meclis üyesi olarak görev yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Eroglu.doc"
+      },
+      {
+        "name": "Ekrem Ural",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.l2.1983'de oluşan Kurucu Meclis’te üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/URAL.DOC"
+      },
+      {
+        "name": "Enver Emin",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983’te oluşan Kurucu Meclis’te üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/EMIN.doc"
+      },
+      {
+        "name": "Erdal Süreç",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'te oluşan Kurucu Meclis üyeliği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Surecer.doc"
+      },
+      {
+        "name": "Ergun Orhan Şevket",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis’te üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/SEVKETE.doc",
+        "aliases": [
+          "Ergün Orhan Şevket"
+        ]
+      },
+      {
+        "name": "Ergün Vehbi",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'te oluşan Kurucu Meclis’te üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/2885896_ergün vehbi.doc"
+      },
+      {
+        "name": "Esat Varoglu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis Üyeliği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Varoglue.doc",
+        "aliases": [
+          "Esat Varoğlu"
+        ]
+      },
+      {
+        "name": "Eşber Serakıncı",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983’te oluşan Kurucu Meclis’in üyesi idi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/serakincies.doc",
+        "aliases": [
+          "Esber Serakıncı"
+        ]
+      },
+      {
+        "name": "Fadıl Çağda",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "2 Aralık 1983 tarihinde oluşturulan KKTC Kurucu Meclisinde milletvekili olarak görev almış, 23 Haziran 1985 tarihindeki seçimleri de kazanarak, aralıksız sürdürdüğü milletvekilliği görevi 6 Mayıs 1990 tarihli secimleri kazandığı halde yemin etmediği için 18 Mayıs 1990 tarihinde sona ermiştir.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CAGDAFAD.doc",
+        "aliases": [
+          "Fadil Çağda"
+        ]
+      },
+      {
+        "name": "Ferhat Ulutaş",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis’te üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Ulutasf.doc",
+        "aliases": [
+          "Ferhat Ulutas"
+        ]
+      },
+      {
+        "name": "Fuat Veziroğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1981 yılında TKP milletvekili olarak yeniden seçilen, ancak 1983’te partisinden istifa eden Veziroğlu, 6.12.1983 tarihinde oluşan KKTC Kurucu Meclisi’nde Kıbrıs Demokrasi Partisi’nin üyesi olarak görev aldı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/vezirogluf.doc"
+      },
+      {
+        "name": "Gozel Halim",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis Üye liği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/HALIMG.doc",
+        "aliases": [
+          "Gözel Halim"
+        ]
+      },
+      {
+        "name": "Güner Göktuğ",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis’te görev aldı ve Cumhuriyet Anayasası’nı hazırlayan komisyonda çalıştı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/GOKTUG.doc"
+      },
+      {
+        "name": "Hakkı Atun",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "2 Aralık 1983 tarihinde oluşan Kurucu Meclis’te de üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ATUNHAK.doc"
+      },
+      {
+        "name": "Halil Paşa",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6 Aralık 1983 – 8 Temmuz 1985 tarihleri arasında, Dernek Kontejanından, KKTC Kurucu Meclisinde Milletvekili / Üye ve 24 kişilik Bağımsız Dayanışma Grubu Başkanı olarak görev yapmıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/PASAHAL.DOC"
+      },
+      {
+        "name": "Hasan Ozbaflı",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983’de oluşan Kurucu Meclis’in üyelerindendi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/OZBAFLI.DOC",
+        "aliases": [
+          "Hasan Özbaflı"
+        ]
+      },
+      {
+        "name": "Hilmi Refik",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis’te üyelik yaptı. fik, evli olup iki çocuk babasıdır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Refik-h.doc"
+      },
+      {
+        "name": "Hüseyin Angolemli",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1983’te oluşan Kurucu Meclis’te üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/2379196_HÜSEYİN ANGOLEMLİ.docx"
+      },
+      {
+        "name": "Hüseyin Celal",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "2 Aralık 1983 yılında oluşturulan Kurucu Meclis’in üyesi olarak görev yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CELAL.doc"
+      },
+      {
+        "name": "Hüseyin M. Gültekin",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1975'de Kıbrıs Türk Federe Devleti Kurucu Meclisi’nde ve 6.12.1983'de oluşan KKTC Kurucu Meclis’inde görev aldı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Gultekin.DOC",
+        "aliases": [
+          "Hüseyin Muzaffer Gültekin"
+        ]
+      },
+      {
+        "name": "Kaya Bekiroğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "2 Aralık 1983 tarihinde oluşturulan KKTC Kurucu Meclisine yeniden milletvekili seçilen Sn.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/BEKIROGL.DOC"
+      },
+      {
+        "name": "Kenan Atakol",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "2 Aralık 1983’te oluşturulan Kurucu Meclis’te üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ATAKOL.doc"
+      },
+      {
+        "name": "Lütfi Ozter",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis’te üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/381390_ÖZTER.DOC",
+        "aliases": [
+          "Lütfi Özter"
+        ]
+      },
+      {
+        "name": "Mehmet Altınay",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "Kuzey Kıbrıs Türk Cumhuriyeti’nin ilanı üzerine, Aralık 1983'de oluşan Kurucu Meclis Üyeliği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/5863226_ALTINAY.doc"
+      },
+      {
+        "name": "Mehmet Bayram",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1983 yılında oluşturulan Kurucu Mecliste üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/bayram.doc"
+      },
+      {
+        "name": "Mehmet Can",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "2 Aralık 1983 tarihinde oluşturulan KKTC Kurucu Meclisine milletvekili seçilen Sn Can’ın bu görevi 8 Temmuz 1985 tarihinde sona ermiştir.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CANMEHMT.DOC"
+      },
+      {
+        "name": "Mehmet Civa",
+        "constituency": "Lefkoşa",
+        "party": "CTP",
+        "note": "",
+        "evidence": "On yıl Cumhuriyetçi Türk Partisi’nin çeşitli yönetim kademelerinde görev aldı, Merkez Yönetim Kurulu Üyeliği yaptı . 13 Temmuz 1981 tarihinde Cumhuriyetçi Türk Partisi’nden Lefkoşa milletvekili seçilmiş, 2 Aralık 1983 tarihinde oluşturulan KKTC Kurucu Meclisi ile 23 Haziran 1985 tarihindeki seçimler",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CIVA.doc"
+      },
+      {
+        "name": "Mustafa Hacıahmetoğlu",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1976, 1981 seçimlerinde de milletvekili seçilen sayın Hacıahmetoğlu, 6.12.1983'de oluşan Kurucu Meclisin de üyesi idi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/HACIAHMET.doc"
+      },
+      {
+        "name": "Mustafa Karpaslı",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "13 Temmuz 1981 tarihinde Ulusal Birlik Partisi’nden Mağusa bölgesi milletvekili seçildi . 2 Aralık 1983 tarihinde oluşturulan KKTC Kurucu Meclisi ile 23 Haziran 1985, 6 Mayıs 1990 tarihli secimleri kazanarak aralıksız sürdürdüğü milletvekilliği görevi 25 Aralık 1993 tarihinde sona ermiştir.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/KARPASLI.doc"
+      },
+      {
+        "name": "Mustafa Çağatay",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "2 Aralık 1983 tarihinde oluşturulan KKTC Kurucu Meclisinde milletvekilliği yapan Sn Çağatay’ın Milletvekilliği 8 Temmuz 1985 tarihinde sona ermiştir.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/CAGATAY.doc"
+      },
+      {
+        "name": "Naci Talat Usar",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'te oluşan Kurucu Meclis’te görev yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/USARNACI.doc"
+      },
+      {
+        "name": "Necati Münir Ertekün",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis üyeliğinde bulundu.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/ERTEKUN.doc",
+        "aliases": [
+          "Necati Münür Ertekün"
+        ]
+      },
+      {
+        "name": "Nejat Konuk",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983’de oluşturulan Kurucu Meclis’te de üyelik yapan Konuk, 1983-1985 yılları arasında ikinci kez Başbaklanlık görevinde bulundu.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/KONUKN.doc",
+        "aliases": [
+          "Osman Nejat Konuk"
+        ]
+      },
+      {
+        "name": "Orhan Hasan Kahya",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis Üyeliği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/KAHYA.DOC"
+      },
+      {
+        "name": "Orhan Zihni Bilgehan",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983’te oluşan Kurucu Meclis’te görev yaptı ve Milli Eğitim ve Kültür Bakanı olarak çalıştı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/8508905_BILGEHAN.doc"
+      },
+      {
+        "name": "Osman Örek",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983 tarihinde oluşturulan Kuzey Kıbrıs Türk Cumhuriyeti Kurucu Meclis’inde de milletvekili olarak görev yaptı ve ardından aktif politikadan ayrıldı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Orekosm.doc",
+        "aliases": [
+          "Osman Nuri Örek"
+        ]
+      },
+      {
+        "name": "Raif R. Denktaş",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983’te oluşturulan Kurucu Meclis’te görev aldı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Denktasraif.doc",
+        "aliases": [
+          "Raif Denktaş"
+        ]
+      },
+      {
+        "name": "Sadi Togan",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis üyeliği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Togans.doc"
+      },
+      {
+        "name": "Salih Coşar",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1983’te oluşan Kurucu Mecliste Kurucu Meclis üyeliği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/6328375_SALİH COŞAR ÖZGEÇMİŞ.docx"
+      },
+      {
+        "name": "Taşkent Atasayan",
+        "constituency": "Gazimağusa",
+        "party": "UBP",
+        "note": "",
+        "evidence": "13 Temmuz 1981, 2 Aralık 1983 tarihinde oluşan KKTC Kurucu Meclisine milletvekili seçilmiş, 23 Haziran 1985, 6 Mayıs 1990 tarihli secimlerde de Ulusal Birlik Partisi’nden Mağusa milletvekili seçildi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/atasayant.doc",
+        "aliases": [
+          "Taskent Atasayan"
+        ]
+      },
+      {
+        "name": "Tonguz Ayman",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "2 Aralık 1983 tarihinde oluşan KKTC Kurucu Meclisine milletvekili seçilmiş 8 Temmuz 1985 tarihinde b u görevi görevi sona ermiştir Evli olup iki çocuk babasıdır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Aymant.doc"
+      },
+      {
+        "name": "Yılmaz Bora",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "2 Aralık 1983 tarihinde oluşturulan KKTC Kurucu Meclisinde milletvekili olarak görev aldı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Borayil.doc",
+        "aliases": [
+          "Yilmaz Bora"
+        ]
+      },
+      {
+        "name": "Özel Tahsin",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis üyeliği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Tahsinoz.doc"
+      },
+      {
+        "name": "Özker Özgür",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983 tarihinde oluşturulan Kurucu Meclis’te de üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/OZGUROZK.DOC"
+      },
+      {
+        "name": "İbrahim Koreli",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983’te oluşan Kurucu Meclis Üyeliği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/5149222_İBRAHİM  KORELİ.docx",
+        "aliases": [
+          "Ibrahim Koreli"
+        ]
+      },
+      {
+        "name": "İrsen Küçük",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "1983’de oluşturulan Kurucu Mecliste üyelik yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/kucuk.doc"
+      },
+      {
+        "name": "İsmail Bozkurt",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "TKP’nin kurucuları arasında bulunan ve Genel Başkanlığını da yapmış olan Bozkurt, 6.12.1983'de oluşan KKTC Kurucu Meclisi’nin de üyesi idi.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/BOZKURTI.doc",
+        "aliases": [
+          "Ismail Bozkurt"
+        ]
+      },
+      {
+        "name": "İsmail Tezer",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983'de oluşan Kurucu Meclis üyeliği yaptı.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/Tezeris.doc",
+        "aliases": [
+          "Ismail Tezer"
+        ]
+      },
+      {
+        "name": "İsmet Kotak",
+        "constituency": "",
+        "party": "",
+        "note": "",
+        "evidence": "6.12.1983’de oluşan Kurucu Meclis’te de üyelik yapmıştır.",
+        "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/KOTAK.doc"
+      }
+    ]
   }
 }
