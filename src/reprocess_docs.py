@@ -248,8 +248,17 @@ def run(args) -> dict:
         api.upload_folder(folder_path=str(out_root), repo_id=args.dataset_repo, repo_type="dataset", commit_message=msg,
                           allow_patterns=["data/*.parquet", "README.md", "terms_cache/**"])
         files = ["speakers_index.json", "terms_index.json", "topics_index.json", "speaker_topics.json"]
+        import shutil
+
+        extra = [(Path(args.quality_dir) / "ocr_variants.json", "ocr_variants.json")]
+        if args.upload_ui:
+            extra += [(ROOT / "space_static" / "index.html", "index.html"), (ROOT / "space_static" / "og-image.png", "og-image.png")]
+        for srcf, name in extra:
+            if srcf.exists():
+                shutil.copyfile(srcf, space_dir / name)
+                files.append(name)
         api.upload_folder(folder_path=str(space_dir), repo_id=args.space_repo, repo_type="space", allow_patterns=files, commit_message=msg)
-        print("Uploaded dataset + Space indices.")
+        print(f"Uploaded dataset + Space files: {files}")
     return report
 
 
@@ -272,6 +281,7 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--parse-only", action="store_true", help="Only extract+parse (cached per document), then stop")
     ap.add_argument("--budget", type=float, default=0, help="Stop parsing after this many seconds (resume later)")
     ap.add_argument("--upload", action="store_true")
+    ap.add_argument("--upload-ui", action="store_true", help="Also publish space_static/index.html + og-image.png")
     ap.add_argument("--dataset-repo", default=DATASET_REPO)
     ap.add_argument("--space-repo", default=SPACE_REPO)
     return ap
