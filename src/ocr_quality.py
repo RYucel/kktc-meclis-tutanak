@@ -14,6 +14,7 @@ Outputs:
   <out>/vocab.parquet            word, n   (clean-source vocabulary)
   <out>/doc_quality.parquet      doc_id, meclis, donem, tarih, text_source, source_file, words, oov, mixed, frag, score
   <out>/spaced_docs.txt         letter-spaced PDF documents (input for reprocess_docs.py)
+  <out>/noisy_docs.txt          OCR-noisy PDF documents, worst first (input for reocr_vlm.py)
   <out>/summary.json             distribution by meclis / decade / text_source and the worst documents
 """
 from __future__ import annotations
@@ -140,6 +141,10 @@ def main():
         "SELECT doc_id FROM q WHERE text_source LIKE 'pdf%' AND frag >= 0.3 ORDER BY doc_id").fetchall()]
     (out / "spaced_docs.txt").write_text("\n".join(spaced) + "\n", encoding="utf-8")
     summary["spaced_docs"] = len(spaced)
+    noisy = [r[0] for r in con.execute(
+        "SELECT doc_id FROM q WHERE text_source LIKE 'pdf%' AND frag < 0.3 AND score >= 0.15 ORDER BY score DESC").fetchall()]
+    (out / "noisy_docs.txt").write_text("\n".join(noisy) + "\n", encoding="utf-8")
+    summary["noisy_docs"] = len(noisy)
     (out / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"scored {len(rows):,} documents in {time.perf_counter() - t0:.0f}s -> {out}")
 

@@ -36,3 +36,23 @@ def test_score_text_flags_garbage():
     good = score_text("Sayın Başkan, sayın milletvekilleri bugün bütçeyi görüşüyoruz.", vocab)
     bad = score_text("Sayın mi 1 letveki 1 leri K^TC KK1lC*nin 4din b u g ü n", vocab)
     assert good["score"] < 0.05 < bad["score"]
+
+
+def test_pick_pages_spreads_and_skips_cover():
+    from reocr_vlm import pick_pages
+
+    assert pick_pages(5, 0) == [0, 1, 2, 3, 4]
+    picked = pick_pages(100, 3)
+    assert len(picked) == 3 and 0 not in picked and picked == sorted(picked)
+
+
+def test_cached_pages_requires_every_page(tmp_path):
+    from reocr_vlm import cached_pages, page_cache
+
+    for i in (0, 2):
+        p = page_cache(tmp_path, "D/x.pdf", i)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(f"sayfa {i}", encoding="utf-8")
+    assert cached_pages(tmp_path, "D/x.pdf", 3) is None
+    page_cache(tmp_path, "D/x.pdf", 1).write_text("sayfa 1", encoding="utf-8")
+    assert cached_pages(tmp_path, "D/x.pdf", 3) == ["sayfa 0", "sayfa 1", "sayfa 2"]

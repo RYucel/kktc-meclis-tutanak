@@ -57,7 +57,8 @@ def load_index(path: Path) -> dict[str, dict]:
     return recs
 
 
-def reparse(doc_ids: list[str], index: dict[str, dict], raw_dir: Path, cache_dir: Path, budget_s: float = 0) -> tuple[list[dict], list[dict], list[str]]:
+def reparse(doc_ids: list[str], index: dict[str, dict], raw_dir: Path, cache_dir: Path, budget_s: float = 0,
+            reocr_dir: Path | None = None) -> tuple[list[dict], list[dict], list[str]]:
     """Parse each document once; results are cached per document so an interrupted run resumes."""
     import hashlib
 
@@ -80,6 +81,13 @@ def reparse(doc_ids: list[str], index: dict[str, dict], raw_dir: Path, cache_dir
             continue
         try:
             ext = extract_any_linux(src, rec["ext"])
+            if reocr_dir and ext.get("page_count"):
+                from reocr_vlm import cached_pages
+
+                vlm_pages = cached_pages(reocr_dir, did, ext["page_count"])
+                if vlm_pages is not None:  # use the vision-model transcription only when every page was re-read
+                    full = "\n\n".join(p.strip() for p in vlm_pages if p.strip())
+                    ext = {**ext, "pages": vlm_pages, "text": full, "total_chars": len(full), "text_source": "pdf_vlm_ocr"}
             doc = {k: rec.get(k) for k in ("local_rel_path", "filename", "ext", "meclis", "donem", "yasama_yili", "top_folder", "download_url", "sha256", "size_bytes")}
             doc_rec, turns = parse_document({**doc, **ext})
         except Exception as e:  # keep going: one bad file must not block the batch
@@ -143,7 +151,8 @@ def run(args) -> dict:
         raise SystemExit(f"{len(missing)} doc_ids are not in the dataset, e.g. {missing[:3]}")
 
     print(f"[1/4] Re-extracting {len(doc_ids)} documents from {args.raw_dir}...")
-    new_docs, new_sp, errors = reparse(doc_ids, load_index(Path(args.index)), Path(args.raw_dir), out_root / "parsed", args.budget)
+    new_docs, new_sp, errors = reparse(doc_ids, load_index(Path(args.index)), Path(args.raw_dir), out_root / ("parsed_vlm" if args.reocr_dir else "parsed"), args.budget,
+                                       Path(args.reocr_dir) if args.reocr_dir else None)
     if args.parse_only:
         print(f"   parsed {len(new_docs)} documents, {len(new_sp):,} turns (--parse-only)")
         return {}
@@ -259,6 +268,7 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--memory-limit", default="1.5GB")
     ap.add_argument("--threads", type=int, default=0)
     ap.add_argument("--skip-aux", action="store_true")
+    ap.add_argument("--reocr-dir", default=None, help="Use vision-model page transcriptions from reocr_vlm.py when complete")
     ap.add_argument("--parse-only", action="store_true", help="Only extract+parse (cached per document), then stop")
     ap.add_argument("--budget", type=float, default=0, help="Stop parsing after this many seconds (resume later)")
     ap.add_argument("--upload", action="store_true")
