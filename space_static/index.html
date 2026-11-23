@@ -106,6 +106,12 @@
   .btn-primary:disabled { opacity: 0.6; cursor: wait; }
   .btn-ghost { padding: 7px 12px; border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--folio); color: var(--ink-soft); font-family: var(--sans); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
   .btn-ghost:hover { border-color: var(--ink); color: var(--ink); background: var(--paper); }
+  .btn-ghost.is-done { border-color: var(--olive); color: var(--olive); }
+  .cite-box { margin: 0 0 16px; padding: 12px 14px; background: var(--paper); border: 1px solid var(--rule); border-left: 3px solid var(--crimson); border-radius: 6px; }
+  .cite-lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--crimson); font-weight: 600; margin-bottom: 6px; }
+  .cite-text { font-family: var(--serif); font-size: 14.5px; line-height: 1.5; color: var(--ink); word-break: break-word; }
+  .cite-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .sc-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
   .ac-wrap { position: relative; }
   .ac-dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--folio); border: 1px solid var(--rule-strong); border-radius: 8px; box-shadow: var(--shadow-md); max-height: 290px; overflow-y: auto; z-index: 40; display: none; }
@@ -1891,7 +1897,11 @@ async function runSearch(offset = 0) {
           </div>
           <p class="sc-body">${highlightSnippet(it.text, w.terms)}</p>
           <div class="sc-foot">
-            <button type="button" class="btn-ghost read-btn" data-idx="${idx}">Tam Konuşmayı Oku</button>
+            <div class="sc-actions">
+              <button type="button" class="btn-ghost read-btn" data-idx="${idx}">Tam Konuşmayı Oku</button>
+              <button type="button" class="btn-ghost cite-btn" data-idx="${idx}" title="Kaynak gösterimini kopyala">Alıntıla</button>
+              <button type="button" class="btn-ghost link-btn" data-idx="${idx}" title="Bu konuşmanın kalıcı bağlantısını kopyala / paylaş">Bağlantı</button>
+            </div>
             <a class="sc-src" href="${escHtml(it.source_url)}" target="_blank" rel="noopener">Orijinal Belge: ${escHtml(it.source_file)} ↗</a>
           </div>
         </article>
@@ -1915,11 +1925,132 @@ async function runSearch(offset = 0) {
   }
 }
 
+// ---------- Permalinks & citations ----------
+const MECLIS_FULL = {
+  KKTC: 'KKTC Cumhuriyet Meclisi',
+  KKTC_ARA: 'KKTC Cumhuriyet Meclisi (Aradönem)',
+  KKTC_KM: 'KKTC Kurucu Meclisi',
+  KTFD: 'Kıbrıs Türk Federe Meclisi',
+  KTFD_KM: 'Kıbrıs Türk Federe Devleti Kurucu Meclisi',
+  KTY: 'Kıbrıs Türk Yönetimi Meclisi',
+  TCM: 'Türk Cemaat Meclisi',
+  KC: 'Kıbrıs Cumhuriyeti Temsilciler Meclisi',
+};
+const SPEECH_COLS = `speech_id, doc_id, meclis, donem, birlesim, oturum, tarih, turn_index,
+  speaker_name, speaker_title, constituency, modifiers, speaker_role, text, word_count, source_file, source_url`;
+
+function speechPermalink(item) {
+  const p = new URLSearchParams();
+  if (item.speaker_name) p.set('speaker', item.speaker_name);  // lets DuckDB read only this speaker's row groups
+  p.set('s', String(item.speech_id));
+  return `${location.origin}${location.pathname}?${p.toString()}`;
+}
+
+function speechCitation(item) {
+  const who = item.speaker_name + (item.speaker_title ? ` (${item.speaker_title})` : (item.constituency ? ` (${item.constituency})` : ''));
+  const parts = [
+    `${MECLIS_FULL[item.meclis] || item.meclis} Tutanak Dergisi`,
+    item.donem ? `Dönem ${item.donem}` : '',
+    item.birlesim ? `${item.birlesim}. Birleşim` : '',
+    item.oturum ? `${item.oturum}. Oturum` : '',
+    item.tarih ? formatDateTR(item.tarih) : 'tarihsiz',
+  ].filter(Boolean).join(', ');
+  const today = formatDateTR(new Date().toISOString().slice(0, 10));
+  return `${who}, ${parts}. Resmî belge: ${item.source_url}. Erişim: ${speechPermalink(item)} (${today}).`;
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (_) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (_) { ok = false; }
+    ta.remove();
+    return ok;
+  }
+}
+
+function flashButton(btn, label) {
+  if (!btn) return;
+  const orig = btn.dataset.orig || btn.textContent;
+  btn.dataset.orig = orig;
+  btn.textContent = label;
+  btn.classList.add('is-done');
+  setTimeout(() => { btn.textContent = orig; btn.classList.remove('is-done'); }, 1800);
+}
+
+async function shareOrCopyLink(item, btn) {
+  const url = speechPermalink(item);
+  if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+    try {
+      await navigator.share({ title: `${item.speaker_name} · ${formatDateTR(item.tarih || '')}`, url });
+      return;
+    } catch (_) { /* cancelled -> fall back to copy */ }
+  }
+  flashButton(btn, (await copyText(url)) ? 'Bağlantı kopyalandı ✓' : 'Kopyalanamadı');
+}
+
+async function citeItem(item, btn) {
+  flashButton(btn, (await copyText(speechCitation(item))) ? 'Alıntı kopyalandı ✓' : 'Kopyalanamadı');
+}
+
+function setSpeechParam(id) {
+  const u = new URL(location.href);
+  if (id) u.searchParams.set('s', String(id)); else u.searchParams.delete('s');
+  history.replaceState(null, '', u.pathname + (u.searchParams.toString() ? '?' + u.searchParams.toString() : ''));
+}
+
+function closeDrawer() {
+  $('drawer-backdrop').classList.remove('open');
+  setSpeechParam(null);
+}
+
+async function openSpeechById(id, speaker) {
+  $('drawer-backdrop').classList.add('open');
+  $('drawer-title').textContent = 'Konuşma yükleniyor...';
+  $('drawer-sub').textContent = '';
+  $('drawer-body').innerHTML = '<div class="loading-box"><div class="spinner"></div><div>Kalıcı bağlantıdaki konuşma getiriliyor...</div></div>';
+  try {
+    const c = await ensureDuckDB();
+    let row = null;
+    if (speaker && speakersByName.has(speaker)) {
+      const r1 = await c.query(`SELECT ${SPEECH_COLS} FROM 'speeches.parquet' WHERE speaker_name = ${sqlQuote(speaker)} AND speech_id = ${sqlQuote(id)} LIMIT 1`);
+      row = r1.toArray()[0];
+    }
+    if (!row) {  // speaker renamed/merged since the link was made: search the whole archive (slower)
+      $('drawer-body').innerHTML = '<div class="loading-box"><div class="spinner"></div><div>Konuşma tüm arşivde aranıyor (biraz sürebilir)...</div></div>';
+      const r2 = await c.query(`SELECT ${SPEECH_COLS} FROM 'speeches.parquet' WHERE speech_id = ${sqlQuote(id)} LIMIT 1`);
+      row = r2.toArray()[0];
+    }
+    if (row) openSpeechDrawer(row.toJSON());
+    else {
+      $('drawer-title').textContent = 'Konuşma bulunamadı';
+      $('drawer-body').innerHTML = '<div class="empty-state">Bu bağlantıdaki konuşma arşivde bulunamadı. Bağlantı eksik kopyalanmış olabilir.</div>';
+    }
+  } catch (e) {
+    $('drawer-title').textContent = 'Hata';
+    $('drawer-body').innerHTML = `<div class="empty-state" style="color:var(--crimson)">${escHtml(e.message)}</div>`;
+  }
+}
+
 function openSpeechDrawer(item) {
   $('drawer-backdrop').classList.add('open');
-  $('drawer-title').textContent = `${item.speaker_name} · ${item.tarih || 'Tarihsiz'}`;
+  setSpeechParam(item.speech_id);
+  $('drawer-title').textContent = `${item.speaker_name} · ${item.tarih ? formatDateTR(item.tarih) : 'Tarihsiz'}`;
   $('drawer-sub').innerHTML = `${escHtml(item.meclis)} ${item.donem ? 'Dönem ' + item.donem : ''} ${item.birlesim ? item.birlesim + '. Birleşim' : ''} · <a href="${escHtml(item.source_url)}" target="_blank" rel="noopener" style="color:var(--crimson)">${escHtml(item.source_file)} ↗</a>`;
   $('drawer-body').innerHTML = `
+    <div class="cite-box">
+      <div class="cite-lbl">Kaynak gösterimi</div>
+      <div class="cite-text" id="cite-text">${escHtml(speechCitation(item))}</div>
+      <div class="cite-actions">
+        <button type="button" class="btn-ghost" id="drawer-cite">Alıntıyı Kopyala</button>
+        <button type="button" class="btn-ghost" id="drawer-link">Kalıcı Bağlantıyı Kopyala / Paylaş</button>
+      </div>
+    </div>
     <div class="ctx-turn">
       <div style="font-family:var(--mono);font-size:11.5px;color:var(--ink-muted);margin-bottom:8px">
         ${item.speaker_title ? escHtml(item.speaker_title) + ' · ' : ''}Oturum ${item.oturum || 1} · Konuşma #${item.turn_index} · ${Number(item.word_count||0).toLocaleString('tr-TR')} kelime
@@ -1931,6 +2062,8 @@ function openSpeechDrawer(item) {
       <div id="full-doc-slot"></div>
     </div>
   `;
+  $('drawer-cite').onclick = e => citeItem(item, e.currentTarget);
+  $('drawer-link').onclick = e => shareOrCopyLink(item, e.currentTarget);
   $('load-full-doc').onclick = async () => {
     const slot = $('full-doc-slot');
     slot.innerHTML = '<div style="margin-top:10px;color:var(--ink-muted);font-size:13px">Birleşim belgesi indiriliyor...</div>';
@@ -2025,12 +2158,16 @@ $('results').onclick = e => {
     return;
   }
   const rd = e.target.closest('.read-btn');
-  if (rd) openSpeechDrawer(lastItems[Number(rd.dataset.idx)]);
+  if (rd) { openSpeechDrawer(lastItems[Number(rd.dataset.idx)]); return; }
+  const ct = e.target.closest('.cite-btn');
+  if (ct) { citeItem(lastItems[Number(ct.dataset.idx)], ct); return; }
+  const lk = e.target.closest('.link-btn');
+  if (lk) { shareOrCopyLink(lastItems[Number(lk.dataset.idx)], lk); return; }
 };
 
-$('drawer-close').onclick = () => $('drawer-backdrop').classList.remove('open');
-$('drawer-backdrop').onclick = e => { if (e.target === $('drawer-backdrop')) $('drawer-backdrop').classList.remove('open'); };
-document.addEventListener('keydown', e => { if (e.key === 'Escape') $('drawer-backdrop').classList.remove('open'); });
+$('drawer-close').onclick = () => closeDrawer();
+$('drawer-backdrop').onclick = e => { if (e.target === $('drawer-backdrop')) closeDrawer(); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('drawer-backdrop').classList.contains('open')) closeDrawer(); });
 $('btn-clear').onclick = () => {
   for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role']) $(f).value = '';
   $('sort').value = 'newest';
@@ -2164,6 +2301,8 @@ if (urlP.get('view') === 'terms') {
 } else {
   renderDirectoryLanding();
 }
+// Permalink: ?speaker=...&s=<speech_id> opens that exact speech
+if (urlP.get('s')) openSpeechById(urlP.get('s'), urlP.get('speaker'));
 </script>
 </body>
 </html>
