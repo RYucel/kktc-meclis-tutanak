@@ -543,6 +543,9 @@ _GENERIC_SPEAKERS = {
     "Meclis Başkanı", "Katip", "Geçici Başkan", "Geçici Katip",
     "Sesler", "Başkan", "Başkan Yardımcısı", "Başkan Vekili",
     "Milletvekilleri", "Sıralardan", "Salondan", "Meclis Reisi",
+    # generic role labels produced by the speaker-resolution pass (speaker_resolution.ROLE_CANON)
+    "İkinci Başkan", "İkinci Başkan Vekili", "Birinci Başkan", "Birinci Başkan Vekili",
+    "Geçici Başkan Vekili", "Başbakan", "Başbakan Yardımcısı",
 }
 
 

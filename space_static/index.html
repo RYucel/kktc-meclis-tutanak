@@ -4,6 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KKTC Cumhuriyet Meclisi Tutanak Arşivi (1960–2026)</title>
+<meta name="description" content="1960'tan bugüne KKTC ve öncül meclis tutanaklarında konuşmacı bazlı, tam metin arama. 1,28 milyon konuşma, açık veri. Bağımsız bir projedir; resmî Cumhuriyet Meclisi sitesi değildir.">
+<meta name="theme-color" content="#B91C1C">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:site_name" content="Cumhuriyet Meclisi Konuşma Arşivi">
+<meta property="og:title" content="Cumhuriyet Meclisi Konuşma Arşivi (1960–2026)">
+<meta property="og:description" content="Hangi milletvekili, hangi konuda, ne söyledi? KKTC ve öncül meclis tutanaklarında konuşmacı bazlı tam metin arama. Bağımsız açık veri projesi.">
+<meta property="og:image" content="https://stevevaius-kktc-meclis-tutanak-arama.static.hf.space/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Cumhuriyet Meclisi Konuşma Arşivi — 1,28 milyon konuşma, 1960–2026, bağımsız açık veri projesi">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cumhuriyet Meclisi Konuşma Arşivi (1960–2026)">
+<meta name="twitter:description" content="KKTC ve öncül meclis tutanaklarında konuşmacı bazlı tam metin arama. Bağımsız açık veri projesi.">
+<meta name="twitter:image" content="https://stevevaius-kktc-meclis-tutanak-arama.static.hf.space/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
@@ -91,6 +106,12 @@
   .btn-primary:disabled { opacity: 0.6; cursor: wait; }
   .btn-ghost { padding: 7px 12px; border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--folio); color: var(--ink-soft); font-family: var(--sans); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
   .btn-ghost:hover { border-color: var(--ink); color: var(--ink); background: var(--paper); }
+  .btn-ghost.is-done { border-color: var(--olive); color: var(--olive); }
+  .cite-box { margin: 0 0 16px; padding: 12px 14px; background: var(--paper); border: 1px solid var(--rule); border-left: 3px solid var(--crimson); border-radius: 6px; }
+  .cite-lbl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--crimson); font-weight: 600; margin-bottom: 6px; }
+  .cite-text { font-family: var(--serif); font-size: 14.5px; line-height: 1.5; color: var(--ink); word-break: break-word; }
+  .cite-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .sc-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
   .ac-wrap { position: relative; }
   .ac-dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--folio); border: 1px solid var(--rule-strong); border-radius: 8px; box-shadow: var(--shadow-md); max-height: 290px; overflow-y: auto; z-index: 40; display: none; }
@@ -99,6 +120,9 @@
   .ac-item:hover { background: var(--crimson-tint); }
   .ac-name { font-weight: 600; font-size: 14px; color: var(--ink); }
   .ac-meta { font-family: var(--mono); font-size: 11px; color: var(--ink-muted); white-space: nowrap; }
+  .ac-unverified .ac-name { font-weight: 500; color: var(--ink-muted); }
+  .ac-badge { font-family: var(--mono); font-size: 10px; font-weight: 500; padding: 1px 5px; border-radius: 3px; background: #F3EFE8; color: var(--ink-muted); vertical-align: 1px; margin-left: 4px; }
+  .ac-badge.ac-role { background: var(--crimson-tint); }
 
   .quick-bar { margin-top: 13px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .quick-lbl { font-family: var(--mono); font-size: 11px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
@@ -584,7 +608,7 @@
 <header class="masthead">
   <div class="masthead-inner">
     <div>
-      <div class="kicker">Kuzey Kıbrıs Türk Cumhuriyeti · Resmî Tutanak Dizini</div>
+      <div class="kicker">Bağımsız Açık Veri Projesi · KKTC Meclis Tutanakları</div>
       <h1>Cumhuriyet Meclisi Konuşma Arşivi</h1>
       <p class="masthead-sub">1960'tan günümüze tüm meclis tutanaklarında konuşmacı bazlı ve tam metin arama</p>
     </div>
@@ -615,6 +639,7 @@
       <span>En son yüklenen tutanak: <strong>Yükleniyor...</strong></span>
     </div>
     <div class="freshness-note" id="freshness-note">
+      <strong>Bağımsız bir açık veri projesidir; resmî Cumhuriyet Meclisi sitesi değildir.</strong> Resmî tutanaklar: <a href="https://evrakcm.gov.ct.tr/siteler/belgeler/tutanaklar/Shared%20Documents/Forms/Belge%20Grntleme.aspx" target="_blank" rel="noopener">evrakcm.gov.ct.tr</a>.
       1960–1995 arası taranmış PDF belgelerinde eski OCR kaynaklı küçük yazım farkları bulunabilir; her konuşmanın altında orijinal resmî Meclis tutanağı bağlantısı yer alır.
     </div>
   </div>
@@ -963,6 +988,28 @@ function matchSpeakerTokens(foldedField, queryTokens) {
   return variants.some(v => queryTokens.every(tok => v.includes(tok)));
 }
 
+// Matched = verified identity (v: roster member / high-confidence), generic role label (r) or a
+// plausible rare person (p, e.g. "Fazıl Küçük"). Everything else is an unmatched label (mostly OCR).
+// Indexes built before the speaker-resolution pass carry no flags: treat every entry as matched.
+let speakerFlagsPresent = null;
+function isMatchedSpeaker(s) {
+  if (speakerFlagsPresent === null) speakerFlagsPresent = speakersIndex.some(x => x.v || x.r || x.p);
+  return !speakerFlagsPresent || !!(s.v || s.r || s.p);
+}
+
+// Matched entries first (index is sorted by speech count); unmatched labels are never hidden, only
+// pushed below: at most `maxUnmatched` when matches exist, all remaining slots otherwise.
+function findSpeakerHits(tokens, limit, maxUnmatched) {
+  const matched = [], unmatched = [];
+  for (const s of speakersIndex) {
+    if (!matchSpeakerTokens(s.f, tokens)) continue;
+    if (isMatchedSpeaker(s)) { matched.push(s); if (matched.length >= limit) break; }
+    else if (unmatched.length < limit) unmatched.push(s);
+  }
+  const room = Math.max(0, limit - matched.length);
+  return matched.concat(unmatched.slice(0, matched.length ? Math.min(room, maxUnmatched) : room));
+}
+
 function resolveSpeakers(query) {
   const q = query.trim();
   if (!q) return [];
@@ -970,14 +1017,7 @@ function resolveSpeakers(query) {
   const fq = foldAscii(q);
   if (!fq) return [];
   const tokens = fq.split(' ').filter(Boolean);
-  const matches = [];
-  for (const s of speakersIndex) {
-    if (matchSpeakerTokens(s.f, tokens)) {
-      matches.push(s.n);
-      if (matches.length >= 20) break;
-    }
-  }
-  return matches;
+  return findSpeakerHits(tokens, 20, 20).map(s => s.n);
 }
 
 function renderDossier(name) {
@@ -1155,7 +1195,7 @@ function renderDirectoryLanding() {
   $('pager').innerHTML = '';
   $('results-count').textContent = 'En çok söz alan siyasetçilerden birini seçin veya yukarıdan konuşmacı/kelime arayın.';
   const generic = new Set(['Meclis Başkanı', 'Katip', 'Geçici Başkan', 'Geçici Katip', 'Sesler']);
-  const top = speakersIndex.filter(s => !generic.has(s.n)).slice(0, 24);
+  const top = speakersIndex.filter(s => !generic.has(s.n) && !s.r && isMatchedSpeaker(s)).slice(0, 24);
   $('results').innerHTML = `
     <div class="dir-heading">
       <div>Öne Çıkan Konuşmacılar (1960–2026) <span>Tıklayarak tüm konuşmalarını anında listeleyin</span></div>
@@ -1857,7 +1897,11 @@ async function runSearch(offset = 0) {
           </div>
           <p class="sc-body">${highlightSnippet(it.text, w.terms)}</p>
           <div class="sc-foot">
-            <button type="button" class="btn-ghost read-btn" data-idx="${idx}">Tam Konuşmayı Oku</button>
+            <div class="sc-actions">
+              <button type="button" class="btn-ghost read-btn" data-idx="${idx}">Tam Konuşmayı Oku</button>
+              <button type="button" class="btn-ghost cite-btn" data-idx="${idx}" title="Kaynak gösterimini kopyala">Alıntıla</button>
+              <button type="button" class="btn-ghost link-btn" data-idx="${idx}" title="Bu konuşmanın kalıcı bağlantısını kopyala / paylaş">Bağlantı</button>
+            </div>
             <a class="sc-src" href="${escHtml(it.source_url)}" target="_blank" rel="noopener">Orijinal Belge: ${escHtml(it.source_file)} ↗</a>
           </div>
         </article>
@@ -1881,11 +1925,132 @@ async function runSearch(offset = 0) {
   }
 }
 
+// ---------- Permalinks & citations ----------
+const MECLIS_FULL = {
+  KKTC: 'KKTC Cumhuriyet Meclisi',
+  KKTC_ARA: 'KKTC Cumhuriyet Meclisi (Aradönem)',
+  KKTC_KM: 'KKTC Kurucu Meclisi',
+  KTFD: 'Kıbrıs Türk Federe Meclisi',
+  KTFD_KM: 'Kıbrıs Türk Federe Devleti Kurucu Meclisi',
+  KTY: 'Kıbrıs Türk Yönetimi Meclisi',
+  TCM: 'Türk Cemaat Meclisi',
+  KC: 'Kıbrıs Cumhuriyeti Temsilciler Meclisi',
+};
+const SPEECH_COLS = `speech_id, doc_id, meclis, donem, birlesim, oturum, tarih, turn_index,
+  speaker_name, speaker_title, constituency, modifiers, speaker_role, text, word_count, source_file, source_url`;
+
+function speechPermalink(item) {
+  const p = new URLSearchParams();
+  if (item.speaker_name) p.set('speaker', item.speaker_name);  // lets DuckDB read only this speaker's row groups
+  p.set('s', String(item.speech_id));
+  return `${location.origin}${location.pathname}?${p.toString()}`;
+}
+
+function speechCitation(item) {
+  const who = item.speaker_name + (item.speaker_title ? ` (${item.speaker_title})` : (item.constituency ? ` (${item.constituency})` : ''));
+  const parts = [
+    `${MECLIS_FULL[item.meclis] || item.meclis} Tutanak Dergisi`,
+    item.donem ? `Dönem ${item.donem}` : '',
+    item.birlesim ? `${item.birlesim}. Birleşim` : '',
+    item.oturum ? `${item.oturum}. Oturum` : '',
+    item.tarih ? formatDateTR(item.tarih) : 'tarihsiz',
+  ].filter(Boolean).join(', ');
+  const today = formatDateTR(new Date().toISOString().slice(0, 10));
+  return `${who}, ${parts}. Resmî belge: ${item.source_url}. Erişim: ${speechPermalink(item)} (${today}).`;
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (_) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (_) { ok = false; }
+    ta.remove();
+    return ok;
+  }
+}
+
+function flashButton(btn, label) {
+  if (!btn) return;
+  const orig = btn.dataset.orig || btn.textContent;
+  btn.dataset.orig = orig;
+  btn.textContent = label;
+  btn.classList.add('is-done');
+  setTimeout(() => { btn.textContent = orig; btn.classList.remove('is-done'); }, 1800);
+}
+
+async function shareOrCopyLink(item, btn) {
+  const url = speechPermalink(item);
+  if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+    try {
+      await navigator.share({ title: `${item.speaker_name} · ${formatDateTR(item.tarih || '')}`, url });
+      return;
+    } catch (_) { /* cancelled -> fall back to copy */ }
+  }
+  flashButton(btn, (await copyText(url)) ? 'Bağlantı kopyalandı ✓' : 'Kopyalanamadı');
+}
+
+async function citeItem(item, btn) {
+  flashButton(btn, (await copyText(speechCitation(item))) ? 'Alıntı kopyalandı ✓' : 'Kopyalanamadı');
+}
+
+function setSpeechParam(id) {
+  const u = new URL(location.href);
+  if (id) u.searchParams.set('s', String(id)); else u.searchParams.delete('s');
+  history.replaceState(null, '', u.pathname + (u.searchParams.toString() ? '?' + u.searchParams.toString() : ''));
+}
+
+function closeDrawer() {
+  $('drawer-backdrop').classList.remove('open');
+  setSpeechParam(null);
+}
+
+async function openSpeechById(id, speaker) {
+  $('drawer-backdrop').classList.add('open');
+  $('drawer-title').textContent = 'Konuşma yükleniyor...';
+  $('drawer-sub').textContent = '';
+  $('drawer-body').innerHTML = '<div class="loading-box"><div class="spinner"></div><div>Kalıcı bağlantıdaki konuşma getiriliyor...</div></div>';
+  try {
+    const c = await ensureDuckDB();
+    let row = null;
+    if (speaker && speakersByName.has(speaker)) {
+      const r1 = await c.query(`SELECT ${SPEECH_COLS} FROM 'speeches.parquet' WHERE speaker_name = ${sqlQuote(speaker)} AND speech_id = ${sqlQuote(id)} LIMIT 1`);
+      row = r1.toArray()[0];
+    }
+    if (!row) {  // speaker renamed/merged since the link was made: search the whole archive (slower)
+      $('drawer-body').innerHTML = '<div class="loading-box"><div class="spinner"></div><div>Konuşma tüm arşivde aranıyor (biraz sürebilir)...</div></div>';
+      const r2 = await c.query(`SELECT ${SPEECH_COLS} FROM 'speeches.parquet' WHERE speech_id = ${sqlQuote(id)} LIMIT 1`);
+      row = r2.toArray()[0];
+    }
+    if (row) openSpeechDrawer(row.toJSON());
+    else {
+      $('drawer-title').textContent = 'Konuşma bulunamadı';
+      $('drawer-body').innerHTML = '<div class="empty-state">Bu bağlantıdaki konuşma arşivde bulunamadı. Bağlantı eksik kopyalanmış olabilir.</div>';
+    }
+  } catch (e) {
+    $('drawer-title').textContent = 'Hata';
+    $('drawer-body').innerHTML = `<div class="empty-state" style="color:var(--crimson)">${escHtml(e.message)}</div>`;
+  }
+}
+
 function openSpeechDrawer(item) {
   $('drawer-backdrop').classList.add('open');
-  $('drawer-title').textContent = `${item.speaker_name} · ${item.tarih || 'Tarihsiz'}`;
+  setSpeechParam(item.speech_id);
+  $('drawer-title').textContent = `${item.speaker_name} · ${item.tarih ? formatDateTR(item.tarih) : 'Tarihsiz'}`;
   $('drawer-sub').innerHTML = `${escHtml(item.meclis)} ${item.donem ? 'Dönem ' + item.donem : ''} ${item.birlesim ? item.birlesim + '. Birleşim' : ''} · <a href="${escHtml(item.source_url)}" target="_blank" rel="noopener" style="color:var(--crimson)">${escHtml(item.source_file)} ↗</a>`;
   $('drawer-body').innerHTML = `
+    <div class="cite-box">
+      <div class="cite-lbl">Kaynak gösterimi</div>
+      <div class="cite-text" id="cite-text">${escHtml(speechCitation(item))}</div>
+      <div class="cite-actions">
+        <button type="button" class="btn-ghost" id="drawer-cite">Alıntıyı Kopyala</button>
+        <button type="button" class="btn-ghost" id="drawer-link">Kalıcı Bağlantıyı Kopyala / Paylaş</button>
+      </div>
+    </div>
     <div class="ctx-turn">
       <div style="font-family:var(--mono);font-size:11.5px;color:var(--ink-muted);margin-bottom:8px">
         ${item.speaker_title ? escHtml(item.speaker_title) + ' · ' : ''}Oturum ${item.oturum || 1} · Konuşma #${item.turn_index} · ${Number(item.word_count||0).toLocaleString('tr-TR')} kelime
@@ -1897,6 +2062,8 @@ function openSpeechDrawer(item) {
       <div id="full-doc-slot"></div>
     </div>
   `;
+  $('drawer-cite').onclick = e => citeItem(item, e.currentTarget);
+  $('drawer-link').onclick = e => shareOrCopyLink(item, e.currentTarget);
   $('load-full-doc').onclick = async () => {
     const slot = $('full-doc-slot');
     slot.innerHTML = '<div style="margin-top:10px;color:var(--ink-muted);font-size:13px">Birleşim belgesi indiriliyor...</div>';
@@ -1962,14 +2129,11 @@ $('speaker').addEventListener('input', () => {
   if (v.length < 2) { dd.style.display = 'none'; return; }
   const fq = foldAscii(v);
   const tokens = fq.split(' ').filter(Boolean);
-  const hits = [];
-  for (const s of speakersIndex) {
-    if (matchSpeakerTokens(s.f, tokens)) { hits.push(s); if (hits.length >= 16) break; }
-  }
+  const hits = findSpeakerHits(tokens, 16, 4);
   if (!hits.length) { dd.style.display = 'none'; return; }
   dd.innerHTML = hits.map(it => `
-    <div class="ac-item" data-name="${escHtml(it.n)}">
-      <span class="ac-name">${escHtml(it.n)}</span>
+    <div class="ac-item${isMatchedSpeaker(it) ? '' : ' ac-unverified'}" data-name="${escHtml(it.n)}">
+      <span class="ac-name">${escHtml(it.n)}${isMatchedSpeaker(it) ? '' : ' <span class="ac-badge" title="Resmî milletvekili listesiyle veya güçlü bir kimlikle eşleştirilemeyen etiket: nadir bir konuşmacı ya da taranmış tutanaktan kalan bir okuma hatası olabilir">eşleştirilmemiş</span>'}${it.r ? ' <span class="ac-badge ac-role" title="Genel makam etiketi (oturumu yöneten kişi tespit edilemedi)">makam</span>' : ''}</span>
       <span class="ac-meta">${it.s.toLocaleString('tr-TR')} söz · ${(it.a||'?').slice(0,4)}–${(it.b||'?').slice(0,4)}</span>
     </div>
   `).join('');
@@ -1994,12 +2158,16 @@ $('results').onclick = e => {
     return;
   }
   const rd = e.target.closest('.read-btn');
-  if (rd) openSpeechDrawer(lastItems[Number(rd.dataset.idx)]);
+  if (rd) { openSpeechDrawer(lastItems[Number(rd.dataset.idx)]); return; }
+  const ct = e.target.closest('.cite-btn');
+  if (ct) { citeItem(lastItems[Number(ct.dataset.idx)], ct); return; }
+  const lk = e.target.closest('.link-btn');
+  if (lk) { shareOrCopyLink(lastItems[Number(lk.dataset.idx)], lk); return; }
 };
 
-$('drawer-close').onclick = () => $('drawer-backdrop').classList.remove('open');
-$('drawer-backdrop').onclick = e => { if (e.target === $('drawer-backdrop')) $('drawer-backdrop').classList.remove('open'); };
-document.addEventListener('keydown', e => { if (e.key === 'Escape') $('drawer-backdrop').classList.remove('open'); });
+$('drawer-close').onclick = () => closeDrawer();
+$('drawer-backdrop').onclick = e => { if (e.target === $('drawer-backdrop')) closeDrawer(); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('drawer-backdrop').classList.contains('open')) closeDrawer(); });
 $('btn-clear').onclick = () => {
   for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role']) $(f).value = '';
   $('sort').value = 'newest';
@@ -2133,6 +2301,8 @@ if (urlP.get('view') === 'terms') {
 } else {
   renderDirectoryLanding();
 }
+// Permalink: ?speaker=...&s=<speech_id> opens that exact speech
+if (urlP.get('s')) openSpeechById(urlP.get('s'), urlP.get('speaker'));
 </script>
 </body>
 </html>

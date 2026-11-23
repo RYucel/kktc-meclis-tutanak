@@ -668,6 +668,17 @@ Kuzey Kıbrıs Türk Cumhuriyeti (KKTC) Cumhuriyet Meclisi ve öncül meclisleri
 2. **`documents`:** Belge düzeyinde tam metin ve meta veriler.
 3. **`speakers`:** Konuşmacı dizini (konuşma sayısı, kelime sayısı, aktif tarih aralığı, unvanlar ve seçim bölgeleri).
 
+## Konuşmacı Kimlik Çözümleme (`canon_method`)
+
+Ham etiket her zaman `speaker_name_parsed` sütununda korunur; `speaker_name` çözümlenmiş kimliktir. `canon_method` değeri hangi kuralın uygulandığını gösterir:
+
+* `exact`, `diacritic_fold`, `spaceless_exact`, `doc_surname`, `doc_prefix`, `middle_initial`, `fuzzy_period`, `fuzzy_global`: belge içi ve dönem bazlı kanonikleştirme (1. ve 2. geçiş)
+* `anchor_merge`: aynı kişinin bölünmüş kayıtlarının birleştirilmesi (ör. `Osman N. Örek` → `Osman Örek`)
+* `anchor_exact` / `anchor_fuzzy`: unvan, OCR öneki veya bitişik yazım temizlendikten sonra resmî listedeki ya da güçlü kanıtlı bir kimliğe eşleme (ör. `Başbakandr . Dervişeroğlu` → `Derviş Eroğlu`); kişinin o yıl ±2 içinde aktif olması şarttır
+* `token_temporal` / `surname_temporal`: OCR ile bozulmuş ad/soyadın, o yıl aktif tek kişiye eşlenmesi
+* `multi_person`: iki kişinin adını taşıyan etiketler (ör. `Kutlu Evren, Ünal Üstel`) hiçbir kişiye atanmaz; başkan/katip sözleri genel makam etiketine düşer
+* `role_title`: OCR bozuk makam etiketlerinin tek biçime indirilmesi (ör. `Îkînci Başkan` → `İkinci Başkan`)
+
 ## En Çok Söz Alan 20 Konuşmacı
 
 | Konuşmacı | Konuşma | Kelime | Tarih Aralığı |
@@ -711,6 +722,19 @@ def main():
     print(
         f"Canonical roster: {canon_report['canonical_roster_size']} | "
         f"methods={canon_report['method_counts']}"
+    )
+
+    print("Running 3rd-pass anchor resolution (OCR rescue, multi-person labels, role titles)...")
+    from speaker_resolution import load_rosters, resolve_records
+
+    res_report = resolve_records(speeches, load_rosters())
+    canon_report["resolution"] = res_report
+    (PARSED_DIR / "canonicalization_report.json").write_text(
+        json.dumps(canon_report, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    print(
+        f"Anchors: {res_report['anchors']} | anchor merges: {len(res_report['anchor_merges'])} | "
+        f"methods={res_report['method_counts']}"
     )
 
     # Refresh per-document speaker lists & build speaker profiles

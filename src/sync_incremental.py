@@ -37,8 +37,10 @@ from analyze_topics import build_speaker_topics, build_topics_index
 from crawl_manifest import ROOT_REL, crawl_subtree, list_folder_all_pages
 from extract_text import clean_word_text, detect_magic, extract_docx, extract_pdf
 from ole_doc_fallback import extract_ole_doc_text
-from optimize_for_wasm import build_terms_index, export_term_shards
+from optimize_for_wasm import EXTRA_SEARCH_ALIASES, build_terms_index, export_term_shards
 from parse_speakers import parse_document
+from speaker_index import stats_from_parquet
+from speaker_resolution import load_rosters, resolve_records
 
 DATASET_REPO = os.environ.get("KKTC_DATASET_REPO", "stevevaius/KKTC_Meclis_Tutanak")
 SPACE_REPO = os.environ.get("KKTC_SPACE_REPO", "stevevaius/KKTC-Meclis-Tutanak-Arama")
@@ -257,6 +259,7 @@ def rebuild_speakers_and_card(
     readme_out: Path,
     index_out: Path,
     dataset_repo: str,
+    extra_aliases: dict[str, set[str]] | None = None,
 ):
     """Rebuild speakers.parquet, HF Dataset README.md, and Static Space speakers_index.json via DuckDB."""
     # Rebuild speakers.parquet cleanly from speeches.parquet
@@ -377,6 +380,17 @@ Kuzey Kıbrıs Türk Cumhuriyeti (KKTC) Cumhuriyet Meclisi ve öncül meclisleri
 2. **`documents`:** Belge düzeyinde tam metin ve meta veriler.
 3. **`speakers`:** Konuşmacı dizini (konuşma sayısı, kelime sayısı, aktif tarih aralığı, unvanlar ve seçim bölgeleri).
 
+## Konuşmacı Kimlik Çözümleme (`canon_method`)
+
+Ham etiket her zaman `speaker_name_parsed` sütununda korunur; `speaker_name` çözümlenmiş kimliktir. `canon_method` değeri hangi kuralın uygulandığını gösterir:
+
+* `exact`, `diacritic_fold`, `spaceless_exact`, `doc_surname`, `doc_prefix`, `middle_initial`, `fuzzy_period`, `fuzzy_global`: belge içi ve dönem bazlı kanonikleştirme (1. ve 2. geçiş)
+* `anchor_merge`: aynı kişinin bölünmüş kayıtlarının birleştirilmesi (ör. `Osman N. Örek` → `Osman Örek`)
+* `anchor_exact` / `anchor_fuzzy`: unvan, OCR öneki veya bitişik yazım temizlendikten sonra resmî listedeki ya da güçlü kanıtlı bir kimliğe eşleme (ör. `Başbakandr . Dervişeroğlu` → `Derviş Eroğlu`); kişinin o yıl ±2 içinde aktif olması şarttır
+* `token_temporal` / `surname_temporal`: OCR ile bozulmuş ad/soyadın, o yıl aktif tek kişiye eşlenmesi
+* `multi_person`: iki kişinin adını taşıyan etiketler (ör. `Kutlu Evren, Ünal Üstel`) hiçbir kişiye atanmaz; başkan/katip sözleri genel makam etiketine düşer
+* `role_title`: OCR bozuk makam etiketlerinin tek biçime indirilmesi (ör. `Îkînci Başkan` → `İkinci Başkan`)
+
 ## En Çok Söz Alan 20 Konuşmacı
 
 | Konuşmacı | Konuşma | Kelime | Tarih Aralığı |
@@ -399,44 +413,13 @@ Orijinal tutanak belgelerinin hakları **KKTC Cumhuriyet Meclisi**'ne aittir. Bu
 """
     readme_out.write_text(card, encoding="utf-8")
 
-    # Rebuild compact speakers_index.json for Static Space
-    tl_rows = con.execute(
-        f"""
-        SELECT speaker_name, substr(tarih, 1, 4) AS yr, COUNT(*) AS cnt
-        FROM read_parquet('{sp_path.as_posix()}')
-        WHERE tarih IS NOT NULL AND length(tarih) >= 4
-        GROUP BY 1, 2
-        ORDER BY 1, 2
-        """
-    ).fetchall()
-    timelines: dict[str, list[list]] = {}
-    for nm, yr, cnt in tl_rows:
-        timelines.setdefault(nm, []).append([yr, int(cnt)])
+    # Rebuild compact speakers_index.json for Static Space (shared builder keeps search aliases
+    # and verified/role flags in sync with optimize_for_wasm.py)
+    from speaker_index import build_speaker_entries
 
-    spk_rows = con.execute(
-        f"""
-        SELECT speaker_name, speech_count, word_count, doc_count,
-               first_date, last_date, titles, constituencies
-        FROM read_parquet('{spk_out.as_posix()}')
-        ORDER BY speech_count DESC
-        """
-    ).fetchall()
-    speakers_list = []
-    for nm, sc, wc, dc, fd, ld, titles, consts in spk_rows:
-        entry = {
-            "n": nm,
-            "f": fold_ascii(nm),
-            "s": int(sc),
-            "w": int(wc),
-            "d": int(dc),
-            "a": (fd or "")[:10],
-            "b": (ld or "")[:10],
-            "c": list(consts)[:3] if consts else [],
-            "t": list(titles)[:5] if titles else [],
-        }
-        if int(sc) >= 5 and nm in timelines:
-            entry["y"] = timelines[nm]
-        speakers_list.append(entry)
+    speakers_list, spk_summary = build_speaker_entries(
+        con, sp_path.as_posix(), spk_out.as_posix(), extra_aliases=extra_aliases
+    )
 
     from datetime import datetime, timezone
     latest_row = con.execute(
@@ -458,6 +441,8 @@ Orijinal tutanak belgelerinin hakları **KKTC Cumhuriyet Meclisi**'ne aittir. Bu
             "min_date": st_row[4],
             "max_date": st_row[5],
             "speakers": len(speakers_list),
+            "speakers_verified": spk_summary["speakers_verified"],
+            "verified_turn_share": spk_summary["verified_turn_share"],
             "latest_date": latest_row[0] if latest_row else st_row[5],
             "latest_meclis": latest_row[1] if latest_row else "KKTC",
             "latest_donem": int(latest_row[2]) if (latest_row and latest_row[2] is not None) else None,
@@ -558,6 +543,14 @@ def main():
 
         print(f"[5/6] Canonicalizing {len(new_speeches):,} new turns & merging Parquet files...")
         canonicalize_new_turns(new_speeches, old_spk_path)
+        # Third pass: anchor-based OCR rescue / multi-person / role-title cleanup against the full corpus
+        _con_stats = duckdb.connect(":memory:")
+        res_report = resolve_records(
+            new_speeches, load_rosters(), base_stats=stats_from_parquet(_con_stats, old_sp_path)
+        )
+        _con_stats.close()
+        if res_report["method_counts"]:
+            print(f"      Speaker resolution on new turns: {res_report['method_counts']}")
         # Refresh doc konusmacilar from canonicalized new turns
         by_doc_spks = defaultdict(set)
         for s in new_speeches:
@@ -612,7 +605,8 @@ def main():
         )
 
         rebuild_speakers_and_card(
-            con, merged_sp, merged_doc, merged_spk, readme_out, index_out, args.dataset_repo
+            con, merged_sp, merged_doc, merged_spk, readme_out, index_out, args.dataset_repo,
+            extra_aliases={k: set(v) for k, v in EXTRA_SEARCH_ALIASES.items()},
         )
         terms_out = tmp / "terms_index.json"
         spk_cnt_map = {

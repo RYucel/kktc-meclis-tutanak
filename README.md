@@ -19,6 +19,7 @@ Kuzey Kıbrıs Türk Cumhuriyeti (KKTC) Cumhuriyet Meclisi ve öncül meclisleri
    Oturum başlıklarını (`BAŞKAN: ...`, `KATİP: ...`), oturum içi kürsü devirlerini (`Başkanlık Kürsüsünü ... devreder`) ve tüm konuşmacı geçişlerini ayrıştırarak `data/parsed/documents.jsonl` ile `data/parsed/speeches.jsonl` dosyalarını üretir.
 5. `python src/build_dataset.py`
    İki aşamalı konuşmacı kanonikleştirme (belge içi soyadı çözümleme + dönem/genel bulanık yazım düzeltme) uygular, Hugging Face uyumlu Parquet dosyalarını (`data/hf_dataset/`) ve yerel SQLite FTS5 arama veritabanını (`data/search.db`) oluşturur.
+   Ardından 3. geçiş (`src/speaker_resolution.py`) çalışır: resmî milletvekili listeleri ve güçlü kanıtlı kimlikler üzerinden OCR ile bozulmuş, unvanı bitişik yazılmış veya iki kişiyi birden taşıyan etiketleri zaman penceresi kontrolüyle çözer (ayrıntılar aşağıda).
 6. `python src/search_cli.py`
    Konuşmacı adı, anahtar kelime, meclis, dönem ve tarih aralığına göre anlık arama yapar.
 7. `python src/upload_hf.py --repo-id <kullanici>/KKTC_Meclis_Tutanak`
@@ -43,3 +44,28 @@ python src/search_cli.py --speaker "Tufan Erhürman" --query "elektrik OR kib-te
 # Tarih ve dönem filtresiyle arama
 python src/search_cli.py --speaker "Derviş Eroğlu" --from-date 1985-01-01 --to-date 1995-12-31 --query "anayasa"
 ```
+
+## Konuşmacı Kimlik Çözümleme (3. Geçiş)
+
+1960–1995 arası taranmış tutanaklarda OCR aynı kişiyi onlarca farklı yazımla üretir (`Başbakandr . Dervişeroğlu`, `Barbakan Dr Derviş Eroglu`, `Hakkı Attın` …) ve bazı etiketler iki kişiyi birden taşır (`Kutlu Evren, Ünal Üstel`). [`src/speaker_resolution.py`](src/speaker_resolution.py) bunları **önce doğruluk** ilkesiyle çözer:
+
+* **Çapalar (anchor):** `data/official_rosters.json` üyeleri + en az 5 belgede tekrarlanan temiz adlar (≥100 söz, ya da 1983 öncesi unvan içi kimlikler için ≥40 söz). Tek oturumluk OCR çöpleri ve iki kişilik etiketler (`Mustafa Akıncı Hüseyin Özgürgün`) çapa olamaz.
+* **Bölünmüş kimlik birleştirme:** baş harf farkı (`Osman N. Örek` = `Osman Örek`), eksik soyad (`Ümit Süleyman` → `Ümit Süleyman Onan`), kesik soyad (`Mustafa Hacıahmet` → `Mustafa Hacıahmetoğlu`), resmî listeyle doğrulanan düşmüş ilk ad (`Ersan Saner` → `Hamza Ersan Saner`) ve ilk harf hatası dahil 20 kat güçlü bir kimliğin OCR ikizi (`Haci T. Usar` → `Naci Talat Usar`, `Czker Özgür` → `Özker Özgür`). Çelişen baş harfler (`Mehmet A.` / `Mehmet B.`), kendi başına soyad olan kesikler (`Öztürk` ≠ `Öztürkler`) ve Denktaş ailesi gibi korunan soyadları asla birleştirilmez.
+* **Kurtarma:** unvan/önek/bitişik yazım temizlenir; eşleşme ancak tek bir çapaya net farkla uyuyorsa **ve** o kişi ilgili yılda ±2 aktifse uygulanır.
+* **Çok kişili etiketler** hiçbir kişiye atanmaz; başkan/katip sözleri genel makam etiketine düşer.
+
+Yayındaki veri setine ham arşiv olmadan uygulamak için:
+
+```bash
+pip install -r requirements.txt                                   # rapidfuzz dahil (yoksa ~100x yavaş difflib yedeği)
+python src/recanonicalize.py --from-hub                           # kuru çalıştırma: data/recanon/ + space_static/*.json + rapor
+python src/recanonicalize.py --from-hub --upload --upload-ui      # rapor uygunsa Dataset + Space (indeksler + arayüz) tek seferde
+```
+
+Rapordaki (`data/parsed/speaker_resolution_report.json`) her eşleme (`from` → `to`, yöntem, söz sayısı) incelenebilir; ham etiket her zaman `speaker_name_parsed` sütununda kalır.
+
+**Deploy güvenliği:** Space indeksleri her zaman Parquet ile birlikte üretilmelidir. `recanonicalize.py` indeksleri varsayılan olarak `space_static/` içine yazar (repo kopyası eskimez), `--upload --skip-aux` birleşimini reddeder ve Space dosyalarını tek commit'te yükler. `src/deploy_space.py` artık varsayılan olarak yalnızca `index.html` + `README.md` yükler; `--with-indices` verilirse yerel `speakers_index.json` canlıdakinden eskiyse yüklemeyi reddeder.
+
+**Arayüz:** `speakers_index.json` girdileri `v` (doğrulanmış kişi), `r` (makam etiketi) ve `p` (eşleşmeyen ama temiz, nadir gerçek isim; ör. `Fazıl Küçük`, `Emine Çolak`) bayraklarını taşır. Otomatik tamamlama bu üç grubu normal listeler; hiçbir bayrağı olmayan etiketler gizlenmez, en fazla 4 tanesi en altta soluk ve "eşleştirilmemiş" rozetiyle gösterilir.
+
+Testler: `python -m pytest tests/test_speaker_resolution.py tests/test_parser.py tests/test_topics.py`
