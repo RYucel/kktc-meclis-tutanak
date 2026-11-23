@@ -54,6 +54,8 @@ def main():
     )
 
     patterns = ["index.html", "README.md", "og-image.png"]
+    if (space_dir / "mp_bios.json").exists():
+        patterns.append("mp_bios.json")
     if args.with_indices:
         for fn in INDEX_FILES:
             assert (space_dir / fn).exists(), f"missing {space_dir / fn}"

@@ -56,3 +56,21 @@ def test_cached_pages_requires_every_page(tmp_path):
     assert cached_pages(tmp_path, "D/x.pdf", 3) is None
     page_cache(tmp_path, "D/x.pdf", 1).write_text("sayfa 1", encoding="utf-8")
     assert cached_pages(tmp_path, "D/x.pdf", 3) == ["sayfa 0", "sayfa 1", "sayfa 2"]
+
+
+def test_clean_mogan_markdown():
+    from reocr_vlm import clean_mogan_markdown
+
+    md = (
+        "<header>12</header>\n"
+        "## BİRİNCİ OTURUM\n\n"
+        "**BAŞKAN -** Sayın milletvekilleri, toplantıyı açıyorum.\n"
+        "<table><tr><th>Ad</th><th>Oy</th></tr><tr><td>Ali</td><td>Evet</td></tr></table>\n"
+        "<figure/>"
+        "<footer>Tutanak</footer>"
+    )
+    out = clean_mogan_markdown(md)
+    assert "##" not in out and "**" not in out and "<header>" not in out and "<figure" not in out
+    assert "BİRİNCİ OTURUM" in out
+    assert "BAŞKAN - Sayın milletvekilleri, toplantıyı açıyorum." in out
+    assert "Ali | Evet" in out

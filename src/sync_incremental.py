@@ -18,10 +18,13 @@ import ssl
 import sys
 import tempfile
 import time
+import urllib.parse
 import urllib.request
 from collections import Counter, defaultdict
 from difflib import SequenceMatcher
 from pathlib import Path
+
+from bs4 import BeautifulSoup
 
 import duckdb
 import pyarrow as pa
@@ -63,6 +66,101 @@ def fold_ascii(s: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9\s]", " ", s)).strip()
 
 
+_ROMAN_NUM = {
+    "I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8,
+    "IX": 9, "X": 10, "XI": 11, "XII": 12, "XIII": 13, "XIV": 14, "XV": 15,
+}
+
+
+def _session_key(local_rel_path: str) -> tuple[str, str] | None:
+    """Normalize a doc's folder + session token (e.g. 'B57' or 'OB3') to prevent duplicates
+    across evrakcm.gov.ct.tr and cm.gov.ct.tr/Tutanaklar even if extensions/spacing differ.
+    """
+    parts = local_rel_path.replace("\\", "/").split("/")
+    if len(parts) < 2:
+        return None
+    folder = parts[0].lower()
+    m_fy = re.search(r"d0*(\d+)y0*(\d+)", folder)
+    fkey = f"d{int(m_fy.group(1))}y{int(m_fy.group(2))}" if m_fy else folder
+    stem = Path(parts[-1]).stem.upper()
+    m_ob = re.search(r"\bO\.?\s*B\.?\s*[-_]?\s*0*(\d+)\b", stem)
+    if m_ob:
+        return (fkey, f"OB{int(m_ob.group(1))}")
+    m_b = re.search(r"(?:^|[^A-Z])B[-_\s]*0*(\d+)\b", stem)
+    if m_b:
+        return (fkey, f"B{int(m_b.group(1))}")
+    return None
+
+
+def crawl_cm_tutanaklar() -> list[dict]:
+    """Fetch current-year sessions from cm.gov.ct.tr/Tutanaklar (often updated earlier than evrakcm)."""
+    url = "https://cm.gov.ct.tr/Tutanaklar"
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 KKTC-Tutanak-Sync/1.0"})
+    html = urllib.request.urlopen(req, timeout=25, context=SSL_CTX).read().decode("utf-8", errors="replace")
+    soup = BeautifulSoup(html, "html.parser")
+
+    sel = soup.find("select", id=re.compile("DropDownList"))
+    selected_opt = sel.find("option", selected=True) if sel else None
+    sel_text = selected_opt.get_text(" ", strip=True) if selected_opt else ""
+    m_dy = re.search(r"D[ÖO]NEM\s+([IVX]+|\d+)\s*,\s*Y[Iİ]L\s+(\d+)", sel_text, re.I)
+    if not m_dy:
+        return []
+    d_raw = m_dy.group(1).upper()
+    donem = _ROMAN_NUM.get(d_raw, int(d_raw) if d_raw.isdigit() else None)
+    yil = int(m_dy.group(2))
+    if not donem:
+        return []
+    top_folder = f"Dönem {donem} Yıl {yil}(d{donem:02d}y{yil:02d})"
+
+    base_form: dict[str, str] = {}
+    for inp in soup.find_all("input", attrs={"type": "hidden"}):
+        if inp.get("name"):
+            base_form[inp["name"]] = inp.get("value", "")
+    if sel and sel.get("name") and selected_opt:
+        base_form[sel["name"]] = selected_opt.get("value", "")
+
+    tbl = soup.find("table", id=re.compile("GridView"))
+    if not tbl:
+        return []
+
+    records: list[dict] = []
+    for tr in tbl.find_all("tr")[1:]:
+        tds = tr.find_all("td")
+        if len(tds) < 3:
+            continue
+        label = tds[0].get_text(" ", strip=True)
+        inp = tds[2].find("input", attrs={"type": "image"})
+        if not inp or not inp.get("name"):
+            continue
+        alt = (inp.get("alt") or "").strip()
+        ext = Path(alt).suffix.lstrip(".").lower() or "pdf"
+        m_num = re.search(r"(\d+)", label)
+        if not m_num:
+            continue
+        num = int(m_num.group(1))
+        is_ob = "olağanüstü" in label.lower() or "olaganustu" in label.lower()
+        filename = f"OB{num}.{ext}" if is_ob else f"B{num}.{ext}"
+        local_rel = f"{top_folder}/{filename}"
+        post_form = {**base_form, f"{inp['name']}.x": "15", f"{inp['name']}.y": "15"}
+        records.append(
+            {
+                "rel_path": f"/Tutanaklar/{alt or filename}",
+                "local_rel_path": local_rel,
+                "download_url": url,
+                "filename": filename,
+                "ext": ext,
+                "top_folder": top_folder,
+                "subpath": top_folder,
+                "meclis": "KKTC",
+                "donem": donem,
+                "yasama_yili": yil,
+                "_postback_url": url,
+                "_postback_form": post_form,
+            }
+        )
+    return records
+
+
 def crawl_live_manifest() -> list[dict]:
     top_folders, root_files = list_folder_all_pages(ROOT_REL)
     all_records: list[dict] = []
@@ -86,6 +184,27 @@ def crawl_live_manifest() -> list[dict]:
     with concurrent.futures.ThreadPoolExecutor(max_workers=6) as ex:
         for recs in ex.map(crawl_subtree, top_folders):
             all_records.extend(recs)
+
+    # Secondary source: cm.gov.ct.tr/Tutanaklar (current legislative year, often ahead of evrakcm)
+    seen_paths = {r["local_rel_path"].lower() for r in all_records}
+    seen_keys = {k for r in all_records if (k := _session_key(r["local_rel_path"])) is not None}
+    try:
+        cm_recs = crawl_cm_tutanaklar()
+        added_cm = 0
+        for r in cm_recs:
+            sk = _session_key(r["local_rel_path"])
+            if r["local_rel_path"].lower() in seen_paths or (sk is not None and sk in seen_keys):
+                continue
+            all_records.append(r)
+            seen_paths.add(r["local_rel_path"].lower())
+            if sk is not None:
+                seen_keys.add(sk)
+            added_cm += 1
+        if added_cm:
+            print(f"      Secondary source (cm.gov.ct.tr/Tutanaklar): +{added_cm} sessions ahead of evrakcm")
+    except Exception as e:
+        print(f"      [WARN] Secondary source cm.gov.ct.tr/Tutanaklar skipped: {e}")
+
     all_records.sort(key=lambda r: r["local_rel_path"].lower())
     return all_records
 
@@ -111,12 +230,25 @@ def download_temp_file(rec: dict, out_dir: Path, retries: int = 4) -> tuple[Path
     dest = out_dir / Path(*rec["local_rel_path"].split("/"))
     dest.parent.mkdir(parents=True, exist_ok=True)
     last_err = None
+    post_form = rec.get("_postback_form")
+    url = rec.get("_postback_url") or rec["download_url"]
     for attempt in range(retries):
         try:
-            req = urllib.request.Request(
-                rec["download_url"],
-                headers={"User-Agent": "Mozilla/5.0 KKTC-Tutanak-Sync/1.0"},
-            )
+            if post_form:
+                data = urllib.parse.urlencode(post_form).encode("utf-8")
+                req = urllib.request.Request(
+                    url,
+                    data=data,
+                    headers={
+                        "User-Agent": "Mozilla/5.0 KKTC-Tutanak-Sync/1.0",
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                )
+            else:
+                req = urllib.request.Request(
+                    url,
+                    headers={"User-Agent": "Mozilla/5.0 KKTC-Tutanak-Sync/1.0"},
+                )
             h = hashlib.sha256()
             total = 0
             with urllib.request.urlopen(req, timeout=60, context=SSL_CTX) as resp, dest.open("wb") as fh:
@@ -488,7 +620,12 @@ def main():
         existing_ids -= dropped
         print(f"      [SIMULATE-DROP] Pretending {len(dropped)} docs are new: {sorted(dropped)}")
 
-    new_records = [r for r in live_records if r["local_rel_path"] not in existing_ids]
+    existing_keys = {k for i in existing_ids if (k := _session_key(i)) is not None}
+    new_records = [
+        r for r in live_records
+        if r["local_rel_path"] not in existing_ids
+        and ((sk := _session_key(r["local_rel_path"])) is None or sk not in existing_keys)
+    ]
     print(f"      New files detected: {len(new_records)}")
 
     if not new_records:

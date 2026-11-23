@@ -45,6 +45,50 @@ def core_alias(variant: str) -> str | None:
     return " ".join(core) if core else None
 
 
+_DIRTY_TITLE_RE = re.compile(r"[§îâûÎÂÛ0-9*#£>^~|]")
+
+
+def _rank_titles(raw_counts: list[tuple[str, int]], limit: int = 5) -> list[str]:
+    """Merge punctuation/diacritic variants of titles, drop 1-turn OCR noise, return top-N by frequency."""
+    if not raw_counts:
+        return []
+    groups: dict[str, dict] = {}
+    for title, cnt in raw_counts:
+        t = re.sub(r"\s+", " ", (title or "").strip())
+        if not t or len(t) < 3 or _DIRTY_TITLE_RE.search(t):
+            continue
+        key = fold(t).replace(" ", "")
+        if not key:
+            continue
+        g = groups.get(key)
+        if g is None:
+            groups[key] = {"total": cnt, "best": t, "best_c": cnt}
+        else:
+            g["total"] += cnt
+            # Prefer clean punctuation (no " ,") and higher raw count
+            cand_score = (0 if " ," in t else 1, cnt)
+            best_score = (0 if " ," in g["best"] else 1, g["best_c"])
+            if cand_score > best_score:
+                g["best"], g["best_c"] = t, cnt
+    ranked = sorted(groups.values(), key=lambda g: (-g["total"], g["best"]))
+    if not ranked:
+        return []
+    total_all = sum(g["total"] for g in ranked)
+    min_cnt = 2 if total_all >= 10 else 1
+    filtered = [g["best"] for g in ranked if g["total"] >= min_cnt]
+    return (filtered or [ranked[0]["best"]])[:limit]
+
+
+def _rank_constituencies(raw_counts: list[tuple[str, int]], limit: int = 3) -> list[str]:
+    """Return speaker constituencies sorted by frequency, dropping stray 1-2 turn OCR/parse outliers."""
+    if not raw_counts:
+        return []
+    ranked = sorted(raw_counts, key=lambda x: (-x[1], x[0]))
+    top_cnt = ranked[0][1]
+    min_cnt = max(3, int(top_cnt * 0.05)) if top_cnt >= 20 else 1
+    return [c for c, cnt in ranked if cnt >= min_cnt][:limit] or [ranked[0][0]]
+
+
 def build_speaker_entries(
     con,
     sp_path: str,
@@ -88,6 +132,30 @@ def build_speaker_entries(
             if len(lst) < 40:
                 lst.append(v)
 
+    # Frequency-ranked titles & constituencies directly from speeches.parquet
+    # (speakers.parquet list_distinct() order is arbitrary and keeps punctuation duplicates / 1-turn typos)
+    raw_titles: dict[str, list[tuple[str, int]]] = {}
+    for nm, t, c in con.execute(
+        f"""
+        SELECT speaker_name, speaker_title, COUNT(*) AS c
+        FROM read_parquet('{sp}')
+        WHERE speaker_name IS NOT NULL AND speaker_title IS NOT NULL
+        GROUP BY 1, 2
+        """
+    ).fetchall():
+        raw_titles.setdefault(nm, []).append((t, int(c)))
+
+    raw_consts: dict[str, list[tuple[str, int]]] = {}
+    for nm, cst, c in con.execute(
+        f"""
+        SELECT speaker_name, constituency, COUNT(*) AS c
+        FROM read_parquet('{sp}')
+        WHERE speaker_name IS NOT NULL AND constituency IS NOT NULL
+        GROUP BY 1, 2
+        """
+    ).fetchall():
+        raw_consts.setdefault(nm, []).append((cst, int(c)))
+
     rows = con.execute(
         f"""
         SELECT speaker_name, speech_count, word_count, doc_count,
@@ -117,6 +185,8 @@ def build_speaker_entries(
                     aliases.append(a)
                 if len(aliases) >= max_aliases:
                     break
+        clean_consts = _rank_constituencies(raw_consts.get(nm, []), limit=3) if nm in raw_consts else (list(consts)[:3] if consts else [])
+        clean_titles = _rank_titles(raw_titles.get(nm, []), limit=5) if nm in raw_titles else (list(titles)[:5] if titles else [])
         entry = {
             "n": nm,
             "f": base_f if not aliases else " | ".join([base_f] + aliases[:max_aliases]),
@@ -125,8 +195,8 @@ def build_speaker_entries(
             "d": int(dc or 0),
             "a": (fd or "")[:10],
             "b": (ld or "")[:10],
-            "c": list(consts)[:3] if consts else [],
-            "t": list(titles)[:5] if titles else [],
+            "c": clean_consts,
+            "t": clean_titles,
         }
         if is_person:
             entry["v"] = 1

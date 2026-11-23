@@ -120,7 +120,7 @@ def run(args) -> dict:
     t0 = time.perf_counter()
     if args.upload and args.skip_aux:
         raise SystemExit("--upload cannot be combined with --skip-aux.")
-    doc_ids = [ln.strip() for ln in Path(args.docs).read_text(encoding="utf-8").splitlines() if ln.strip()]
+    doc_ids = [ln.strip() for ln in Path(args.docs).read_text(encoding="utf-8-sig").splitlines() if ln.strip()]
     if args.limit:
         doc_ids = doc_ids[: args.limit]
     out_root = Path(args.out_dir)

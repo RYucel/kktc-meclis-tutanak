@@ -6,19 +6,21 @@
 <title>KKTC Cumhuriyet Meclisi Tutanak Arşivi (1960–2026)</title>
 <meta name="description" content="1960'tan bugüne KKTC ve öncül meclis tutanaklarında konuşmacı bazlı, tam metin arama. 1,28 milyon konuşma, açık veri. Bağımsız bir projedir; resmî Cumhuriyet Meclisi sitesi değildir.">
 <meta name="theme-color" content="#B91C1C">
+<link rel="canonical" href="https://kktcmeclisarsivi.org/">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://kktcmeclisarsivi.org/">
 <meta property="og:locale" content="tr_TR">
 <meta property="og:site_name" content="Cumhuriyet Meclisi Konuşma Arşivi">
 <meta property="og:title" content="Cumhuriyet Meclisi Konuşma Arşivi (1960–2026)">
 <meta property="og:description" content="Hangi milletvekili, hangi konuda, ne söyledi? KKTC ve öncül meclis tutanaklarında konuşmacı bazlı tam metin arama. Bağımsız açık veri projesi.">
-<meta property="og:image" content="https://stevevaius-kktc-meclis-tutanak-arama.static.hf.space/og-image.png">
+<meta property="og:image" content="https://kktcmeclisarsivi.org/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Cumhuriyet Meclisi Konuşma Arşivi — 1,28 milyon konuşma, 1960–2026, bağımsız açık veri projesi">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Cumhuriyet Meclisi Konuşma Arşivi (1960–2026)">
 <meta name="twitter:description" content="KKTC ve öncül meclis tutanaklarında konuşmacı bazlı tam metin arama. Bağımsız açık veri projesi.">
-<meta name="twitter:image" content="https://stevevaius-kktc-meclis-tutanak-arama.static.hf.space/og-image.png">
+<meta name="twitter:image" content="https://kktcmeclisarsivi.org/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
@@ -194,6 +196,57 @@
     font-size: 11.5px;
     color: var(--ink-muted);
     line-height: 1.45;
+  }
+
+  /* MP Official Biography inside Dossier */
+  .dossier-bio {
+    margin-top: 14px;
+    padding: 13px 16px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--olive);
+    border-radius: 6px;
+  }
+  .bio-hdr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .bio-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--olive);
+  }
+  .bio-src {
+    font-size: 11.5px;
+    color: var(--ink-muted);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--rule-strong);
+  }
+  .bio-src:hover { color: var(--crimson); border-bottom-color: var(--crimson); }
+  .bio-body {
+    font-family: var(--serif);
+    font-size: 15px;
+    line-height: 1.62;
+    color: #252C36;
+    white-space: pre-line;
+  }
+  .bio-body.clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .bio-toggle {
+    margin-top: 8px;
+    padding: 3px 9px;
+    font-size: 11.5px;
   }
 
   /* Directory Grid (initial landing view) */
@@ -820,6 +873,7 @@ let topicsById = new Map();
 let conceptsById = new Map();
 let topicTermsById = new Map();
 let speakerTopicsData = null;
+let mpBios = {};
 let activeView = 'search'; // 'search' | 'terms' | 'topics'
 let activeTermId = 'KKTC:10';
 let activeTopicsSub = 'term'; // 'term' | 'trend'
@@ -874,13 +928,14 @@ function termVariants(tNorm) {
   return ocrVariants[tNorm] || [];
 }
 
-// 1. Load speakers_index.json + terms_index.json + topics_index.json + speaker_topics.json in parallel (0ms UI)
+// 1. Load speakers_index.json + terms_index.json + topics_index.json + speaker_topics.json + mp_bios.json in parallel (0ms UI)
 async function loadIndex() {
-  const [rSpk, rTerms, rTopics, rSpkTopics] = await Promise.all([
+  const [rSpk, rTerms, rTopics, rSpkTopics, rBios] = await Promise.all([
     fetch('./speakers_index.json'),
     fetch('./terms_index.json').catch(() => null),
     fetch('./topics_index.json').catch(() => null),
     fetch('./speaker_topics.json').catch(() => null),
+    fetch('./mp_bios.json').catch(() => null),
   ]);
   const data = await rSpk.json();
   speakersIndex = data.speakers || [];
@@ -906,6 +961,11 @@ async function loadIndex() {
 
   if (rSpkTopics && rSpkTopics.ok) {
     speakerTopicsData = await rSpkTopics.json();
+  }
+
+  if (rBios && rBios.ok) {
+    const bd = await rBios.json();
+    mpBios = bd.bios || {};
   }
 
   const st = data.stats;
@@ -1120,6 +1180,23 @@ function renderDossier(name) {
     `;
   }
 
+  // Official MP Biography (from cm.gov.ct.tr)
+  let bioBoxHtml = '';
+  const bioObj = mpBios && mpBios[p.n] ? mpBios[p.n] : null;
+  if (bioObj && bioObj.bio) {
+    const isLong = bioObj.bio.length > 340;
+    bioBoxHtml = `
+      <div class="dossier-bio" id="dossier-bio">
+        <div class="bio-hdr">
+          <span class="bio-title">Resmî Özgeçmiş · KKTC Cumhuriyet Meclisi</span>
+          ${bioObj.url ? `<a class="bio-src" href="${escHtml(bioObj.url)}" target="_blank" rel="noopener">Kaynak Belge (cm.gov.ct.tr) ↗</a>` : ''}
+        </div>
+        <div class="bio-body${isLong ? ' clamped' : ''}" id="bio-body">${escHtml(bioObj.bio)}</div>
+        ${isLong ? `<button type="button" class="btn-ghost bio-toggle" id="bio-toggle">Özgeçmişin Tamamını Oku ▾</button>` : ''}
+      </div>
+    `;
+  }
+
   $('dossier').innerHTML = `
     <div class="dossier-head">
       <div>
@@ -1136,6 +1213,7 @@ function renderDossier(name) {
         <div class="ds-box"><div class="ds-val">${(p.a||'?').slice(0,4)}–${(p.b||'?').slice(0,4)}</div><div class="ds-lbl">Aktif Dönem</div></div>
       </div>
     </div>
+    ${bioBoxHtml}
     ${tl.length ? `
     <div class="timeline-box">
       <div class="timeline-hdr">
@@ -1147,6 +1225,15 @@ function renderDossier(name) {
     ${topicsBoxHtml}
   `;
   $('dossier').style.display = 'block';
+
+  const bioBtn = $('bio-toggle');
+  if (bioBtn) {
+    bioBtn.onclick = () => {
+      const body = $('bio-body');
+      const expanded = !body.classList.toggle('clamped');
+      bioBtn.textContent = expanded ? 'Özgeçmişi Daralt ▴' : 'Özgeçmişin Tamamını Oku ▾';
+    };
+  }
 
   const dtBox = $('dossier-topics');
   if (dtBox) {

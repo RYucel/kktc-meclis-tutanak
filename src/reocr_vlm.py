@@ -14,13 +14,18 @@ Pages are cached per model under data/reocr/<model>/, so two models can be compa
 from __future__ import annotations
 
 import argparse
+import base64
 import concurrent.futures as cf
 import hashlib
+import html as html_lib
 import json
 import os
+import re
 import sys
 import threading
 import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 SRC_DIR = Path(__file__).resolve().parent
@@ -38,8 +43,101 @@ PROMPT = (
     "- Okuyamadığın yerlere [okunamadı] yaz; tahmin etme.\n"
     "- Sadece sayfa metnini ver; açıklama, markdown veya kod bloğu ekleme."
 )
+PROMPT_MOGAN = "Sayfayı markdown olarak yaz."
 _lock = threading.Lock()
 DEFAULT_MODEL = "gemini-3.8-flash"
+
+
+def clean_mogan_markdown(md: str) -> str:
+    """Convert MoganOCR Markdown/HTML output to clean plain text compatible with parse_speakers.py."""
+    s = (md or "").replace("\r\n", "\n").replace("\r", "\n")
+    # Remove <figure/> placeholders and unwrap <header>/<footer> tags
+    s = re.sub(r"<figure\b[^>]*/?>.*?</figure>", "", s, flags=re.S | re.I)
+    s = re.sub(r"<figure\b[^>]*/>", "", s, flags=re.I)
+    s = re.sub(r"</?(?:header|footer)>", "", s, flags=re.I)
+
+    # Flatten HTML tables into pipe-separated rows (matching extract_docx)
+    def _table_to_lines(m: re.Match) -> str:
+        rows = []
+        for tr in re.findall(r"<tr\b[^>]*>(.*?)</tr>", m.group(0), flags=re.S | re.I):
+            cells = [
+                re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html_lib.unescape(c))).strip()
+                for c in re.findall(r"<t[hd]\b[^>]*>(.*?)</t[hd]>", tr, flags=re.S | re.I)
+            ]
+            cells = [c for c in cells if c]
+            if cells:
+                rows.append(" | ".join(cells))
+        return "\n".join(rows)
+
+    s = re.sub(r"<table\b[^>]*>.*?</table>", _table_to_lines, s, flags=re.S | re.I)
+    s = re.sub(r"<br\s*/?>", "\n", s, flags=re.I)
+    s = html_lib.unescape(s)
+
+    # Strip Markdown heading prefixes and bold/italic wrappers so speaker headers stay plain text
+    s = re.sub(r"(?m)^#{1,6}\s+", "", s)
+    s = re.sub(r"\*\*([^\n*]+?)\*\*", r"\1", s)
+    s = re.sub(r"__([^\n_]+?)__", r"\1", s)
+    s = re.sub(r"\n{3,}", "\n\n", s)
+    return s.strip()
+
+
+def transcribe_openai(base_url: str, model: str, png: bytes, prompt: str, clean_md: bool = False, retries: int = 4) -> tuple[str, dict]:
+    """Call a local OpenAI-compatible VLM server (llama-server, vLLM, Ollama)."""
+    url = base_url.rstrip("/") + "/chat/completions"
+    b64 = base64.b64encode(png).decode("ascii")
+    payload = {
+        "model": model,
+        "temperature": 0.0,
+        "max_tokens": 4096,
+        "chat_template_kwargs": {"enable_thinking": False},
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}},
+                    {"type": "text", "text": prompt},
+                ],
+            }
+        ],
+    }
+    body = json.dumps(payload).encode("utf-8")
+    headers = {"Content-Type": "application/json"}
+    api_key = os.environ.get("OPENAI_API_KEY")
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
+
+    delay = 2.0
+    for attempt in range(retries):
+        try:
+            req = urllib.request.Request(url, data=body, headers=headers, method="POST")
+            with urllib.request.urlopen(req, timeout=300) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            text = (data["choices"][0]["message"].get("content") or "").strip()
+            if text.startswith("```"):
+                text = text.strip("`").split("\n", 1)[-1].strip()
+            if clean_md:
+                text = clean_mogan_markdown(text)
+            u = data.get("usage") or {}
+            usage = {
+                "in": int(u.get("prompt_tokens", 0) or 0),
+                "out": int(u.get("completion_tokens", 0) or 0),
+                "think": 0,
+            }
+            return text, usage
+        except urllib.error.HTTPError as e:
+            err_body = e.read().decode("utf-8", errors="replace")[:300]
+            if 400 <= e.code < 500 and e.code not in (408, 429):
+                raise SystemExit(f"Local VLM HTTP {e.code}: {err_body}")
+            if attempt + 1 >= retries:
+                raise
+            time.sleep(delay)
+            delay = min(delay * 2, 30)
+        except Exception:
+            if attempt + 1 >= retries:
+                raise
+            time.sleep(delay)
+            delay = min(delay * 2, 30)
+    raise RuntimeError("transcribe_openai exhausted retries")
 # USD per 1M tokens (input, output), standard tier, from ai.google.dev pricing (Nov 2026); batch is half
 PRICES = {
     "gemini-3.8-flash": (0.75, 3.75),
@@ -157,7 +255,11 @@ def main():
     ap.add_argument("--raw-dir", default="data/raw")
     ap.add_argument("--out", default=None, help="Cache dir (default data/reocr/<model>)")
     ap.add_argument("--model", default=os.environ.get("KKTC_VLM_MODEL", DEFAULT_MODEL),
-                    help=f"Gemini model id (default {DEFAULT_MODEL}; cheaper: gemini-3.1-flash-lite, gemini-2.5-flash-lite)")
+                    help=f"Model id (default {DEFAULT_MODEL}; local example: moganocr-tr-1.5)")
+    ap.add_argument("--base-url", default=os.environ.get("KKTC_VLM_BASE_URL", ""),
+                    help="OpenAI-compatible server base URL (e.g. http://127.0.0.1:8080/v1 for llama-server / vLLM)")
+    ap.add_argument("--preset", choices=["auto", "gemini", "mogan"], default="auto",
+                    help="Prompt & post-processing preset (auto picks 'mogan' when model name contains 'mogan')")
     ap.add_argument("--list-models", action="store_true", help="Print the model ids your API key can use and exit")
     ap.add_argument("--dpi", type=int, default=200)
     ap.add_argument("--workers", type=int, default=2)
@@ -178,9 +280,14 @@ def main():
     if not (args.in_price or args.out_price) and args.model in PRICES:
         args.in_price, args.out_price = PRICES[args.model]
 
-    out = Path(args.out or f"data/reocr/{args.model}")
+    use_local = bool(args.base_url)
+    if use_local and args.model == DEFAULT_MODEL:
+        args.model = "moganocr-tr-1.5"
+    preset = ("mogan" if "mogan" in args.model.lower() else "gemini") if args.preset == "auto" else args.preset
+    model_slug = re.sub(r"[^A-Za-z0-9._-]+", "_", args.model).strip("_")
+    out = Path(args.out or f"data/reocr/{model_slug}")
     out.mkdir(parents=True, exist_ok=True)
-    doc_ids = [ln.strip() for ln in Path(args.docs).read_text(encoding="utf-8").splitlines() if ln.strip()]
+    doc_ids = [ln.strip() for ln in Path(args.docs).read_text(encoding="utf-8-sig").splitlines() if ln.strip()]
     if args.limit_docs:
         doc_ids = doc_ids[: args.limit_docs]
 
@@ -201,9 +308,10 @@ def main():
                 jobs.append((did, src, pno))
     if args.max_pages:
         jobs = jobs[: args.max_pages]
-    print(f"{len(doc_ids)} documents, {total_pages:,} pages in total; {len(jobs):,} pages to read with {args.model}")
+    print(f"{len(doc_ids)} documents, {total_pages:,} pages in total; {len(jobs):,} pages to read with {args.model}"
+          + (f" via {args.base_url} (preset={preset})" if use_local else ""))
 
-    client = make_client()
+    client = None if use_local else make_client()
     usage_log = out / "usage.jsonl"
     done = {"n": 0, "in": 0, "out": 0, "think": 0}
     t0 = time.perf_counter()
@@ -213,7 +321,7 @@ def main():
     def spent() -> float:
         return (done["in"] * args.in_price + done["out"] * args.out_price) / 1e6
 
-    if args.max_usd and not (args.in_price or args.out_price):
+    if not use_local and args.max_usd and not (args.in_price or args.out_price):
         raise SystemExit(f"No price known for {args.model}: pass --in-price/--out-price so --max-usd can be enforced.")
 
     def work(job):
@@ -222,7 +330,11 @@ def main():
         did, src, pno = job
         with pymupdf.open(str(src)) as d:
             png = render_png(d[pno], args.dpi)
-        text, usage = transcribe(client, args.model, png)
+        if use_local:
+            prompt = PROMPT_MOGAN if preset == "mogan" else PROMPT
+            text, usage = transcribe_openai(args.base_url, args.model, png, prompt=prompt, clean_md=(preset == "mogan"))
+        else:
+            text, usage = transcribe(client, args.model, png)
         cp = page_cache(out, did, pno)
         tmp = cp.with_suffix(".tmp")
         tmp.write_text(text, encoding="utf-8")
@@ -234,11 +346,13 @@ def main():
             done["think"] += usage.get("think", 0)
             with usage_log.open("a", encoding="utf-8") as f:
                 f.write(json.dumps({"doc_id": did, "page": pno + 1, "model": args.model, **usage}, ensure_ascii=False) + "\n")
-            if args.max_usd and spent() >= args.max_usd and not stop.is_set():
+            if not use_local and args.max_usd and spent() >= args.max_usd and not stop.is_set():
                 stop.set()
                 print(f"   COST CAP: ~${spent():.2f} spent (--max-usd {args.max_usd}); stopping. Cached pages are kept.")
-            if done["n"] % 25 == 0 or done["n"] == len(jobs):
-                print(f"   {done['n']:,}/{len(jobs):,} pages  tokens in={done['in']:,} out={done['out']:,} (thinking {done['think']:,}) ~${spent():.2f}  {time.perf_counter() - t0:.0f}s")
+            if done["n"] % 10 == 0 or done["n"] == len(jobs):
+                elapsed = max(time.perf_counter() - t0, 0.1)
+                cost_s = "free/local" if use_local else f"~${spent():.2f}"
+                print(f"   {done['n']:,}/{len(jobs):,} pages ({done['n']/elapsed:.2f} pg/s)  tokens in={done['in']:,} out={done['out']:,}  {cost_s}  {elapsed:.0f}s", flush=True)
 
     errors = []
     ex = cf.ThreadPoolExecutor(max_workers=args.workers)
