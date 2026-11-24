@@ -103,3 +103,38 @@ def test_cy_parse_labels_and_dates():
     assert find_date("29 KASIM 196o TARİHLİ TOPLANTI.", (1960, 1961)) == "1960-11-29"
     assert find_date("ΣΥΝΕΔΡΙΑΣΙΣ ΤΗΣ 29ης ΑΥΓΟΥΣΤΟΥ 1960", (1960, 1961)) == "1960-08-29"
     assert greek_header("ΣΥΝΕΔΡΙΑΣΙΣ ΤΗΣ Ί8ης ΙΑΝΟΥΑΡΙΟΥ 1961", (1960, 1961)) == "1961-01"
+
+
+def test_normalize_turkish_text():
+    from extract_text import normalize_turkish_text
+
+    assert normalize_turkish_text("askeri is\u0327 birlig\u0306i") == "askeri iş birliği"
+    assert normalize_turkish_text("KÂ\uf054İP İLKAY KÂ\uf04dİL") == "KÂTİP İLKAY KÂMİL"
+    assert normalize_turkish_text("\uf06c Madde\ufffd") == "• Madde"
+
+
+def test_clean_mogan_markdown_strips_inline_html_and_repetitions():
+    from reocr_vlm import clean_mogan_markdown
+
+    md = "Sayın<sup>H</sup> Başkan,\n" + " ".join(["ἡ"] * 12)
+    out = clean_mogan_markdown(md)
+    assert "<sup>" not in out
+    assert out == "SayınH Başkan,\nἡ"
+
+
+def test_render_page_image_blank_and_crop():
+    import pymupdf
+    from reocr_vlm import render_page_image
+
+    doc = pymupdf.open()
+    blank = doc.new_page(width=842, height=1190)
+    assert render_page_image(blank, dpi=200, as_jpeg=True)[0] is None
+
+    boxed = doc.new_page(width=842, height=1190)
+    boxed.insert_text((320, 500), "BAŞKAN - Sayın milletvekilleri, toplantıyı açıyorum.", fontsize=14)
+    img_bytes, mime = render_page_image(boxed, dpi=200, as_jpeg=True)
+    assert mime == "image/jpeg" and img_bytes is not None
+    cropped_pix = pymupdf.Pixmap(img_bytes)
+    full_pix = boxed.get_pixmap(matrix=pymupdf.Matrix(2350 / 1190, 2350 / 1190), colorspace="gray")
+    assert cropped_pix.width * cropped_pix.height < 0.5 * full_pix.width * full_pix.height
+    doc.close()

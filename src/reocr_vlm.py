@@ -18,6 +18,7 @@ import base64
 import concurrent.futures as cf
 import hashlib
 import html as html_lib
+import http.client
 import json
 import os
 import re
@@ -25,12 +26,15 @@ import sys
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
 SRC_DIR = Path(__file__).resolve().parent
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
+
+from extract_text import normalize_turkish_text  # noqa: E402
 
 PROMPT = (
     "Bu görüntü, Kıbrıs Türk meclis tutanaklarından taranmış tek bir sayfadır. "
@@ -45,6 +49,9 @@ PROMPT = (
 )
 PROMPT_MOGAN = "Sayfayı markdown olarak yaz."
 _lock = threading.Lock()
+_tls = threading.local()
+_open_docs: list = []
+_open_conns: list = []
 DEFAULT_MODEL = "gemini-3.8-flash"
 
 
@@ -71,30 +78,79 @@ def clean_mogan_markdown(md: str) -> str:
 
     s = re.sub(r"<table\b[^>]*>.*?</table>", _table_to_lines, s, flags=re.S | re.I)
     s = re.sub(r"<br\s*/?>", "\n", s, flags=re.I)
+    s = re.sub(r"</?(?:sup|sub|span|div|p|b|i|u|em|strong|small|font|mark|ins|del)\b[^>]*>", "", s, flags=re.I)
     s = html_lib.unescape(s)
 
     # Strip Markdown heading prefixes and bold/italic wrappers so speaker headers stay plain text
     s = re.sub(r"(?m)^#{1,6}\s+", "", s)
     s = re.sub(r"\*\*([^\n*]+?)\*\*", r"\1", s)
     s = re.sub(r"__([^\n_]+?)__", r"\1", s)
+    # Collapse runaway VLM repetition tails (6+ consecutive repeats of 1-6 word units)
+    s = re.sub(r"(\S+(?:\s+\S+){0,5}?)(?:\s+\1){5,}", r"\1", s)
+    s = normalize_turkish_text(s)
     s = re.sub(r"\n{3,}", "\n\n", s)
     return s.strip()
 
 
-def transcribe_openai(base_url: str, model: str, png: bytes, prompt: str, clean_md: bool = False, retries: int = 4) -> tuple[str, dict]:
+def _post_openai_json(url: str, body: bytes, headers: dict[str, str], timeout: int = 300) -> tuple[int, bytes]:
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme == "http":
+        conns = getattr(_tls, "http_conns", None)
+        if conns is None:
+            conns = {}
+            _tls.http_conns = conns
+        key = (parsed.hostname, parsed.port or 80)
+        conn = conns.get(key)
+        if conn is None:
+            conn = http.client.HTTPConnection(key[0], key[1], timeout=timeout)
+            conns[key] = conn
+            with _lock:
+                _open_conns.append(conn)
+        path = parsed.path + (f"?{parsed.query}" if parsed.query else "")
+        try:
+            conn.request("POST", path, body=body, headers={**headers, "Connection": "keep-alive"})
+            resp = conn.getresponse()
+            data = resp.read()
+            return resp.status, data
+        except Exception:
+            try:
+                conn.close()
+            except Exception:
+                pass
+            conns.pop(key, None)
+            raise
+    req = urllib.request.Request(url, data=body, headers=headers, method="POST")
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return resp.status, resp.read()
+    except urllib.error.HTTPError as e:
+        return e.code, e.read()
+
+
+def transcribe_openai(
+    base_url: str,
+    model: str,
+    image_bytes: bytes,
+    prompt: str,
+    clean_md: bool = False,
+    retries: int = 4,
+    mime_type: str = "image/jpeg",
+) -> tuple[str, dict]:
     """Call a local OpenAI-compatible VLM server (llama-server, vLLM, Ollama)."""
     url = base_url.rstrip("/") + "/chat/completions"
-    b64 = base64.b64encode(png).decode("ascii")
+    b64 = base64.b64encode(image_bytes).decode("ascii")
     payload = {
         "model": model,
         "temperature": 0.0,
-        "max_tokens": 4096,
+        "max_tokens": 2600,
+        "repeat_penalty": 1.12,
+        "frequency_penalty": 0.1,
         "chat_template_kwargs": {"enable_thinking": False},
         "messages": [
             {
                 "role": "user",
                 "content": [
-                    {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}},
+                    {"type": "image_url", "image_url": {"url": f"data:{mime_type};base64,{b64}"}},
                     {"type": "text", "text": prompt},
                 ],
             }
@@ -109,9 +165,12 @@ def transcribe_openai(base_url: str, model: str, png: bytes, prompt: str, clean_
     delay = 2.0
     for attempt in range(retries):
         try:
-            req = urllib.request.Request(url, data=body, headers=headers, method="POST")
-            with urllib.request.urlopen(req, timeout=300) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
+            status, raw = _post_openai_json(url, body, headers, timeout=300)
+            if 400 <= status < 500 and status not in (408, 429):
+                raise SystemExit(f"Local VLM HTTP {status}: {raw.decode('utf-8', errors='replace')[:300]}")
+            if status >= 400:
+                raise RuntimeError(f"HTTP {status}: {raw.decode('utf-8', errors='replace')[:200]}")
+            data = json.loads(raw.decode("utf-8"))
             text = (data["choices"][0]["message"].get("content") or "").strip()
             if text.startswith("```"):
                 text = text.strip("`").split("\n", 1)[-1].strip()
@@ -124,14 +183,8 @@ def transcribe_openai(base_url: str, model: str, png: bytes, prompt: str, clean_
                 "think": 0,
             }
             return text, usage
-        except urllib.error.HTTPError as e:
-            err_body = e.read().decode("utf-8", errors="replace")[:300]
-            if 400 <= e.code < 500 and e.code not in (408, 429):
-                raise SystemExit(f"Local VLM HTTP {e.code}: {err_body}")
-            if attempt + 1 >= retries:
-                raise
-            time.sleep(delay)
-            delay = min(delay * 2, 30)
+        except SystemExit:
+            raise
         except Exception:
             if attempt + 1 >= retries:
                 raise
@@ -166,8 +219,93 @@ def cached_pages(out: Path, doc_id: str, page_count: int) -> list[str] | None:
     return [p.read_text(encoding="utf-8") for p in paths]
 
 
+def render_page_image(page, dpi: int = 200, as_jpeg: bool = False) -> tuple[bytes | None, str]:
+    """Render page normalized to ~A4 pixel cap, crop white margins, and return (bytes, mime) or (None, mime) if blank."""
+    import pymupdf
+
+    mime = "image/jpeg" if as_jpeg else "image/png"
+    max_pt = max(float(page.rect.width), float(page.rect.height), 1.0)
+    scale = min(dpi / 72.0, 2350.0 / max_pt)
+    pix = page.get_pixmap(matrix=pymupdf.Matrix(scale, scale), colorspace="gray")
+    w, h = pix.width, pix.height
+    if w < 10 or h < 10:
+        return None, mime
+    mv = memoryview(pix.samples)
+    x0_in, x1_in = int(w * 0.03), int(w * 0.97)
+    y0_in, y1_in = int(h * 0.02), int(h * 0.98)
+
+    ink_count = 0
+    for y in range(y0_in, y1_in, 4):
+        row = mv[y * w + x0_in : y * w + x1_in]
+        for px in row[::4]:
+            if px < 205:
+                ink_count += 1
+                if ink_count >= 15:
+                    break
+        if ink_count >= 15:
+            break
+    if ink_count < 15:
+        return None, mime
+
+    def _row_ink(y: int) -> int:
+        row = mv[y * w + x0_in : y * w + x1_in]
+        return sum(1 for px in row[::2] if px < 205)
+
+    top = y0_in
+    while top < y1_in and _row_ink(top) < 3:
+        top += 2
+    bot = y1_in
+    while bot > top and _row_ink(bot) < 3:
+        bot -= 2
+    if top >= bot:
+        return None, mime
+
+    left, right = x1_in, x0_in
+    for y in range(top, bot + 1, 6):
+        row = mv[y * w : (y + 1) * w]
+        for x in range(x0_in, left, 2):
+            if row[x] < 205:
+                left = x
+                break
+        for x in range(x1_in - 1, right, -2):
+            if row[x] < 205:
+                right = x
+                break
+    if left >= right:
+        return None, mime
+
+    pad = 28
+    x0 = max(0, left - pad)
+    y0 = max(0, top - pad)
+    x1 = min(w, right + pad)
+    y1 = min(h, bot + pad)
+    irect = pymupdf.IRect(x0, y0, x1, y1)
+    cropped = pymupdf.Pixmap(pix.colorspace, irect, pix.alpha)
+    cropped.copy(pix, irect)
+    out_bytes = cropped.tobytes("jpg", jpg_quality=88) if as_jpeg else cropped.tobytes("png")
+    return out_bytes, mime
+
+
 def render_png(page, dpi: int) -> bytes:
-    return page.get_pixmap(dpi=dpi, colorspace="gray").tobytes("png")
+    img, _ = render_page_image(page, dpi=dpi, as_jpeg=False)
+    return img if img is not None else page.get_pixmap(dpi=dpi, colorspace="gray").tobytes("png")
+
+
+def _get_thread_doc(src_path: Path):
+    import pymupdf
+
+    docs = getattr(_tls, "docs", None)
+    if docs is None:
+        docs = {}
+        _tls.docs = docs
+    key = str(src_path)
+    doc = docs.get(key)
+    if doc is None:
+        doc = pymupdf.open(key)
+        docs[key] = doc
+        with _lock:
+            _open_docs.append(doc)
+    return doc
 
 
 def make_client():
@@ -328,13 +466,17 @@ def main():
         if stop.is_set():
             return
         did, src, pno = job
-        with pymupdf.open(str(src)) as d:
-            png = render_png(d[pno], args.dpi)
-        if use_local:
+        d = _get_thread_doc(src)
+        img_bytes, mime = render_page_image(d[pno], args.dpi, as_jpeg=use_local)
+        if img_bytes is None:
+            text, usage = "", {"in": 0, "out": 0, "think": 0}
+        elif use_local:
             prompt = PROMPT_MOGAN if preset == "mogan" else PROMPT
-            text, usage = transcribe_openai(args.base_url, args.model, png, prompt=prompt, clean_md=(preset == "mogan"))
+            text, usage = transcribe_openai(
+                args.base_url, args.model, img_bytes, prompt=prompt, clean_md=(preset == "mogan"), mime_type=mime
+            )
         else:
-            text, usage = transcribe(client, args.model, png)
+            text, usage = transcribe(client, args.model, img_bytes)
         cp = page_cache(out, did, pno)
         tmp = cp.with_suffix(".tmp")
         tmp.write_text(text, encoding="utf-8")
@@ -372,6 +514,18 @@ def main():
         print(f"\n   Stopped by user after {done['n']} pages (~${spent():.2f}). Cached pages are kept.")
         os._exit(130)  # do not wait for in-flight requests
     ex.shutdown(wait=True)
+    for d in _open_docs:
+        try:
+            d.close()
+        except Exception:
+            pass
+    _open_docs.clear()
+    for c in _open_conns:
+        try:
+            c.close()
+        except Exception:
+            pass
+    _open_conns.clear()
     if errors:
         print(f"   {len(errors)} pages failed (re-run to retry): {errors[:3]}")
 

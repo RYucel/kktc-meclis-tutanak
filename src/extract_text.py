@@ -6,6 +6,7 @@ import json
 import os
 import re
 import time
+import unicodedata
 import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
@@ -16,6 +17,35 @@ MANIFEST_PATH = Path("data/manifest.jsonl")
 DOWNLOAD_INDEX_PATH = Path("data/download_index.jsonl")
 
 W_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+
+_PUA_CHAR_MAP = {
+    "\uf06c": "•",
+    "\uf0b7": "•",
+    "\uf0a7": "•",
+    "\uf02d": "-",
+    "\uf0be": "—",
+}
+_PUA_STRIP_RE = re.compile(r"[\ue000-\uf8ff\ufffd]")
+
+
+def normalize_turkish_text(s: str) -> str:
+    """Normalize decomposed NFD Turkish letters to NFC and repair MS Word Symbol-font PUA glyphs."""
+    if not s:
+        return ""
+    if any("\ue000" <= c <= "\uf8ff" or c == "\ufffd" for c in s):
+        out = []
+        for ch in s:
+            if ch in _PUA_CHAR_MAP:
+                out.append(_PUA_CHAR_MAP[ch])
+            elif "\uf020" <= ch <= "\uf07e":
+                out.append(chr(ord(ch) - 0xF000))
+            elif ("\ue000" <= ch <= "\uf8ff") or ch == "\ufffd":
+                continue
+            else:
+                out.append(ch)
+        s = "".join(out)
+    s = s.replace("i\u0307", "i")
+    return unicodedata.normalize("NFC", s)
 
 
 def detect_magic(path: Path) -> str:
@@ -70,7 +100,7 @@ def extract_docx(path: Path) -> dict:
                             cells.append(c_txt)
                     if cells:
                         lines.append(" | ".join(cells))
-    full_text = "\n".join(lines)
+    full_text = normalize_turkish_text("\n".join(lines))
     return {
         "text": full_text,
         "pages": None,
@@ -143,9 +173,9 @@ def extract_pdf(path: Path) -> dict:
         empty_pages = 0
         spaced_pages_fixed = 0
         for page in doc:
-            t = page.get_text("text") or ""
+            t = normalize_turkish_text(page.get_text("text") or "")
             if looks_letter_spaced(t):
-                rebuilt = rebuild_letter_spaced_page(page)
+                rebuilt = normalize_turkish_text(rebuild_letter_spaced_page(page))
                 if rebuilt.strip():
                     t = rebuilt
                     spaced_pages_fixed += 1
@@ -180,7 +210,8 @@ def extract_pdf(path: Path) -> dict:
 
 def clean_word_text(raw: str) -> str:
     # Word COM returns \r for paragraphs, \x07 for table cell/row markers, \x0b soft newline, \x0c page break
-    s = raw.replace("\r\x07", "\n").replace("\x07", " | ")
+    s = normalize_turkish_text(raw)
+    s = s.replace("\r\x07", "\n").replace("\x07", " | ")
     s = s.replace("\r\n", "\n").replace("\r", "\n")
     s = s.replace("\x0b", "\n").replace("\x0c", "\n\n")
     s = re.sub(r"[\x00-\x08\x0e-\x1f]", "", s)

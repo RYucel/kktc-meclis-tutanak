@@ -909,6 +909,9 @@ function sqlQuote(s) {
 function trLower(s) {
   return String(s).replace(/İ/g, 'i').replace(/I/g, 'ı').toLowerCase().replace(/\u0307/g, '');
 }
+function normQueryTerm(s) {
+  return trLower(s).replace(/[ıâîû]/g, c => ({'ı':'i','â':'a','î':'i','û':'u'}[c] || c));
+}
 function foldAscii(s) {
   const map = {'ç':'c','ğ':'g','ı':'i','ö':'o','ş':'s','ü':'u','â':'a','î':'i','û':'u'};
   return trLower(s).replace(/[çğıöşüâîû]/g, c => map[c] || c).replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -1045,9 +1048,10 @@ function highlightSnippet(text, terms, maxLen = 440) {
     return escHtml(clean.length > maxLen ? clean.slice(0, maxLen) + '...' : clean);
   }
   const charMap = {
-    'i':'[iİıI]', 'ı':'[iİıI]', 'c':'[cCçÇ]', 'ç':'[cCçÇ]',
+    'a':'[aAâÂ]', 'â':'[aAâÂ]',
+    'i':'[iİıIîÎ]', 'ı':'[iİıIîÎ]', 'î':'[iİıIîÎ]', 'c':'[cCçÇ]', 'ç':'[cCçÇ]',
     'g':'[gGğĞ]', 'ğ':'[gGğĞ]', 'o':'[oOöÖ]', 'ö':'[oOöÖ]',
-    's':'[sSşŞ]', 'ş':'[sSşŞ]', 'u':'[uUüÜ]', 'ü':'[uUüÜ]'
+    's':'[sSşŞ]', 'ş':'[sSşŞ]', 'u':'[uUüÜûÛ]', 'ü':'[uUüÜûÛ]', 'û':'[uUüÜûÛ]'
   };
   const alts = terms.map(t => [...t].map(ch => {
     const cl = trLower(ch);
@@ -1849,19 +1853,19 @@ function buildWhereSql() {
   const terms = parseQueryTerms($('q').value);
   const highlightTerms = [...terms];
   for (const term of terms) {
-    const tNorm = trLower(term).replace(/ı/g, 'i');
+    const tNorm = normQueryTerm(term);
     const forms = [tNorm, ...termVariants(tNorm)];
     clauses.push(forms.length === 1
-      ? `contains(replace(lower(text), 'ı', 'i'), ${sqlQuote(tNorm)})`
-      : '(' + forms.map(v => `contains(replace(lower(text), 'ı', 'i'), ${sqlQuote(v)})`).join(' OR ') + ')');
+      ? `contains(translate(lower(text), 'ıâîû', 'iaiu'), ${sqlQuote(tNorm)})`
+      : '(' + forms.map(v => `contains(translate(lower(text), 'ıâîû', 'iaiu'), ${sqlQuote(v)})`).join(' OR ') + ')');
     for (const v of forms.slice(1)) if (!highlightTerms.includes(v)) highlightTerms.push(v);
   }
   if (activeTopicFilter && (activeTopicFilter.rx || activeTopicFilter.terms?.length)) {
     if (activeTopicFilter.rx) {
-      clauses.push(`regexp_matches(replace(lower(text), 'ı', 'i'), ${sqlQuote(activeTopicFilter.rx)})`);
+      clauses.push(`regexp_matches(translate(lower(text), 'ıâîû', 'iaiu'), ${sqlQuote(activeTopicFilter.rx)})`);
     } else {
       clauses.push(
-        '(' + activeTopicFilter.terms.map(v => `contains(replace(lower(text), 'ı', 'i'), ${sqlQuote(v)})`).join(' OR ') + ')'
+        '(' + activeTopicFilter.terms.map(v => `contains(translate(lower(text), 'ıâîû', 'iaiu'), ${sqlQuote(v)})`).join(' OR ') + ')'
       );
     }
     for (const v of (activeTopicFilter.terms || [])) {
@@ -1964,17 +1968,30 @@ async function runSearch(offset = 0) {
     const orderSql = sortVal === 'oldest' ? 'tarih ASC NULLS LAST, turn_index ASC'
                    : sortVal === 'longest' ? 'word_count DESC, tarih DESC NULLS LAST'
                    : 'tarih DESC NULLS LAST, turn_index ASC';
+    const orderSqlPrefixed = sortVal === 'oldest' ? 's.tarih ASC NULLS LAST, s.turn_index ASC'
+                           : sortVal === 'longest' ? 's.word_count DESC, s.tarih DESC NULLS LAST'
+                           : 's.tarih DESC NULLS LAST, s.turn_index ASC';
 
-    // Single-pass query with window COUNT(*) OVER() avoids scanning the Parquet file twice!
+    // Two-phase late materialization: scan only filter/sort columns first, then fetch wide columns for top 25 rows.
     const rowsRes = await c.query(`
-      SELECT COUNT(*) OVER()::DOUBLE AS _total,
-             speech_id, doc_id, meclis, donem, birlesim, oturum, tarih, turn_index,
-             speaker_name, speaker_title, constituency, modifiers, speaker_role,
-             text, word_count, source_file, source_url
-      FROM '${targetTable}'
-      WHERE ${w.sql}
-      ORDER BY ${orderSql}
-      LIMIT ${PAGE_SIZE} OFFSET ${offset}
+      WITH matched AS (
+        SELECT file_row_number AS _rn, tarih, turn_index, word_count
+        FROM read_parquet('${targetTable}', file_row_number=true)
+        WHERE ${w.sql}
+      ),
+      top_rows AS (
+        SELECT _rn, (SELECT COUNT(*)::DOUBLE FROM matched) AS _total
+        FROM matched
+        ORDER BY ${orderSql}
+        LIMIT ${PAGE_SIZE} OFFSET ${offset}
+      )
+      SELECT t._total,
+             s.speech_id, s.doc_id, s.meclis, s.donem, s.birlesim, s.oturum, s.tarih, s.turn_index,
+             s.speaker_name, s.speaker_title, s.constituency, s.modifiers, s.speaker_role,
+             s.text, s.word_count, s.source_file, s.source_url
+      FROM read_parquet('${targetTable}', file_row_number=true) s
+      JOIN top_rows t ON s.file_row_number = t._rn
+      ORDER BY ${orderSqlPrefixed}
     `);
     const rows = rowsRes.toArray().map(r => r.toJSON());
     const total = rows.length ? Number(rows[0]._total || 0) : 0;

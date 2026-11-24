@@ -84,9 +84,17 @@ def score_text(text: str, vocab: set[str]) -> dict:
     return {"words": len(words), "oov": round(r_oov, 4), "mixed": round(r_mixed, 4), "frag": round(r_frag, 4), "score": round(score, 4)}
 
 
+_NORM_MAP = str.maketrans("ıâîû", "iaiu")
+_ASCII_TR_MAP = str.maketrans("çğöşü", "cgosu")
+
+
 def _norm(w: str) -> str:
-    """Same normalisation the Space applies to queries: Turkish lowercase, dotless i folded to i."""
-    return tr_lower(w).replace("ı", "i")
+    """Same normalisation the Space applies to queries: Turkish lowercase, dotless i and circumflexes folded."""
+    return tr_lower(w).translate(_NORM_MAP)
+
+
+def _fold_ascii_tr(w: str) -> str:
+    return _norm(w).translate(_ASCII_TR_MAP)
 
 
 def _deletes(w: str) -> set[str]:
@@ -94,10 +102,10 @@ def _deletes(w: str) -> set[str]:
 
 
 def build_ocr_variants(con, docs: Path, out: Path, min_word_n: int = 20, min_var_n: int = 2, max_per_word: int = 8) -> dict:
-    """Map frequent clean words to OCR-damaged spellings seen in scanned documents (edit distance 1, unique target).
+    """Map frequent clean words to OCR-damaged spellings seen in scanned documents.
 
-    The Space ORs these variants into a search term, so 'karşı' also finds 'karjı' / 'karsı' / 'kar şı'-free
-    one-off misreads. Keys and values use the query normalisation (_norm).
+    Includes edit-distance-1 OCR errors, multi-diacritic ASCII drops ('hukumet' -> 'hükümet'),
+    and reverse ASCII-keyboard entries for tolerant search.
     """
     vocab = {}
     for w, n in con.execute(
@@ -107,13 +115,20 @@ def build_ocr_variants(con, docs: Path, out: Path, min_word_n: int = 20, min_var
         vocab[k] = vocab.get(k, 0) + n
     frequent = {w: n for w, n in vocab.items() if n >= min_word_n and len(w) >= 5}
     del_index: dict[str, set[str]] = {}
-    for w in frequent:
+    ascii_to_clean: dict[str, list[tuple[str, int]]] = {}
+    for w, n in frequent.items():
         for d in _deletes(w) | {w}:
             del_index.setdefault(d, set()).add(w)
+        aw = _fold_ascii_tr(w)
+        if aw != w:
+            ascii_to_clean.setdefault(aw, []).append((w, n))
+    for aw in ascii_to_clean:
+        ascii_to_clean[aw].sort(key=lambda x: -x[1])
+
     oov = con.execute(
         f"""
         SELECT w, COUNT(*) n FROM (
-          SELECT unnest(regexp_extract_all(replace(lower(replace(replace(text,'İ','i'),'I','ı')),'ı','i'), '[a-zçğıöşüâîû]+')) AS w
+          SELECT unnest(regexp_extract_all(translate(lower(replace(replace(text,'İ','i'),'I','ı')),'ıâîû','iaiu'), '[a-zçğıöşüâîû]+')) AS w
           FROM read_parquet('{_p(docs)}') WHERE text_source LIKE 'pdf%'
         ) WHERE length(w) >= 4 GROUP BY w HAVING COUNT(*) >= {min_var_n}
         """
@@ -128,11 +143,23 @@ def build_ocr_variants(con, docs: Path, out: Path, min_word_n: int = 20, min_var
         cands = {c for c in cands if abs(len(c) - len(tok)) <= 1}
         if len(cands) == 1:
             variants.setdefault(cands.pop(), []).append((tok, n))
+        elif not cands and len(tok) >= 5:
+            ac = ascii_to_clean.get(_fold_ascii_tr(tok))
+            if ac and (len(ac) == 1 or ac[0][1] >= 0.85 * sum(cnt for _, cnt in ac)):
+                variants.setdefault(ac[0][0], []).append((tok, n))
     result = {
         w: [t for t, _ in sorted(vs, key=lambda x: -x[1])[:max_per_word]]
         for w, vs in variants.items()
         if sum(n for _, n in vs) >= 3
     }
+    # Add reverse ASCII-keyboard entries for words that are not clean ASCII words in their own right
+    for aw, ac in ascii_to_clean.items():
+        if vocab.get(aw, 0) >= 10:
+            continue
+        if len(ac) == 1 or ac[0][1] >= 0.75 * sum(cnt for _, cnt in ac):
+            top = ac[0][0]
+            expanded = [w for w, _ in ac[:2]] + [v for v in result.get(top, []) if v != aw][:4]
+            result[aw] = list(dict.fromkeys(expanded))[:max_per_word]
     (out / "ocr_variants.json").write_text(json.dumps(result, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     return result
 
