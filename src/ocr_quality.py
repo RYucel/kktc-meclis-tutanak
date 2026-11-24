@@ -52,6 +52,7 @@ def _p(path) -> str:
 
 def build_vocab(con, docs: str, out: Path, min_count: int = 3) -> set[str]:
     vp = out / "vocab.parquet"
+    out.mkdir(parents=True, exist_ok=True)
     if not vp.exists():
         srcs = ",".join(f"'{s}'" for s in CLEAN_SOURCES)
         con.execute(
