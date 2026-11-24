@@ -15,6 +15,8 @@ import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from cy_translate import load_cache, lookup_translation
+
 FOLDER = "Kıbrıs Cumhuriyeti Temsilciler Meclisi"
 VOLUMES = {  # synodos letter -> (yasama yılı, label, official PDF)
     "A": (1, "Α΄ Σύνοδος 1960-61", "https://www.parliament.cy/images/media/redirectfile/A Vouleftiki periodos -Synodos A - 16.08.1960-07.081961.pdf"),
@@ -30,8 +32,9 @@ def slug(s: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "_", s).strip("_")
 
 
-def build(vol_files: list[tuple[str, Path]]):
+def build(vol_files: list[tuple[str, Path]], trans_cache: dict[str, str] | None = None):
     docs, speeches = [], []
+    trans_cache = trans_cache or {}
     for vol, path in vol_files:
         yy, label, pdf = VOLUMES[vol]
         turns = [json.loads(ln) for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip()]
@@ -43,17 +46,23 @@ def build(vol_files: list[tuple[str, Path]]):
             doc_id = f"{FOLDER}/Synodos {vol} - {birlesim:02d}. birleşim{(' ' + tarih) if tarih else ''}"
             dslug = slug(f"KC_{vol}_{birlesim:02d}_{tarih or ''}")
             first_page = min((t["page"] for t in ts if t.get("page")), default=None)
+            doc_turn_blocks = []
             for i, t in enumerate(ts):
                 page = t.get("page") or first_page
+                tr = lookup_translation(t["text"], trans_cache) if trans_cache else None
                 speeches.append({
                     "doc_id": doc_id, "meclis": "KC", "donem": None, "yasama_yili": yy, "birlesim": birlesim, "oturum": 1,
                     "tarih": tarih, "speaker_raw": t["speaker_raw"], "speaker_name": t["speaker_name"],
                     "speaker_role": t["speaker_role"], "speaker_title": None, "constituency": None, "modifiers": LANG_LABEL.get(t.get("lang") or ""),
                     "text_source": TEXT_SOURCE, "source_file": f"{label}.pdf", "source_url": f"{pdf}#page={page}" if page else pdf,
-                    "text": t["text"], "char_count": len(t["text"]), "word_count": len(t["text"].split()), "turn_index": i,
+                    "text": t["text"], "text_tr": tr, "char_count": len(t["text"]), "word_count": len(t["text"].split()), "turn_index": i,
                     "speech_id": f"{dslug}#o1#t{i:04d}", "speaker_name_parsed": t["speaker_raw"], "canon_method": t["canon_method"],
                 })
-            text = "\n\n".join(f"{t['speaker_raw']}:\n{t['text']}" for t in ts)
+                if tr:
+                    doc_turn_blocks.append(f"{t['speaker_raw']}:\n{t['text']}\n[Türkçe Çeviri]:\n{tr}")
+                else:
+                    doc_turn_blocks.append(f"{t['speaker_raw']}:\n{t['text']}")
+            text = "\n\n".join(doc_turn_blocks)
             people = sorted({t["speaker_name"] for t in ts if t["speaker_role"] in ("milletvekili_bakan",)})
             chairs = sorted({t["speaker_name"] for t in ts if t["speaker_role"] == "baskan"})
             docs.append({
@@ -70,16 +79,20 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--vol", nargs=2, action="append", metavar=("LETTER", "JSONL"), required=True)
     ap.add_argument("--out", default="data/cy_build")
+    ap.add_argument("--translations", default="data/cy_translations/cache.jsonl", help="Cached Greek->Turkish chunk JSONL")
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
-    docs, speeches = build([(v, Path(p)) for v, p in a.vol])
+    trans_path = Path(a.translations)
+    trans_cache = load_cache(trans_path) if trans_path.exists() else {}
+    docs, speeches = build([(v, Path(p)) for v, p in a.vol], trans_cache=trans_cache)
     for name, rows in (("documents", docs), ("speeches", speeches)):
         with (out / f"{name}.jsonl").open("w", encoding="utf-8") as f:
             for r in rows:
                 f.write(json.dumps(r, ensure_ascii=False) + "\n")
     summary = {
         "documents": len(docs), "speeches": len(speeches),
+        "translated_speeches": sum(1 for s in speeches if s.get("text_tr")),
         "dated_documents": sum(1 for d in docs if d["tarih"] and len(d["tarih"]) == 10),
         "lang": dict(Counter(s["modifiers"] for s in speeches)),
         "turkish_turns_by_speaker": Counter(s["speaker_name"] for s in speeches if s["modifiers"] == "Türkçe").most_common(25),

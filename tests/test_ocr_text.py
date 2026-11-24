@@ -138,3 +138,16 @@ def test_render_page_image_blank_and_crop():
     full_pix = boxed.get_pixmap(matrix=pymupdf.Matrix(2350 / 1190, 2350 / 1190), colorspace="gray")
     assert cropped_pix.width * cropped_pix.height < 0.5 * full_pix.width * full_pix.height
     doc.close()
+
+
+def test_cy_translate_chunking_and_rejoin():
+    from cy_translate import chunk_hash, lookup_translation, split_greek_chunks
+
+    para = "Επιτροπή Επιλογής του Κοινοβουλίου και Συνεδρίασις της Βουλής. " * 25  # ~1625 chars
+    long_speech = "\n\n".join(f"Παράγραφος {i}. " + para.strip() for i in range(4))  # ~6500 chars
+    chunks = split_greek_chunks(long_speech, max_chars=3000)
+    assert len(chunks) >= 3 and all(len(c) <= 3000 for c in chunks)
+    fake_cache = {chunk_hash(c): f"Çeviri {i + 1}" for i, c in enumerate(chunks)}
+    joined = lookup_translation(long_speech, fake_cache, max_chars=3000)
+    assert joined == "\n\n".join(f"Çeviri {i + 1}" for i in range(len(chunks)))
+    assert lookup_translation("Sayın Başkan, teşekkür ederim.", fake_cache) is None

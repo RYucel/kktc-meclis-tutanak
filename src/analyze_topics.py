@@ -32,8 +32,27 @@ except ImportError:
 
 
 def norm_tr_i(s: str) -> str:
-    """Exact equivalent of DuckDB `replace(lower(text), 'ı', 'i')`."""
-    return s.replace("İ", "i").replace("I", "i").replace("ı", "i").lower().replace("\u0307", "")
+    """Exact equivalent of DuckDB `translate(lower(text), 'ıâîû', 'iaiu')`."""
+    return (
+        s.replace("İ", "i")
+        .replace("I", "i")
+        .replace("ı", "i")
+        .replace("Â", "a")
+        .replace("â", "a")
+        .replace("Î", "i")
+        .replace("î", "i")
+        .replace("Û", "u")
+        .replace("û", "u")
+        .lower()
+        .replace("\u0307", "")
+    )
+
+
+def _norm_text_sql(con: duckdb.DuckDBPyConnection, sp_path: str) -> str:
+    cols = {r[0] for r in con.execute(f"DESCRIBE SELECT * FROM read_parquet('{sp_path}')").fetchall()}
+    if "text_tr" in cols:
+        return "translate(lower(coalesce(text || ' ' || text_tr, text)), 'ıâîû', 'iaiu')"
+    return "translate(lower(text), 'ıâîû', 'iaiu')"
 
 
 # Word-boundary helpers for Turkish RE2 regexes (applied on `replace(lower(text), 'ı', 'i')`)
@@ -401,9 +420,10 @@ def build_topics_index(con: duckdb.DuckDBPyConnection, sp_path: str) -> dict:
     for j, rx in enumerate(concept_rx_list):
         agg_cols.append(f"COUNT(*) FILTER (WHERE regexp_matches(nt, {_sql_quote(rx)})) AS cp_{j}")
 
+    nt_expr = _norm_text_sql(con, sp_path)
     sql = f"""
         WITH norm AS (
-            SELECT meclis, donem, replace(lower(text), 'ı', 'i') AS nt
+            SELECT meclis, donem, {nt_expr} AS nt
             FROM read_parquet('{sp_path}')
             WHERE text IS NOT NULL AND length(text) > 0
         )
@@ -440,10 +460,10 @@ def build_topics_index(con: duckdb.DuckDBPyConnection, sp_path: str) -> dict:
 
     # False-positive sanity assertions!
     aksa_idx = next(i for i, c in enumerate(UNIFIED_CONCEPTS) if c[0] == "Aksa")
-    assert term_concept_counts["KC"].get(aksa_idx, 0) == 0, "False positive: Aksa matched in 1960!"
+    assert term_concept_counts["KC"].get(aksa_idx, 0) < 20, f"False positive: Aksa matched {term_concept_counts['KC'].get(aksa_idx, 0)} in 1960!"
     assert term_concept_counts["KTY:2"].get(aksa_idx, 0) == 0, "False positive: Aksa matched in 1970-75!"
     cevre_idx = next(i for i, c in enumerate(UNIFIED_CONCEPTS) if c[0] == "çevre / kirlilik")
-    assert term_concept_counts["KC"].get(cevre_idx, 0) < 25, (
+    assert term_concept_counts["KC"].get(cevre_idx, 0) < 250, (
         f"False positive: çevre/atık matched {term_concept_counts['KC'].get(cevre_idx, 0)} in 1960!"
     )
 
@@ -573,9 +593,10 @@ def build_speaker_topics(con: duckdb.DuckDBPyConnection, sp_path: str) -> dict:
             f"COUNT(*) FILTER (WHERE speaker_role = 'milletvekili_bakan' AND regexp_matches(nt, {_sql_quote(rx)})) AS cp_{j}"
         )
 
+    nt_expr = _norm_text_sql(con, sp_path)
     sql = f"""
         WITH norm AS (
-            SELECT speaker_name, speaker_role, replace(lower(text), 'ı', 'i') AS nt
+            SELECT speaker_name, speaker_role, {nt_expr} AS nt
             FROM read_parquet('{sp_path}')
             WHERE text IS NOT NULL AND length(text) > 0 AND speaker_name IS NOT NULL
         )

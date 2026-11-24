@@ -508,7 +508,7 @@ Kuzey Kıbrıs Türk Cumhuriyeti (KKTC) Cumhuriyet Meclisi ve öncül meclisleri
 
 ## Alt Veri Setleri (Configs)
 
-1. **`speeches` (varsayılan):** Her satır tek bir konuşmacı sözüdür (`speech_id`, `doc_id`, `meclis`, `donem`, `yasama_yili`, `birlesim`, `oturum`, `tarih`, `turn_index`, `speaker_name`, `speaker_name_parsed`, `speaker_raw`, `speaker_role`, `speaker_title`, `constituency`, `modifiers`, `canon_method`, `text`, `char_count`, `word_count`, `text_source`, `source_file`, `source_url`).
+1. **`speeches` (varsayılan):** Her satır tek bir konuşmacı sözüdür (`speech_id`, `doc_id`, `meclis`, `donem`, `yasama_yili`, `birlesim`, `oturum`, `tarih`, `turn_index`, `speaker_name`, `speaker_name_parsed`, `speaker_raw`, `speaker_role`, `speaker_title`, `constituency`, `modifiers`, `canon_method`, `text`, `text_tr`, `char_count`, `word_count`, `text_source`, `source_file`, `source_url`).
 2. **`documents`:** Belge düzeyinde tam metin ve meta veriler.
 3. **`speakers`:** Konuşmacı dizini (konuşma sayısı, kelime sayısı, aktif tarih aralığı, unvanlar ve seçim bölgeleri).
 
@@ -696,8 +696,11 @@ def main():
             d["konusmacilar"] = sorted(by_doc_spks.get(d["doc_id"], set()))
 
         # Match exact PyArrow schemas of existing Parquet files
-        old_sp_schema = pq.read_schema(old_sp_path)
+        old_sp_schema = pa.schema([f.with_nullable(True) for f in pq.read_schema(old_sp_path)])
         old_doc_schema = pq.read_schema(old_doc_path)
+        if "text_tr" in old_sp_schema.names:
+            for s in new_speeches:
+                s.setdefault("text_tr", None)
 
         new_sp_tmp = tmp / "new_speeches.parquet"
         new_doc_tmp = tmp / "new_documents.parquet"
@@ -720,7 +723,7 @@ def main():
                 SELECT * FROM (
                     SELECT * FROM read_parquet('{Path(old_sp_path).as_posix()}')
                     WHERE doc_id NOT IN ({new_doc_ids_sql})
-                    UNION ALL
+                    UNION ALL BY NAME
                     SELECT * FROM read_parquet('{new_sp_tmp.as_posix()}')
                 )
                 ORDER BY speaker_name ASC, tarih DESC NULLS LAST, turn_index ASC

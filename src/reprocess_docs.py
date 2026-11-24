@@ -224,13 +224,18 @@ def run(args) -> dict:
     new_sp_tmp = out_root / "new_speeches.parquet"
     sp_schema = pq.read_schema(src["speeches"])
     sp_schema = pa.schema([f.with_nullable(True) for f in sp_schema])
+    schema_changed = "text_tr" not in sp_schema.names
+    if schema_changed:
+        sp_schema = sp_schema.append(pa.field("text_tr", pa.string(), nullable=True))
+    for s in new_sp:
+        s.setdefault("text_tr", None)
     pq.write_table(pa.Table.from_pylist(new_sp, schema=sp_schema), new_sp_tmp)
     con.execute(
         f"""
         COPY (
           SELECT * FROM (
             SELECT * FROM read_parquet('{_p(src['speeches'])}') WHERE doc_id NOT IN ({ids_sql})
-            UNION ALL SELECT * FROM read_parquet('{_p(new_sp_tmp)}')
+            UNION ALL BY NAME SELECT * FROM read_parquet('{_p(new_sp_tmp)}')
           ) ORDER BY speaker_name ASC, tarih DESC NULLS LAST, turn_index ASC
         ) TO '{_p(sp_out)}' (FORMAT PARQUET, COMPRESSION ZSTD, ROW_GROUP_SIZE 32768)
         """
@@ -257,7 +262,7 @@ def run(args) -> dict:
             (space_dir / fn).write_text(json.dumps(payload(), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
         touched = {(d["meclis"], d["donem"]) for d in new_docs} | {
             (m, dn) for m, dn in con.execute(f"SELECT DISTINCT meclis, donem FROM read_parquet('{_p(src['documents'])}') WHERE doc_id IN ({ids_sql})").fetchall()}
-        export_term_shards(con, sp_out.as_posix(), out_root / "terms_cache", only_terms=touched)
+        export_term_shards(con, sp_out.as_posix(), out_root / "terms_cache", only_terms=None if (args.all_shards or schema_changed) else touched)
 
     n_in = con.execute(f"SELECT COUNT(*) FROM read_parquet('{_p(src['documents'])}')").fetchone()[0]
     n_out = con.execute(f"SELECT COUNT(*) FROM read_parquet('{_p(doc_out)}')").fetchone()[0]
@@ -320,6 +325,7 @@ def build_argparser() -> argparse.ArgumentParser:
     ap.add_argument("--memory-limit", default="1.5GB")
     ap.add_argument("--threads", type=int, default=0)
     ap.add_argument("--skip-aux", action="store_true")
+    ap.add_argument("--all-shards", action="store_true", help="Rebuild all per-term Parquet shards in terms_cache")
     ap.add_argument("--reocr-dir", default=None, help="Use vision-model page transcriptions from reocr_vlm.py when complete")
     ap.add_argument("--parse-only", action="store_true", help="Only extract+parse (cached per document), then stop")
     ap.add_argument("--budget", type=float, default=0, help="Stop parsing after this many seconds (resume later)")

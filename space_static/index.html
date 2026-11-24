@@ -289,6 +289,15 @@
   .ctx-turn { background: var(--folio); border: 1.5px solid var(--crimson); border-radius: 8px; padding: 16px 18px; margin-bottom: 12px; }
   .ctx-text { font-family: var(--serif); font-size: 16px; line-height: 1.7; white-space: pre-wrap; color: #1F2630; }
   .doc-full { background: var(--folio); border: 1px solid var(--rule-strong); border-radius: 8px; padding: 16px 18px; font-family: var(--serif); font-size: 14.5px; line-height: 1.65; white-space: pre-wrap; color: #2b323d; margin-top: 12px; }
+  .lang-tabs { display: inline-flex; gap: 4px; margin-bottom: 10px; padding: 3px; background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; flex-wrap: wrap; }
+  .lang-tab { border: 0; background: transparent; padding: 4px 10px; border-radius: 5px; font-family: var(--sans); font-size: 11.5px; font-weight: 600; color: var(--ink-soft); cursor: pointer; transition: all 0.12s; }
+  .lang-tab:hover { color: var(--ink); }
+  .lang-tab.active { background: var(--folio); color: var(--crimson-dark); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  .bilingual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 760px) { .bilingual-grid { grid-template-columns: 1fr; } }
+  .bi-pane { background: var(--paper); border: 1px solid var(--rule); border-radius: 7px; padding: 12px 14px; }
+  .bi-hdr { font-family: var(--sans); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-muted); margin-bottom: 6px; }
+  .bi-note { font-size: 11.5px; color: var(--ink-muted); margin: 0 0 10px; }
 
   .empty-state { background: var(--folio); border: 1px dashed var(--rule-strong); border-radius: 10px; padding: 38px 24px; text-align: center; color: var(--ink-soft); }
   .loading-box { background: var(--folio); border: 1px solid var(--brass); border-left: 4px solid var(--crimson); border-radius: 8px; padding: 20px; display: flex; align-items: center; gap: 14px; }
@@ -1824,6 +1833,8 @@ function openMemberSpeeches(name, forceAll = false) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+const SEARCH_TEXT_SQL = "translate(lower(coalesce(text || ' ' || text_tr, text)), 'ıâîû', 'iaiu')";
+
 function buildWhereSql() {
   const clauses = [];
   const spkRaw = $('speaker').value.trim();
@@ -1856,16 +1867,16 @@ function buildWhereSql() {
     const tNorm = normQueryTerm(term);
     const forms = [tNorm, ...termVariants(tNorm)];
     clauses.push(forms.length === 1
-      ? `contains(translate(lower(text), 'ıâîû', 'iaiu'), ${sqlQuote(tNorm)})`
-      : '(' + forms.map(v => `contains(translate(lower(text), 'ıâîû', 'iaiu'), ${sqlQuote(v)})`).join(' OR ') + ')');
+      ? `contains(${SEARCH_TEXT_SQL}, ${sqlQuote(tNorm)})`
+      : '(' + forms.map(v => `contains(${SEARCH_TEXT_SQL}, ${sqlQuote(v)})`).join(' OR ') + ')');
     for (const v of forms.slice(1)) if (!highlightTerms.includes(v)) highlightTerms.push(v);
   }
   if (activeTopicFilter && (activeTopicFilter.rx || activeTopicFilter.terms?.length)) {
     if (activeTopicFilter.rx) {
-      clauses.push(`regexp_matches(translate(lower(text), 'ıâîû', 'iaiu'), ${sqlQuote(activeTopicFilter.rx)})`);
+      clauses.push(`regexp_matches(${SEARCH_TEXT_SQL}, ${sqlQuote(activeTopicFilter.rx)})`);
     } else {
       clauses.push(
-        '(' + activeTopicFilter.terms.map(v => `contains(translate(lower(text), 'ıâîû', 'iaiu'), ${sqlQuote(v)})`).join(' OR ') + ')'
+        '(' + activeTopicFilter.terms.map(v => `contains(${SEARCH_TEXT_SQL}, ${sqlQuote(v)})`).join(' OR ') + ')'
       );
     }
     for (const v of (activeTopicFilter.terms || [])) {
@@ -1988,7 +1999,7 @@ async function runSearch(offset = 0) {
       SELECT t._total,
              s.speech_id, s.doc_id, s.meclis, s.donem, s.birlesim, s.oturum, s.tarih, s.turn_index,
              s.speaker_name, s.speaker_title, s.constituency, s.modifiers, s.speaker_role,
-             s.text, s.word_count, s.source_file, s.source_url
+             s.text, s.text_tr, s.word_count, s.source_file, s.source_url
       FROM read_parquet('${targetTable}', file_row_number=true) s
       JOIN top_rows t ON s.file_row_number = t._rn
       ORDER BY ${orderSqlPrefixed}
@@ -2016,8 +2027,29 @@ async function runSearch(offset = 0) {
       return;
     }
 
+    function hasTermMatch(rawStr, termsList) {
+      if (!termsList || !termsList.length) return false;
+      const hay = normQueryTerm(rawStr || '');
+      return termsList.some(t => hay.includes(normQueryTerm(t)));
+    }
+    function renderCardBodyHtml(it, mode) {
+      if (!it.text_tr) return `<p class="sc-body">${highlightSnippet(it.text, w.terms)}</p>`;
+      if (mode === 'orig') return `<p class="sc-body">${highlightSnippet(it.text, w.terms)}</p>`;
+      if (mode === 'both') {
+        return `<div class="bilingual-grid" style="margin-bottom:12px">
+          <div class="bi-pane"><div class="bi-hdr">Türkçe Çeviri</div><p class="sc-body" style="margin:0">${highlightSnippet(it.text_tr, w.terms, 360)}</p></div>
+          <div class="bi-pane"><div class="bi-hdr">Orijinal (Yunanca)</div><p class="sc-body" style="margin:0">${highlightSnippet(it.text, w.terms, 360)}</p></div>
+        </div>`;
+      }
+      return `<p class="sc-body">${highlightSnippet(it.text_tr, w.terms)}</p>`;
+    }
+
     $('results').innerHTML = rows.map((it, idx) => {
       const code = [it.meclis, it.donem ? `D${it.donem}` : '', it.birlesim ? `B${it.birlesim}` : '', it.oturum ? `O${it.oturum}` : ''].filter(Boolean).join(' · ');
+      const hasTr = Boolean(it.text_tr);
+      const defaultMode = hasTr
+        ? ((w.terms.length && hasTermMatch(it.text, w.terms) && !hasTermMatch(it.text_tr, w.terms)) ? 'both' : 'tr')
+        : 'orig';
       return `
         <article class="speech-card">
           <div class="sc-head">
@@ -2025,7 +2057,9 @@ async function runSearch(offset = 0) {
               <span class="sc-speaker" data-pick="${escHtml(it.speaker_name)}">${escHtml(it.speaker_name)}</span>
               ${it.speaker_title ? `<span class="sc-title">${escHtml(it.speaker_title)}</span>` : ''}
               ${it.constituency ? `<span class="tag olive" style="margin-left:6px">${escHtml(it.constituency)}</span>` : ''}
-              ${(it.modifiers === 'Türkçe' || it.modifiers === 'Yunanca' || it.modifiers === 'Yunanca/Türkçe') ? `<span class="tag" style="margin-left:6px">${escHtml(it.modifiers)}</span>` : ''}
+              ${hasTr
+                ? `<span class="tag" style="margin-left:6px;background:var(--crimson-tint);color:var(--crimson-dark);border-color:rgba(185,28,28,0.25)">Türkçe Çeviri + Yunanca</span>`
+                : ((it.modifiers === 'Türkçe' || it.modifiers === 'Yunanca' || it.modifiers === 'Yunanca/Türkçe') ? `<span class="tag" style="margin-left:6px">${escHtml(it.modifiers)}</span>` : '')}
             </div>
             <div class="sc-meta">
               <span>${escHtml(it.tarih || 'Tarihsiz')}</span>
@@ -2033,7 +2067,12 @@ async function runSearch(offset = 0) {
               <span>${Number(it.word_count || 0).toLocaleString('tr-TR')} kelime</span>
             </div>
           </div>
-          <p class="sc-body">${highlightSnippet(it.text, w.terms)}</p>
+          ${hasTr ? `<div class="lang-tabs" data-idx="${idx}">
+            <button type="button" class="lang-tab${defaultMode === 'tr' ? ' active' : ''}" data-bmode="tr">Türkçe Çeviri</button>
+            <button type="button" class="lang-tab${defaultMode === 'both' ? ' active' : ''}" data-bmode="both">Yan Yana</button>
+            <button type="button" class="lang-tab${defaultMode === 'orig' ? ' active' : ''}" data-bmode="orig">Orijinal Yunanca</button>
+          </div>` : ''}
+          <div class="sc-body-wrap" data-idx="${idx}">${renderCardBodyHtml(it, defaultMode)}</div>
           <div class="sc-foot">
             <div class="sc-actions">
               <button type="button" class="btn-ghost read-btn" data-idx="${idx}">Tam Konuşmayı Oku</button>
@@ -2045,6 +2084,7 @@ async function runSearch(offset = 0) {
         </article>
       `;
     }).join('');
+    lastItems._renderCardBody = renderCardBodyHtml;
 
     const pagerHtml = [];
     if (offset > 0) pagerHtml.push(`<button type="button" class="btn-ghost" id="pg-prev">← Önceki Sayfa</button>`);
@@ -2075,7 +2115,7 @@ const MECLIS_FULL = {
   KC: 'Kıbrıs Cumhuriyeti Temsilciler Meclisi',
 };
 const SPEECH_COLS = `speech_id, doc_id, meclis, donem, birlesim, oturum, tarih, turn_index,
-  speaker_name, speaker_title, constituency, modifiers, speaker_role, text, word_count, source_file, source_url`;
+  speaker_name, speaker_title, constituency, modifiers, speaker_role, text, text_tr, word_count, source_file, source_url`;
 
 function speechPermalink(item) {
   const p = new URLSearchParams();
@@ -2180,6 +2220,20 @@ function openSpeechDrawer(item) {
   setSpeechParam(item.speech_id);
   $('drawer-title').textContent = `${item.speaker_name} · ${item.tarih ? formatDateTR(item.tarih) : 'Tarihsiz'}`;
   $('drawer-sub').innerHTML = `${escHtml(item.meclis)} ${item.donem ? 'Dönem ' + item.donem : ''} ${item.birlesim ? item.birlesim + '. Birleşim' : ''} · <a href="${escHtml(item.source_url)}" target="_blank" rel="noopener" style="color:var(--crimson)">${escHtml(item.source_file)} ↗</a>`;
+
+  const renderDrawerText = mode => {
+    if (!item.text_tr) return `<div class="ctx-text">${escHtml(item.text)}</div>`;
+    if (mode === 'tr') return `<div class="bi-note">Yapay zekâ Türkçe çevirisidir; resmî kaynak orijinal Yunanca tutanak metnidir.</div><div class="ctx-text">${escHtml(item.text_tr)}</div>`;
+    if (mode === 'orig') return `<div class="ctx-text">${escHtml(item.text)}</div>`;
+    return `
+      <div class="bi-note">Sol sütun yapay zekâ Türkçe çevirisidir; resmî kaynak sağdaki orijinal Yunanca tutanak metnidir.</div>
+      <div class="bilingual-grid">
+        <div class="bi-pane"><div class="bi-hdr">Türkçe Çeviri</div><div class="ctx-text">${escHtml(item.text_tr)}</div></div>
+        <div class="bi-pane"><div class="bi-hdr">Orijinal Tutanak Metni (Yunanca)</div><div class="ctx-text">${escHtml(item.text)}</div></div>
+      </div>
+    `;
+  };
+
   $('drawer-body').innerHTML = `
     <div class="cite-box">
       <div class="cite-lbl">Kaynak gösterimi</div>
@@ -2193,13 +2247,27 @@ function openSpeechDrawer(item) {
       <div style="font-family:var(--mono);font-size:11.5px;color:var(--ink-muted);margin-bottom:8px">
         ${item.speaker_title ? escHtml(item.speaker_title) + ' · ' : ''}Oturum ${item.oturum || 1} · Konuşma #${item.turn_index} · ${Number(item.word_count||0).toLocaleString('tr-TR')} kelime
       </div>
-      <div class="ctx-text">${escHtml(item.text)}</div>
+      ${item.text_tr ? `<div class="lang-tabs" id="drawer-lang-tabs">
+        <button type="button" class="lang-tab active" data-dmode="both">Yan Yana</button>
+        <button type="button" class="lang-tab" data-dmode="tr">Yalnızca Türkçe</button>
+        <button type="button" class="lang-tab" data-dmode="orig">Yalnızca Yunanca</button>
+      </div>` : ''}
+      <div id="drawer-ctx-slot">${renderDrawerText('both')}</div>
     </div>
     <div>
       <button type="button" class="btn-ghost" id="load-full-doc">Tüm Birleşim Tutanağını Yükle</button>
       <div id="full-doc-slot"></div>
     </div>
   `;
+  const dTabs = $('drawer-lang-tabs');
+  if (dTabs) {
+    dTabs.onclick = e => {
+      const btn = e.target.closest('.lang-tab');
+      if (!btn) return;
+      dTabs.querySelectorAll('.lang-tab').forEach(b => b.classList.toggle('active', b === btn));
+      $('drawer-ctx-slot').innerHTML = renderDrawerText(btn.dataset.dmode);
+    };
+  }
   $('drawer-cite').onclick = e => citeItem(item, e.currentTarget);
   $('drawer-link').onclick = e => shareOrCopyLink(item, e.currentTarget);
   $('load-full-doc').onclick = async () => {
@@ -2224,14 +2292,14 @@ $('btn-export').onclick = async () => {
     const c = await ensureDuckDB();
     const res = await c.query(`
       SELECT tarih, meclis, donem, birlesim, oturum, turn_index,
-             speaker_name, speaker_title, constituency, word_count, text, source_url
+             speaker_name, speaker_title, constituency, word_count, text, text_tr, source_url
       FROM '${lastQueryState.table || 'speeches.parquet'}'
       WHERE ${lastQueryState.whereSql}
       ORDER BY ${lastQueryState.orderSql}
       LIMIT 500
     `);
     const rows = res.toArray().map(r => r.toJSON());
-    const cols = ['tarih','meclis','donem','birlesim','oturum','turn_index','speaker_name','speaker_title','constituency','word_count','text','source_url'];
+    const cols = ['tarih','meclis','donem','birlesim','oturum','turn_index','speaker_name','speaker_title','constituency','word_count','text','text_tr','source_url'];
     const csvCell = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
     const lines = [cols.join(','), ...rows.map(r => cols.map(k => csvCell(r[k])).join(','))];
     const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
@@ -2287,6 +2355,17 @@ $('ac-dropdown').onclick = e => {
 document.addEventListener('click', e => { if (!e.target.closest('.ac-wrap')) $('ac-dropdown').style.display = 'none'; });
 
 $('results').onclick = e => {
+  const btab = e.target.closest('.lang-tab[data-bmode]');
+  if (btab) {
+    const grp = btab.closest('.lang-tabs');
+    const idx = Number(grp.dataset.idx);
+    grp.querySelectorAll('.lang-tab').forEach(b => b.classList.toggle('active', b === btab));
+    const wrap = grp.parentElement.querySelector(`.sc-body-wrap[data-idx="${idx}"]`);
+    if (wrap && lastItems[idx] && lastItems._renderCardBody) {
+      wrap.innerHTML = lastItems._renderCardBody(lastItems[idx], btab.dataset.bmode);
+    }
+    return;
+  }
   const pick = e.target.closest('[data-pick]');
   if (pick) {
     $('speaker').value = pick.dataset.pick;
