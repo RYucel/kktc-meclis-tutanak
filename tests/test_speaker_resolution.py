@@ -450,7 +450,7 @@ def test_manual_aliases_fix_1960_labels_scoped_by_meclis():
     assert n["manual_alias"] == 3
     assert recs[0]["speaker_name"] == "Vasos Lisaridis" and recs[0]["canon_method"] == "manual_alias"
     assert recs[1]["speaker_name"] == "Ümit Süleyman Onan"
-    assert recs[2]["speaker_name"] == TEXT_LABEL and recs[2]["speaker_role"] is None
+    assert recs[2]["speaker_name"] == TEXT_LABEL and recs[2]["speaker_role"] == "metin"
     assert recs[3]["speaker_name"] == "K. Deniz" and recs[4]["speaker_name"] == "Meclis Başkanı"
 
 

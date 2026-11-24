@@ -103,7 +103,7 @@ def resolve_label(label: str) -> tuple[str, str | None, str]:
     sh = shape(label)
     sh = " ".join(re.sub(r"^(?:TI|II|IT|TT)(?=P)", "H", t) for t in sh.split())  # Π read as 'TI' / 'II'
     if any(w in sh.replace(" ", "") for w in _HEADING_WORDS):
-        return TEXT_LABEL, None, "text"
+        return TEXT_LABEL, "metin", "text"
     best = None
     for r, n, role in _ROLE_SHAPES:
         ratio = 1.0 if sh == r else difflib.SequenceMatcher(None, sh, r).ratio()

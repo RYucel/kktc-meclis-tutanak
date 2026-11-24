@@ -222,7 +222,9 @@ def run(args) -> dict:
     print("[3/4] Patching speeches/documents parquet...")
     sp_out, doc_out, spk_out = out_data / "speeches.parquet", out_data / "documents.parquet", out_data / "speakers.parquet"
     new_sp_tmp = out_root / "new_speeches.parquet"
-    pq.write_table(pa.Table.from_pylist(new_sp, schema=pq.read_schema(src["speeches"])), new_sp_tmp)
+    sp_schema = pq.read_schema(src["speeches"])
+    sp_schema = pa.schema([f.with_nullable(True) for f in sp_schema])
+    pq.write_table(pa.Table.from_pylist(new_sp, schema=sp_schema), new_sp_tmp)
     con.execute(
         f"""
         COPY (

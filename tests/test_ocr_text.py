@@ -98,7 +98,7 @@ def test_cy_parse_labels_and_dates():
     assert resolve_label("B. AYZZAPIAHZ")[0] == "Vasos Lisaridis"
     assert resolve_label("Η. Α. ΕΙΖΑ")[0] == "Halit Ali Rıza"     # Turkish member in Greek script
     assert resolve_label("H.A.RİZA")[0] == "Halit Ali Rıza"
-    assert resolve_label("SOTUSU")[1] is None                      # 'SORUSU' heading, not a speaker
+    assert resolve_label("SOTUSU")[1] == "metin"                     # 'SORUSU' heading, not a speaker
     assert is_label("GÜNDEM :") is None and is_label("ΠΡΟΕΔΡΟΣ :") == "ΠΡΟΕΔΡΟΣ"
     assert find_date("29 KASIM 196o TARİHLİ TOPLANTI.", (1960, 1961)) == "1960-11-29"
     assert find_date("ΣΥΝΕΔΡΙΑΣΙΣ ΤΗΣ 29ης ΑΥΓΟΥΣΤΟΥ 1960", (1960, 1961)) == "1960-08-29"

@@ -1054,7 +1054,7 @@ def apply_manual_aliases(records: list[dict], rules: list[dict] | None = None) -
             if not r.get("speaker_name_parsed"):
                 r["speaker_name_parsed"] = r.get("speaker_name")
             if rule["to"] == "__text__":
-                r["speaker_name"], r["speaker_role"] = TEXT_LABEL, None
+                r["speaker_name"], r["speaker_role"] = TEXT_LABEL, "metin"
             else:
                 r["speaker_name"] = rule["to"]
                 if rule.get("role"):
