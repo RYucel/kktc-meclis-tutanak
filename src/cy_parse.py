@@ -101,6 +101,7 @@ _HEADING_WORDS = ("EKOEZIZ", "EHITPOHHZ", "NOMOZXEAIOY", "KOMITE", "PAHOPY", "PA
 def resolve_label(label: str) -> tuple[str, str | None, str]:
     """Return (speaker_name, role, method) for a raw label."""
     sh = shape(label)
+    sh = " ".join(re.sub(r"^(?:TI|II|IT|TT)(?=P)", "H", t) for t in sh.split())  # Π read as 'TI' / 'II'
     if any(w in sh.replace(" ", "") for w in _HEADING_WORDS):
         return TEXT_LABEL, None, "text"
     best = None
