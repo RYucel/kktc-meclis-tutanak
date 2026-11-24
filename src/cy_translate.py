@@ -53,6 +53,8 @@ _pace_lock = threading.Lock()
 _next_req_at = 0.0
 _cooldown_until = 0.0
 _min_interval = 60.0 / 32.0
+_max_tokens = 4096
+_http_timeout = 90
 _tls = threading.local()
 _conns: list[http.client.HTTPSConnection] = []
 
@@ -200,7 +202,7 @@ def is_valid_turkish_translation(src: str, tr: str) -> bool:
 def _get_conn() -> http.client.HTTPSConnection:
     conn = getattr(_tls, "conn", None)
     if conn is None:
-        conn = http.client.HTTPSConnection(NVIDIA_HOST, timeout=90)
+        conn = http.client.HTTPSConnection(NVIDIA_HOST, timeout=_http_timeout)
         _tls.conn = conn
         with _lock:
             _conns.append(conn)
@@ -221,7 +223,7 @@ def _call_nim(api_key: str, model: str, instruction: str, user_text: str, retrie
     payload = {
         "model": model,
         "temperature": 0.1,
-        "max_tokens": 4096,
+        "max_tokens": _max_tokens,
         "chat_template_kwargs": {"enable_thinking": False},
         "messages": [
             {"role": "system", "content": f"{SYSTEM_PROMPT}\n{instruction}"},
@@ -316,8 +318,12 @@ def main() -> None:
     ap.add_argument("--vol", nargs="*", default=None, help="Optional volume letters filter, e.g. D A")
     ap.add_argument("--limit-docs", type=int, default=0, help="Only process first N matching documents (0 = all)")
     ap.add_argument("--budget", type=float, default=0, help="Stop cleanly after N seconds (cached chunks kept)")
+    ap.add_argument("--max-tokens", type=int, default=4096, help="Completion token cap per request")
+    ap.add_argument("--timeout", type=int, default=90, help="HTTP read timeout (s)")
     args = ap.parse_args()
     configure_rate_limit(args.rpm)
+    global _max_tokens, _http_timeout
+    _max_tokens, _http_timeout = args.max_tokens, args.timeout
 
     api_key = load_nvidia_api_key()
     sp_path = Path(args.speeches)
