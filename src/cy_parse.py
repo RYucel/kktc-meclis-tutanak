@@ -103,10 +103,13 @@ def resolve_label(label: str) -> tuple[str, str | None, str]:
     sh = shape(label)
     if any(w in sh.replace(" ", "") for w in _HEADING_WORDS):
         return TEXT_LABEL, None, "text"
+    best = None
     for r, n, role in _ROLE_SHAPES:
-        thr = 0.75 if len(r) >= 7 else 0.86
-        if sh == r or difflib.SequenceMatcher(None, sh, r).ratio() >= thr:
-            return n, role, "role"
+        ratio = 1.0 if sh == r else difflib.SequenceMatcher(None, sh, r).ratio()
+        if ratio >= (0.75 if len(r) >= 7 else 0.86) and (best is None or ratio > best[0]):
+            best = (ratio, n, role)
+    if best:
+        return best[1], best[2], "role"
     if len(sh) <= 6 and difflib.SequenceMatcher(None, sh.replace(" ", ""), "KATIP").ratio() >= 0.6 and sh[:1] in "KBR":
         return "Katip", "katip", "role"
     toks = sh.split()
