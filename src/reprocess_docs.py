@@ -100,27 +100,49 @@ def reparse(doc_ids: list[str], index: dict[str, dict], raw_dir: Path, cache_dir
     return docs, speeches, errors
 
 
-def stream_replace_documents(old_doc: str, new_docs: list[dict], out: Path):
-    """Copy documents.parquet batch by batch, swapping in the re-parsed rows at their original position."""
+def stream_replace_documents(old_doc: str, new_docs: list[dict], out: Path, remove: set[str] | None = None) -> int:
+    """Copy documents.parquet batch by batch: swap re-parsed rows in place, drop `remove`, append brand-new documents.
+
+    Returns the number of documents written."""
+    remove = remove or set()
     pf = pq.ParquetFile(old_doc)
     schema = pf.schema_arrow
     by_id = {d["doc_id"]: d for d in new_docs}
+    seen: set[str] = set()
+    n = 0
     tmp = out.with_suffix(".parquet.tmp")
     with pq.ParquetWriter(str(tmp), schema, compression="zstd") as w:
         for batch in pf.iter_batches(batch_size=128):
             rows = batch.to_pylist()
-            if any(r["doc_id"] in by_id for r in rows):
-                rows = [{k: by_id[r["doc_id"]].get(k, r[k]) for k in r} if r["doc_id"] in by_id else r for r in rows]
+            if any(r["doc_id"] in by_id or r["doc_id"] in remove for r in rows):
+                rows = [
+                    {k: by_id[r["doc_id"]].get(k, r[k]) for k in r} if r["doc_id"] in by_id else r
+                    for r in rows if r["doc_id"] not in remove
+                ]
+                if not rows:
+                    continue
                 batch = pa.RecordBatch.from_pylist(rows, schema=schema)
+            seen.update(r for r in batch.column(batch.schema.get_field_index("doc_id")).to_pylist())
+            n += batch.num_rows
             w.write_batch(batch, row_group_size=128)
+        fresh = [d for d in new_docs if d["doc_id"] not in seen and d["doc_id"] not in remove]
+        fresh.sort(key=lambda d: d["doc_id"])
+        for i in range(0, len(fresh), 128):
+            chunk = [{f.name: d.get(f.name) for f in schema} for d in fresh[i:i + 128]]
+            w.write_batch(pa.RecordBatch.from_pylist(chunk, schema=schema), row_group_size=128)
+            n += len(chunk)
     os.replace(tmp, out)
+    return n
 
 
 def run(args) -> dict:
     t0 = time.perf_counter()
     if args.upload and args.skip_aux:
         raise SystemExit("--upload cannot be combined with --skip-aux.")
-    doc_ids = [ln.strip() for ln in Path(args.docs).read_text(encoding="utf-8-sig").splitlines() if ln.strip()]
+    if not args.docs and not args.add_dir:
+        raise SystemExit("Give --docs (re-parse) and/or --add-dir (pre-built documents/speeches JSONL).")
+    doc_ids = [ln.strip() for ln in Path(args.docs).read_text(encoding="utf-8-sig").splitlines() if ln.strip()] if args.docs else []
+    remove_ids = {ln.strip() for ln in Path(args.remove_docs).read_text(encoding="utf-8-sig").splitlines() if ln.strip()} if args.remove_docs else set()
     if args.limit:
         doc_ids = doc_ids[: args.limit]
     out_root = Path(args.out_dir)
@@ -150,18 +172,32 @@ def run(args) -> dict:
     if missing:
         raise SystemExit(f"{len(missing)} doc_ids are not in the dataset, e.g. {missing[:3]}")
 
-    print(f"[1/4] Re-extracting {len(doc_ids)} documents from {args.raw_dir}...")
-    new_docs, new_sp, errors = reparse(doc_ids, load_index(Path(args.index)), Path(args.raw_dir), out_root / ("parsed_vlm" if args.reocr_dir else "parsed"), args.budget,
-                                       Path(args.reocr_dir) if args.reocr_dir else None)
-    if args.parse_only:
-        print(f"   parsed {len(new_docs)} documents, {len(new_sp):,} turns (--parse-only)")
-        return {}
-    if not new_docs:
-        raise SystemExit(f"Nothing re-parsed: {errors}")
+    new_docs, new_sp, errors = [], [], []
+    if doc_ids:
+        print(f"[1/4] Re-extracting {len(doc_ids)} documents from {args.raw_dir}...")
+        new_docs, new_sp, errors = reparse(doc_ids, load_index(Path(args.index)), Path(args.raw_dir), out_root / ("parsed_vlm" if args.reocr_dir else "parsed"), args.budget,
+                                           Path(args.reocr_dir) if args.reocr_dir else None)
+        if args.parse_only:
+            print(f"   parsed {len(new_docs)} documents, {len(new_sp):,} turns (--parse-only)")
+            return {}
+        if not new_docs:
+            raise SystemExit(f"Nothing re-parsed: {errors}")
+        print(f"[2/4] Canonicalizing {len(new_sp):,} turns against the published speakers...")
+        canonicalize_new_turns(new_sp, src["speakers"])
+        res = resolve_records(new_sp, load_rosters(args.rosters), base_stats=stats_from_parquet(con, src["speeches"]))
+    else:
+        res = {}
+    if args.add_dir:
+        # Pre-built rows (e.g. cy_build.py): names are already canonical; only hand-checked aliases apply
+        from speaker_resolution import apply_manual_aliases
 
-    print(f"[2/4] Canonicalizing {len(new_sp):,} turns against the published speakers...")
-    canonicalize_new_turns(new_sp, src["speakers"])
-    res = resolve_records(new_sp, load_rosters(args.rosters), base_stats=stats_from_parquet(con, src["speeches"]))
+        ad = Path(args.add_dir)
+        add_docs = [json.loads(x) for x in (ad / "documents.jsonl").read_text(encoding="utf-8").splitlines() if x.strip()]
+        add_sp = [json.loads(x) for x in (ad / "speeches.jsonl").read_text(encoding="utf-8").splitlines() if x.strip()]
+        apply_manual_aliases(add_sp)
+        print(f"[1/4] Adding {len(add_docs)} pre-built documents ({len(add_sp):,} turns) from {ad}; removing {len(remove_ids)}")
+        new_docs += add_docs
+        new_sp += add_sp
     by_doc = defaultdict(set)
     for s in new_sp:
         by_doc[s["doc_id"]].add(s["speaker_name"])
@@ -171,7 +207,7 @@ def run(args) -> dict:
     # before/after report per document
     vocab_dir = Path(args.quality_dir)
     vocab = build_vocab(con, src["documents"], vocab_dir) if vocab_dir else set()
-    ids_sql = ", ".join("'" + d["doc_id"].replace("'", "''") + "'" for d in new_docs)
+    ids_sql = ", ".join("'" + x.replace("'", "''") + "'" for x in sorted({d["doc_id"] for d in new_docs} | remove_ids)) or "''"
     old_turns = dict(con.execute(f"SELECT doc_id, COUNT(*) FROM read_parquet('{_p(src['speeches'])}') WHERE doc_id IN ({ids_sql}) GROUP BY doc_id").fetchall())
     old_text = dict(con.execute(f"SELECT doc_id, text FROM read_parquet('{_p(src['documents'])}') WHERE doc_id IN ({ids_sql})").fetchall())
     new_turns = defaultdict(int)
@@ -197,7 +233,7 @@ def run(args) -> dict:
         ) TO '{_p(sp_out)}' (FORMAT PARQUET, COMPRESSION ZSTD, ROW_GROUP_SIZE 32768)
         """
     )
-    stream_replace_documents(src["documents"], new_docs, doc_out)
+    n_written = stream_replace_documents(src["documents"], new_docs, doc_out, remove_ids)
 
     print("[4/4] Rebuilding speakers, card and Space indices...")
     from optimize_for_wasm import EXTRA_SEARCH_ALIASES, build_terms_index, export_term_shards
@@ -217,13 +253,16 @@ def run(args) -> dict:
             ("speaker_topics.json", lambda: build_speaker_topics(con, sp_out.as_posix())),
         ):
             (space_dir / fn).write_text(json.dumps(payload(), ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-        touched = {(d["meclis"], d["donem"]) for d in new_docs}
+        touched = {(d["meclis"], d["donem"]) for d in new_docs} | {
+            (m, dn) for m, dn in con.execute(f"SELECT DISTINCT meclis, donem FROM read_parquet('{_p(src['documents'])}') WHERE doc_id IN ({ids_sql})").fetchall()}
         export_term_shards(con, sp_out.as_posix(), out_root / "terms_cache", only_terms=touched)
 
     n_in = con.execute(f"SELECT COUNT(*) FROM read_parquet('{_p(src['documents'])}')").fetchone()[0]
     n_out = con.execute(f"SELECT COUNT(*) FROM read_parquet('{_p(doc_out)}')").fetchone()[0]
-    if n_in != n_out:
-        raise RuntimeError(f"Document count changed: {n_in} -> {n_out}")
+    removed_present = len(remove_ids & known)
+    added = len({d["doc_id"] for d in new_docs} - known - remove_ids)
+    if n_out != n_in - removed_present + added or n_out != n_written:
+        raise RuntimeError(f"Document count mismatch: {n_in} - {removed_present} + {added} != {n_out}")
     total_sp = con.execute(f"SELECT COUNT(*) FROM read_parquet('{_p(sp_out)}')").fetchone()[0]
     con.close()
     new_sp_tmp.unlink(missing_ok=True)
@@ -264,7 +303,9 @@ def run(args) -> dict:
 
 def build_argparser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--docs", required=True, help="Text file with one doc_id (local_rel_path) per line")
+    ap.add_argument("--docs", default=None, help="Text file with one doc_id (local_rel_path) per line to re-parse")
+    ap.add_argument("--add-dir", default=None, help="Directory with pre-built documents.jsonl + speeches.jsonl to add/replace")
+    ap.add_argument("--remove-docs", default=None, help="Text file with doc_ids to delete (with their speeches)")
     ap.add_argument("--data-dir", default="data/hf_dataset/data")
     ap.add_argument("--from-hub", action="store_true", help="Read the current published parquet from the Hub")
     ap.add_argument("--raw-dir", default="data/raw")

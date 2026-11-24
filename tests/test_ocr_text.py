@@ -74,3 +74,32 @@ def test_clean_mogan_markdown():
     assert "BİRİNCİ OTURUM" in out
     assert "BAŞKAN - Sayın milletvekilleri, toplantıyı açıyorum." in out
     assert "Ali | Evet" in out
+
+
+def test_stream_replace_documents_removes_replaces_and_appends(tmp_path):
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+    from reprocess_docs import stream_replace_documents
+
+    old = tmp_path / "docs.parquet"
+    pq.write_table(pa.Table.from_pylist([{"doc_id": f"d{i}", "text": f"t{i}"} for i in range(5)]), old)
+    out = tmp_path / "out.parquet"
+    n = stream_replace_documents(str(old), [{"doc_id": "d1", "text": "NEW"}, {"doc_id": "z9", "text": "added"}], out, remove={"d3"})
+    rows = pq.read_table(out).to_pylist()
+    assert n == 5 and [r["doc_id"] for r in rows] == ["d0", "d1", "d2", "d4", "z9"]
+    assert rows[1]["text"] == "NEW" and rows[-1]["text"] == "added"
+
+
+def test_cy_parse_labels_and_dates():
+    from cy_parse import find_date, greek_header, is_label, resolve_label
+
+    assert resolve_label("TPAMMATEYZ :")[0] == "Katip"           # ΓΡΑΜΜΑΤΕΥΣ OCR'd in Latin look-alikes
+    assert resolve_label("TIPOEAPOZ")[0] == "Glafkos Klerides"    # ΠΡΟΕΔΡΟΣ with Π read as 'TI'
+    assert resolve_label("B. AYZZAPIAHZ")[0] == "Vasos Lisaridis"
+    assert resolve_label("Η. Α. ΕΙΖΑ")[0] == "Halit Ali Rıza"     # Turkish member in Greek script
+    assert resolve_label("H.A.RİZA")[0] == "Halit Ali Rıza"
+    assert resolve_label("SOTUSU")[1] is None                      # 'SORUSU' heading, not a speaker
+    assert is_label("GÜNDEM :") is None and is_label("ΠΡΟΕΔΡΟΣ :") == "ΠΡΟΕΔΡΟΣ"
+    assert find_date("29 KASIM 196o TARİHLİ TOPLANTI.", (1960, 1961)) == "1960-11-29"
+    assert find_date("ΣΥΝΕΔΡΙΑΣΙΣ ΤΗΣ 29ης ΑΥΓΟΥΣΤΟΥ 1960", (1960, 1961)) == "1960-08-29"
+    assert greek_header("ΣΥΝΕΔΡΙΑΣΙΣ ΤΗΣ Ί8ης ΙΑΝΟΥΑΡΙΟΥ 1961", (1960, 1961)) == "1961-01"

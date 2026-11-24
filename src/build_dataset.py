@@ -597,7 +597,7 @@ def write_dataset_card(
         "KTFD_KM": "KTFD Kurucu Meclisi",
         "KKTC_KM": "KKTC Kurucu Meclisi",
         "KKTC_ARA": "KKTC Aradönem",
-        "KC": "Kıbrıs Cumhuriyeti Dönemi (1960)",
+        "KC": "Kıbrıs Cumhuriyeti Temsilciler Meclisi (1960–1964)",
         "TCM": "Türk Cemaat Meclisi (1963)",
     }
 

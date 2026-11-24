@@ -69,7 +69,7 @@ TERM_CATALOG = [
     ("KTY", 2, "KTY 2. Dönem", "1970–1975", "Kıbrıs Türk Yönetimi"),
     ("KTY", 1, "KTY 1. Dönem", "1967–1970", "Kıbrıs Türk Yönetimi"),
     ("TCM", None, "Türk Cemaat Meclisi", "1963", "1960–1963 Tarihsel Meclisler"),
-    ("KC", None, "Kıbrıs Cumhuriyeti Meclisi", "1960", "1960–1963 Tarihsel Meclisler"),
+    ("KC", None, "Kıbrıs Cumhuriyeti Temsilciler Meclisi", "1960–1964", "1960–1963 Tarihsel Meclisler"),
 ]
 
 
