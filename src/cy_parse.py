@@ -66,7 +66,8 @@ GREEK_MEMBERS = [
     ("ΠΑΡΑΣΚΕΥΑΪΔΗΣ", "Φ", "Fidias Paraskevaidis"), ("ΚΥΠΡΙΑΝΟΥ", "Σ", "Spiros Kiprianu"),
     # Turkish members as printed in Greek script
     ("ΡΙΖΑ", "Χ", "Halit Ali Rıza"), ("ΕΙΖΑ", "Η", "Halit Ali Rıza"), ("ΧΑΛΙΤΑΛΗΡΙΖΑ", "Χ", "Halit Ali Rıza"), ("ΣΟΥΛΕΪΜΑΝ", "Ο", "Ümit Süleyman Onan"),
-    ("ΝΑΜΠΙ", "Ν", "Nebil Nabi"), ("ΝΑΒΙ", "Ν", "Nebil Nabi"), ("ΝΑΛΜΠΑΝΤΟΓΛΟΥ", "Μ", "Burhan Nalbandoğlu"),
+    ("ΝΑΜΠΙ", "Ν", "Nebil Nabi"), ("ΝΑΒΙ", "Ν", "Nebil Nabi"), ("ΝΑΠΗ", "Ν", "Nebil Nabi"), ("ΝΕΠΗΛΝΑΠΗ", "Ν", "Nebil Nabi"),
+    ("ΣΟΥΛΕΥΜΑΝ", "Ο", "Ümit Süleyman Onan"), ("ΟΥΜΙΤΣΟΥΛΕΪΜΑΝ", "Ο", "Ümit Süleyman Onan"), ("ΡΑΜΑΤΑΝ", "Ρ", "Ramadan Cemil"), ("ΝΑΛΜΠΑΝΤΟΓΛΟΥ", "Μ", "Burhan Nalbandoğlu"),
     ("ΤΖΕΜΙΛ", "Ρ", "Ramadan Cemil"), ("ΝΤΕΝΙΖ", "Κ", "Kemal Deniz"), ("ΜΠΕΡΜΠΕΡΟΓΛΟΥ", "Α", "Ahmet Mithat Berberoğlu"),
     ("ΜΟΥΝΤΕΡΡΙΣΟΓΛΟΥ", "Ο", "Orhan Müderrisoğlu"), ("ΝΤΕΡΒΙΣ", "Χ", "Hüseyin Derviş"), ("ΟΡΧΑΝ", "Ι", "İbrahim Orhan"),
     ("ΑΛΤΑΪ", "Α", "Aziz Altay"), ("ΓΚΙΟΥΒΕΝΕΡ", "Χ", "Hasan Güvener"), ("ΜΑΝΙΕΡΑ", "Ν", "Niyazi Manyera"),
@@ -95,7 +96,15 @@ def fold_tr(s: str) -> str:
     return strip_accents(s.replace("ı", "i")).replace("ş", "s")
 
 
-_HEADING_WORDS = ("EKOEZIZ", "EHITPOHHZ", "NOMOZXEAIOY", "KOMITE", "PAHOPY", "PAPOPY", "ZOPYZY", "ZOTYZY", "TEKAIOI", "ONEPIZI")
+_HEADING_WORDS = ("KEOAAAION", "KEOAAATON", "EKOEZIZ", "EHITPOHHZ", "NOMOZXEAIOY", "KOMITE", "PAHOPY", "PAPOPY", "ZOPYZY", "ZOTYZY", "TEKAIOI", "ONEPIZI")
+
+
+_LOOSE = str.maketrans({"E": "Z", "T": "Y", "L": "I"})
+
+
+def loose(s: str) -> str:
+    """Even coarser shape for badly OCR'd bold labels (Σ/Ε, Τ/Υ, Ι/Λ confusions)."""
+    return s.translate(_LOOSE)
 
 
 def resolve_label(label: str) -> tuple[str, str | None, str]:
@@ -113,6 +122,12 @@ def resolve_label(label: str) -> tuple[str, str | None, str]:
         return best[1], best[2], "role"
     if len(sh) <= 6 and difflib.SequenceMatcher(None, sh.replace(" ", ""), "KATIP").ratio() >= 0.6 and sh[:1] in "KBR":
         return "Katip", "katip", "role"
+    compact = sh.replace(" ", "")
+    if 3 <= len(compact) <= 6:  # label split across columns: '...ΔΡΟΣ' / '...ΤΕΥΣ'
+        if "HPOEAPOZ".endswith(compact) or loose("HPOEAPOZ").endswith(loose(compact)):
+            return "Glafkos Klerides", "baskan", "role_fragment"
+        if "TPAMMATEYZ".endswith(compact) or loose("TPAMMATEYZ").endswith(loose(compact)) or compact in ("MATEIZ", "TEAE"):
+            return "Katip", "katip", "role_fragment"
     toks = sh.split()
     if not toks:
         return label.strip(), "milletvekili_bakan", "raw"
@@ -134,7 +149,8 @@ def resolve_label(label: str) -> tuple[str, str | None, str]:
     if len(toks) >= 3:
         cands.add("".join(toks[-3:]))
     for gs, gi, n in _GM_SHAPES:
-        r = max(difflib.SequenceMatcher(None, c, gs).ratio() for c in cands)
+        r = max(max(difflib.SequenceMatcher(None, c, gs).ratio(), difflib.SequenceMatcher(None, loose(c), loose(gs)).ratio() - 0.03)
+                for c in cands)
         if r >= 0.8:
             scored.append((r + (0.05 if initial and initial == gi[:1] else 0), n))
     if scored:
