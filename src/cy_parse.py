@@ -177,19 +177,39 @@ def is_label(line: str) -> str | None:
 TR_MONTHS = {"OCAK": 1, "ŞUBAT": 2, "SUBAT": 2, "MART": 3, "NİSAN": 4, "NISAN": 4, "MAYIS": 5, "HAZİRAN": 6, "HAZIRAN": 6,
              "TEMMUZ": 7, "AĞUSTOS": 8, "AGUSTOS": 8, "EYLÜL": 9, "EYLUL": 9, "EKİM": 10, "EKIM": 10, "KASIM": 11,
              "ARALIK": 12}
-EL_MONTHS = {"IANOYAPIOY": 1, "OEBPOYAPIOY": 2, "MAPTIOY": 3, "AHPIAIOY": 4, "MAIOY": 5, "IOYNIOY": 6, "IOYAIOY": 7,
-             "AYTOYZTOY": 8, "ZEHTEMBPIOY": 9, "OKTOBPIOY": 10, "NOEMBPIOY": 11, "AEKEMBPIOY": 12}
-_TR_DATE = re.compile(r"(\d{1,2})\s*\.?\s*([A-ZÇĞİÖŞÜ]{4,8}),?\s+(1[9９]\s?[6]\s?[0-9oOο])\s+TAR[İI]HL[İI]\s+TOPLANT", re.I)
-_EL_DATE = re.compile(r"ΣΥΝ\w*ΔΡΙΑΣ\w*.{0,8}?(\d{1,2})\w{0,3}\s+([Α-ΩΆ-ΏἈ-῿]{4,12})\s+(19[0-9oOο]{2})")
+EL_MONTHS = {"IANOYAPIOY": 1, "OEBPOYAPIOY": 2, "OEBPOYPIOY": 2, "MAPTIOY": 3, "AHPIAIOY": 4, "MAIOY": 5, "IOYNIOY": 6,
+             "IOYMIOY": 6, "IOYAIOY": 7, "AYTOYZTOY": 8, "ZEHTEMBPIOY": 9, "OKTOBPIOY": 10, "NOEMBPIOY": 11, "AEKEMBPIOY": 12}
+_TR_DATE = re.compile(r"(\d{1,2})\s*\.?\s*([A-ZÇĞİÖŞÜ]{4,8}),?\s+(1[9９oOο]\s?[6]\s?[0-9oOο])\s+TAR[İI]H(?:L[İI]|[İI]NDEK[İI])\s+TOPLANT", re.I)
+_EL_MAY_RE = re.compile(r"^M[AΑ][\s'’΄:`.\-]{0,3}[ΙIΤTΓLΥV]{0,3}[OΟ][YΥ]$", re.I)
+_EL_DATE = re.compile(
+    r"(?:ΣΥΝ\w*ΔΡΙΑΣ\w*.{0,10}?)?(\d{1,2})[\w;]{0,3}\s+([Α-ΩΆ-ΏἈ-῿A-Za-z'’΄:`.\- ]{4,15}?)\s+['’΄]?(19[0-9oOο]{2,3})\b"
+)
 
 
-def _year(y: str) -> int | None:
-    y = re.sub(r"\s", "", y).replace("o", "0").replace("O", "0").replace("ο", "0").replace("９", "9")
-    return int(y) if re.fullmatch(r"19\d\d", y) else None
+def _year(y: str, years: tuple[int, int] | None = None) -> int | None:
+    y = re.sub(r"\s", "", y).replace("９", "9")
+    if len(y) == 4 and y[0] == "1" and y[1] in "oOο" and y[2] == "6":
+        y = "196" + y[3]
+    y = y.replace("o", "0").replace("O", "0").replace("ο", "0")
+    if len(y) == 5 and y.startswith("196") and y.endswith("41"):
+        y = "1961"
+    if not re.fullmatch(r"19\d\d", y):
+        return None
+    yi = int(y)
+    if years and not (years[0] <= yi <= years[1]) and yi == 1964 and years[0] <= 1961 <= years[1]:
+        return 1961
+    return yi
 
 
-_EL_HEADER = re.compile(r"^\s*(?:ΕΚΤΑΚΤΟΣ\s+)?ΣΥΝ\w{0,3}ΕΔΡΙΑΣ(?:ΙΣ|Η)\b(.{0,40})$")
-_EL_MONTH_YEAR = re.compile(r"([Α-ΩΆ-Ώ\u1f08-\u1fff]{4,12})\s+(1\s?9\s?[0-9oOο]\s?[0-9oOο])")
+def _el_month(tok: str) -> int | None:
+    t = tok.strip()
+    if _EL_MAY_RE.match(t):
+        return 5
+    return EL_MONTHS.get(shape(t).replace(" ", ""))
+
+
+_EL_HEADER = re.compile(r"^\s*(?:ΕΚΤΑΚΤΟΣ\s+)?ΣΥΝ\w{0,3}ΕΔΡΙΑΣ(?:ΙΣ|Η)\b(.{0,45})$")
+_EL_MONTH_YEAR = re.compile(r"([Α-ΩΆ-Ώ\u1f08-\u1fffA-Za-z'’΄:`.\- ]{4,15}?)\s+['’΄]?(1\s?9\s?[0-9oOο]\s?[0-9oOο]{1,2})")
 
 
 def _valid(y: int, mo: int, d: int | None, years: tuple[int, int] | None) -> bool:
@@ -198,19 +218,23 @@ def _valid(y: int, mo: int, d: int | None, years: tuple[int, int] | None) -> boo
     return 1 <= mo <= 12 and (d is None or 1 <= d <= 31)
 
 
-def find_date(line: str, years: tuple[int, int] | None = None) -> str | None:
+def find_date(line: str, years: tuple[int, int] | None = None, require_header: bool = True) -> str | None:
     m = _TR_DATE.search(line)
     if m:
         mo = TR_MONTHS.get(m.group(2).upper())
-        y = _year(m.group(3))
+        y = _year(m.group(3), years)
         d = int(m.group(1))
         if mo and y and _valid(y, mo, d, years):
             return f"{y}-{mo:02d}-{d:02d}"
+    if require_header and not re.search(r"ΣΥΝ\w*ΔΡΙΑΣ", line):
+        return None
     m = _EL_DATE.search(line)
     if m:
-        mo = EL_MONTHS.get(shape(m.group(2)).replace(" ", ""))
-        y = _year(m.group(3))
+        mo = _el_month(m.group(2))
+        y = _year(m.group(3), years)
         d = int(m.group(1))
+        if d == 81 and mo in (1, 3, 5, 7, 8, 10, 12):
+            d = 31
         if mo and y and _valid(y, mo, d, years):
             return f"{y}-{mo:02d}-{d:02d}"
     return None
@@ -224,8 +248,8 @@ def greek_header(line: str, years: tuple[int, int] | None = None) -> str | None:
     my = _EL_MONTH_YEAR.search(m.group(1))
     if not my:
         return "?"
-    mo = EL_MONTHS.get(shape(my.group(1)).replace(" ", ""))
-    y = _year(my.group(2))
+    mo = _el_month(my.group(1))
+    y = _year(my.group(2), years)
     if mo and y and _valid(y, mo, None, years):
         return f"{y}-{mo:02d}"
     return "?"
@@ -273,10 +297,10 @@ def parse(page_dir: Path, volume: str, source_url: str, meclis: str = "KC", done
     pending_month = None  # Greek header seen, exact day not yet known
     since_header = 0
     for pno, ln in lines:
-        d = find_date(ln, years)
+        d = find_date(ln, years, require_header=not (pending_month is not None and since_header <= 5))
         if d:
             if pending_month is not None and since_header <= 40:
-                date, pending_month = d, None  # same sitting: Turkish header right after the Greek one
+                date, pending_month = d, None  # same sitting: Turkish header or next-line Greek date right after the header
                 continue
             if d != date:
                 flush()
