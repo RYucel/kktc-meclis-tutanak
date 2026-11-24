@@ -64,6 +64,12 @@ GREEK_MEMBERS = [
     ("ΠΟΣΚΩΤΗΣ", "Σ", "Stavros Poskotis"), ("ΔΗΜΗΤΡΙΑΔΗΣ", "Χ", "Hrisis Dimitriadis"), ("ΙΩΑΝΝΙΔΗΣ", "Γ", "Yorgos Yoannidis"),
     ("ΝΙΚΟΛΑΪΔΗΣ", "Η", "İrodotos Nikolaidis"), ("ΣΙΒΙΤΑΝΙΔΗΣ", "Π", "Panikos Sivitanidis"), ("ΓΙΑΓΚΟΥ", "Α", "Andreas Yangu"),
     ("ΠΑΡΑΣΚΕΥΑΪΔΗΣ", "Φ", "Fidias Paraskevaidis"), ("ΚΥΠΡΙΑΝΟΥ", "Σ", "Spiros Kiprianu"),
+    # Turkish members as printed in Greek script
+    ("ΡΙΖΑ", "Χ", "Halit Ali Rıza"), ("ΕΙΖΑ", "Η", "Halit Ali Rıza"), ("ΧΑΛΙΤΑΛΗΡΙΖΑ", "Χ", "Halit Ali Rıza"), ("ΣΟΥΛΕΪΜΑΝ", "Ο", "Ümit Süleyman Onan"),
+    ("ΝΑΜΠΙ", "Ν", "Nebil Nabi"), ("ΝΑΒΙ", "Ν", "Nebil Nabi"), ("ΝΑΛΜΠΑΝΤΟΓΛΟΥ", "Μ", "Burhan Nalbandoğlu"),
+    ("ΤΖΕΜΙΛ", "Ρ", "Ramadan Cemil"), ("ΝΤΕΝΙΖ", "Κ", "Kemal Deniz"), ("ΜΠΕΡΜΠΕΡΟΓΛΟΥ", "Α", "Ahmet Mithat Berberoğlu"),
+    ("ΜΟΥΝΤΕΡΡΙΣΟΓΛΟΥ", "Ο", "Orhan Müderrisoğlu"), ("ΝΤΕΡΒΙΣ", "Χ", "Hüseyin Derviş"), ("ΟΡΧΑΝ", "Ι", "İbrahim Orhan"),
+    ("ΑΛΤΑΪ", "Α", "Aziz Altay"), ("ΓΚΙΟΥΒΕΝΕΡ", "Χ", "Hasan Güvener"), ("ΜΑΝΙΕΡΑ", "Ν", "Niyazi Manyera"),
 ]
 TURKISH_MEMBERS = {
     "riza": "Halit Ali Rıza", "suleyman": "Ümit Süleyman Onan", "suleyamn": "Ümit Süleyman Onan", "nalbantoglu": "Burhan Nalbandoğlu",
@@ -72,7 +78,9 @@ TURKISH_MEMBERS = {
     "altay": "Aziz Altay", "guvener": "Hasan Güvener", "manyera": "Niyazi Manyera", "orek": "Osman Örek", "plumer": "Fazıl Plümer",
     "somek": "Selçuk Şakir Somek", "semsettin": "Halit Kazım Şemsettin", "huseyin": "Necdet Hüseyin", "kucuk": "Fazıl Küçük",
 }
+TEXT_LABEL = "Tutanak Metni"
 ROLES = [  # (shape or folded label, canonical name, role)
+    ("HPOEAPEYON", "Meclis Başkanı", "baskan"), ("TOYPKOZ TPAMMATEYZ", "Katip", "katip"), ("EAAHN TPAMMATEYZ", "Katip", "katip"),
     ("HPOEAPOZ", "Glafkos Klerides", "baskan"), ("TPAMMATEYZ", "Katip", "katip"), ("AHTIHPOEAPOZ", "Orhan Müderrisoğlu", "baskan"),
     ("KATIP", "Katip", "katip"), ("MEOAIZ PEIZI", "Glafkos Klerides", "baskan"), ("MEOAIZ PEIZ YEKIAI", "Orhan Müderrisoğlu", "baskan"),
     ("PEIZ YEKIAI", "Orhan Müderrisoğlu", "baskan"),
@@ -87,18 +95,26 @@ def fold_tr(s: str) -> str:
     return strip_accents(s.replace("ı", "i")).replace("ş", "s")
 
 
-def resolve_label(label: str) -> tuple[str, str, str]:
+_HEADING_WORDS = ("EKOEZIZ", "EHITPOHHZ", "NOMOZXEAIOY", "KOMITE", "PAHOPY", "PAPOPY", "ZOPYZY", "ZOTYZY", "TEKAIOI", "ONEPIZI")
+
+
+def resolve_label(label: str) -> tuple[str, str | None, str]:
     """Return (speaker_name, role, method) for a raw label."""
     sh = shape(label)
+    if any(w in sh.replace(" ", "") for w in _HEADING_WORDS):
+        return TEXT_LABEL, None, "text"
     for r, n, role in _ROLE_SHAPES:
-        if sh == r or difflib.SequenceMatcher(None, sh, r).ratio() >= 0.86:
+        thr = 0.75 if len(r) >= 7 else 0.86
+        if sh == r or difflib.SequenceMatcher(None, sh, r).ratio() >= thr:
             return n, role, "role"
+    if len(sh) <= 6 and difflib.SequenceMatcher(None, sh.replace(" ", ""), "KATIP").ratio() >= 0.6 and sh[:1] in "KBR":
+        return "Katip", "katip", "role"
     toks = sh.split()
     if not toks:
         return label.strip(), "milletvekili_bakan", "raw"
     surname, initial = toks[-1], toks[0][:1] if len(toks) > 1 else ""
     # Turkish members (Latin script, Turkish letters)
-    ft = fold_tr(label).split()
+    ft = re.sub(r"[^a-z ]", " ", fold_tr(label)).split()
     if ft:
         key = re.sub(r"[^a-z]", "", ft[-1])
         if key in TURKISH_MEMBERS:
@@ -108,8 +124,13 @@ def resolve_label(label: str) -> tuple[str, str, str]:
             return TURKISH_MEMBERS[best[0]], "milletvekili_bakan", "tr_member_fuzzy"
     # Greek members in shape space
     scored = []
+    cands = {surname, toks[0]} if len(toks[0]) >= 5 else {surname}
+    if len(toks) >= 2:
+        cands.add(toks[-2] + toks[-1])
+    if len(toks) >= 3:
+        cands.add("".join(toks[-3:]))
     for gs, gi, n in _GM_SHAPES:
-        r = difflib.SequenceMatcher(None, surname, gs).ratio()
+        r = max(difflib.SequenceMatcher(None, c, gs).ratio() for c in cands)
         if r >= 0.8:
             scored.append((r + (0.05 if initial and initial == gi[:1] else 0), n))
     if scored:
@@ -152,20 +173,47 @@ def _year(y: str) -> int | None:
     return int(y) if re.fullmatch(r"19\d\d", y) else None
 
 
-def find_date(line: str) -> str | None:
+_EL_HEADER = re.compile(r"^\s*(?:ΕΚΤΑΚΤΟΣ\s+)?ΣΥΝ\w{0,3}ΕΔΡΙΑΣ(?:ΙΣ|Η)\b(.{0,40})$")
+_EL_MONTH_YEAR = re.compile(r"([Α-ΩΆ-Ώ\u1f08-\u1fff]{4,12})\s+(1\s?9\s?[0-9oOο]\s?[0-9oOο])")
+
+
+def _valid(y: int, mo: int, d: int | None, years: tuple[int, int] | None) -> bool:
+    if years and not (years[0] <= y <= years[1]):
+        return False
+    return 1 <= mo <= 12 and (d is None or 1 <= d <= 31)
+
+
+def find_date(line: str, years: tuple[int, int] | None = None) -> str | None:
     m = _TR_DATE.search(line)
     if m:
-        mo = TR_MONTHS.get(m.group(2).upper().replace("İ", "İ"))
+        mo = TR_MONTHS.get(m.group(2).upper())
         y = _year(m.group(3))
-        if mo and y:
-            return f"{y}-{mo:02d}-{int(m.group(1)):02d}"
+        d = int(m.group(1))
+        if mo and y and _valid(y, mo, d, years):
+            return f"{y}-{mo:02d}-{d:02d}"
     m = _EL_DATE.search(line)
     if m:
         mo = EL_MONTHS.get(shape(m.group(2)).replace(" ", ""))
         y = _year(m.group(3))
-        if mo and y:
-            return f"{y}-{mo:02d}-{int(m.group(1)):02d}"
+        d = int(m.group(1))
+        if mo and y and _valid(y, mo, d, years):
+            return f"{y}-{mo:02d}-{d:02d}"
     return None
+
+
+def greek_header(line: str, years: tuple[int, int] | None = None) -> str | None:
+    """A Greek sitting header whose day OCR'd badly ('ΣΥΝΕΔΡΙΑΣΙΣ ΤΗΣ Ί8ης ΙΑΝΟΥΑΡΙΟΥ 1961') -> 'YYYY-MM'."""
+    m = _EL_HEADER.match(line)
+    if not m:
+        return None
+    my = _EL_MONTH_YEAR.search(m.group(1))
+    if not my:
+        return "?"
+    mo = EL_MONTHS.get(shape(my.group(1)).replace(" ", ""))
+    y = _year(my.group(2))
+    if mo and y and _valid(y, mo, None, years):
+        return f"{y}-{mo:02d}"
+    return "?"
 
 
 # ---------------------------------------------------------------- main parse
@@ -189,7 +237,8 @@ def join_hyphens(lines: list[str]) -> str:
     return text.strip()
 
 
-def parse(page_dir: Path, volume: str, source_url: str, meclis: str = "KC", donem=None) -> list[dict]:
+def parse(page_dir: Path, volume: str, source_url: str, meclis: str = "KC", donem=None,
+          years: tuple[int, int] | None = None) -> list[dict]:
     lines = load_lines(page_dir)
     turns, cur, body, date, sitting = [], None, [], None, 0
     page_start = None
@@ -206,12 +255,26 @@ def parse(page_dir: Path, volume: str, source_url: str, meclis: str = "KC", done
             })
         body, page_start = [], None
 
+    pending_month = None  # Greek header seen, exact day not yet known
+    since_header = 0
     for pno, ln in lines:
-        d = find_date(ln)
-        if d and d != date:
-            flush()
-            cur, date, sitting = None, d, sitting + 1
+        d = find_date(ln, years)
+        if d:
+            if pending_month is not None and since_header <= 40:
+                date, pending_month = d, None  # same sitting: Turkish header right after the Greek one
+                continue
+            if d != date:
+                flush()
+                cur, date, sitting = None, d, sitting + 1
             continue
+        gh = greek_header(ln, years)
+        if gh:
+            flush()
+            cur, sitting = None, sitting + 1
+            pending_month, since_header = gh, 0
+            date = gh if gh != "?" else (date[:7] if date else None)
+            continue
+        since_header += 1
         lab = is_label(ln) if ln else None
         if lab:
             flush()
@@ -235,8 +298,9 @@ def main():
     ap.add_argument("--volume", default="")
     ap.add_argument("--source-url", default="")
     ap.add_argument("--stats", action="store_true")
+    ap.add_argument("--years", nargs=2, type=int, default=None, help="Valid year window, e.g. 1960 1961")
     a = ap.parse_args()
-    turns = parse(Path(a.page_dir), a.volume, a.source_url)
+    turns = parse(Path(a.page_dir), a.volume, a.source_url, years=tuple(a.years) if a.years else None)
     if a.stats:
         from collections import Counter
         print("turns", len(turns), "sittings", len({t["tarih"] for t in turns}), file=sys.stderr)
