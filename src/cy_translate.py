@@ -49,8 +49,40 @@ SINGLE_INSTRUCTION = (
 )
 
 _lock = threading.Lock()
+_pace_lock = threading.Lock()
+_next_req_at = 0.0
+_cooldown_until = 0.0
+_min_interval = 60.0 / 32.0
 _tls = threading.local()
 _conns: list[http.client.HTTPSConnection] = []
+
+
+def configure_rate_limit(rpm: float) -> None:
+    global _min_interval
+    _min_interval = (60.0 / rpm) if rpm > 0 else 0.0
+
+
+def _wait_pace_slot() -> None:
+    global _next_req_at
+    if _min_interval <= 0 and _cooldown_until <= 0:
+        return
+    with _pace_lock:
+        now = time.monotonic()
+        wait_until = max(now, _next_req_at, _cooldown_until)
+        _next_req_at = wait_until + _min_interval
+    delay = wait_until - time.monotonic()
+    if delay > 0:
+        time.sleep(delay)
+
+
+def _trigger_cooldown(seconds: float) -> None:
+    global _cooldown_until, _next_req_at
+    with _pace_lock:
+        target = time.monotonic() + seconds
+        if target > _cooldown_until:
+            _cooldown_until = target
+        if target > _next_req_at:
+            _next_req_at = target
 
 
 def load_nvidia_api_key() -> str:
@@ -205,6 +237,7 @@ def _call_nim(api_key: str, model: str, instruction: str, user_text: str, retrie
     last_err: Exception | None = None
     for attempt in range(retries):
         try:
+            _wait_pace_slot()
             conn = _get_conn()
             conn.request("POST", API_PATH, body=body, headers=headers)
             resp = conn.getresponse()
@@ -218,9 +251,13 @@ def _call_nim(api_key: str, model: str, instruction: str, user_text: str, retrie
             if resp.status == 402:
                 raise SystemExit(f"NVIDIA NIM quota/billing HTTP 402: {msg}")
             last_err = RuntimeError(f"HTTP {resp.status}: {msg}")
-            wait = (5.0 * (1.6**attempt) if resp.status == 429 else 2.0 * (1.6**attempt)) + random.random() * 1.5
-            if resp.status >= 500 or resp.status == 429:
-                time.sleep(min(wait, 45.0))
+            if resp.status == 429:
+                wait = min(12.0 * (1.5**attempt) + random.random() * 3.0, 65.0)
+                _trigger_cooldown(wait)
+                time.sleep(wait)
+                continue
+            if resp.status >= 500:
+                time.sleep(min(2.0 * (1.6**attempt) + random.random() * 1.5, 45.0))
                 continue
             raise last_err
         except SystemExit:
@@ -273,10 +310,14 @@ def main() -> None:
     ap.add_argument("--cache", default="data/cy_translations/cache.jsonl")
     ap.add_argument("--model", default=DEFAULT_MODEL)
     ap.add_argument("--workers", type=int, default=6)
+    ap.add_argument("--rpm", type=float, default=32.0, help="Global max requests/min across workers (0 = unlimited)")
+    ap.add_argument("--max-batch-items", type=int, default=6)
+    ap.add_argument("--max-batch-chars", type=int, default=3400)
     ap.add_argument("--vol", nargs="*", default=None, help="Optional volume letters filter, e.g. D A")
     ap.add_argument("--limit-docs", type=int, default=0, help="Only process first N matching documents (0 = all)")
     ap.add_argument("--budget", type=float, default=0, help="Stop cleanly after N seconds (cached chunks kept)")
     args = ap.parse_args()
+    configure_rate_limit(args.rpm)
 
     api_key = load_nvidia_api_key()
     sp_path = Path(args.speeches)
@@ -317,7 +358,7 @@ def main() -> None:
     cur_chars = 0
     for item in items_todo:
         txt_len = len(item[1])
-        if cur_b and (len(cur_b) >= 5 or cur_chars + txt_len > 2400):
+        if cur_b and (len(cur_b) >= args.max_batch_items or cur_chars + txt_len > args.max_batch_chars):
             batches.append(cur_b)
             cur_b, cur_chars = [], 0
         cur_b.append(item)
