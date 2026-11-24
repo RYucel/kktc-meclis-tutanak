@@ -65,11 +65,17 @@ GREEK_MEMBERS = [
     ("ΝΙΚΟΛΑΪΔΗΣ", "Η", "İrodotos Nikolaidis"), ("ΣΙΒΙΤΑΝΙΔΗΣ", "Π", "Panikos Sivitanidis"), ("ΓΙΑΓΚΟΥ", "Α", "Andreas Yangu"),
     ("ΠΑΡΑΣΚΕΥΑΪΔΗΣ", "Φ", "Fidias Paraskevaidis"), ("ΚΥΠΡΙΑΝΟΥ", "Σ", "Spiros Kiprianu"),
     # Turkish members as printed in Greek script
-    ("ΡΙΖΑ", "Χ", "Halit Ali Rıza"), ("ΕΙΖΑ", "Η", "Halit Ali Rıza"), ("ΧΑΛΙΤΑΛΗΡΙΖΑ", "Χ", "Halit Ali Rıza"), ("ΣΟΥΛΕΪΜΑΝ", "Ο", "Ümit Süleyman Onan"),
-    ("ΝΑΜΠΙ", "Ν", "Nebil Nabi"), ("ΝΑΒΙ", "Ν", "Nebil Nabi"), ("ΝΑΛΜΠΑΝΤΟΓΛΟΥ", "Μ", "Burhan Nalbandoğlu"),
-    ("ΤΖΕΜΙΛ", "Ρ", "Ramadan Cemil"), ("ΝΤΕΝΙΖ", "Κ", "Kemal Deniz"), ("ΜΠΕΡΜΠΕΡΟΓΛΟΥ", "Α", "Ahmet Mithat Berberoğlu"),
+    ("ΡΙΖΑ", "Χ", "Halit Ali Rıza"), ("ΕΙΖΑ", "Η", "Halit Ali Rıza"), ("ΒΙΖΑ", "Η", "Halit Ali Rıza"), ("ΧΑΛΙΤΑΛΗΡΙΖΑ", "Χ", "Halit Ali Rıza"),
+    ("ΣΟΥΛΕΪΜΑΝ", "Ο", "Ümit Süleyman Onan"), ("ΟΥΜΙΤΣΟΥΛΕΪΜΑΝ", "Ο", "Ümit Süleyman Onan"),
+    ("ΝΑΜΠΙ", "Ν", "Nebil Nabi"), ("ΝΑΒΙ", "Ν", "Nebil Nabi"), ("ΝΑΠΗ", "Ν", "Nebil Nabi"), ("ΝΕΠΗΛ", "Ν", "Nebil Nabi"),
+    ("ΝΑΛΜΠΑΝΤΟΓΛΟΥ", "Μ", "Burhan Nalbandoğlu"),
+    ("ΤΖΕΜΙΛ", "Ρ", "Ramadan Cemil"), ("ΡΑΜΑΤΑΝ", "Ρ", "Ramadan Cemil"), ("ΝΤΕΝΙΖ", "Κ", "Kemal Deniz"),
+    ("ΜΠΕΡΜΠΕΡΟΓΛΟΥ", "Α", "Ahmet Mithat Berberoğlu"), ("ΜΜΕΡΜΜΕΡΟΓΛΟΥ", "Α", "Ahmet Mithat Berberoğlu"),
     ("ΜΟΥΝΤΕΡΡΙΣΟΓΛΟΥ", "Ο", "Orhan Müderrisoğlu"), ("ΝΤΕΡΒΙΣ", "Χ", "Hüseyin Derviş"), ("ΟΡΧΑΝ", "Ι", "İbrahim Orhan"),
     ("ΑΛΤΑΪ", "Α", "Aziz Altay"), ("ΓΚΙΟΥΒΕΝΕΡ", "Χ", "Hasan Güvener"), ("ΜΑΝΙΕΡΑ", "Ν", "Niyazi Manyera"),
+    # Common Greek-OCR surname corruptions
+    ("ΕΤΥΑΤΑΝΟΥ", "Π", "Petros Stilyanu"), ("ΕΤΥΑΛΑΝΟΥ", "Π", "Petros Stilyanu"),
+    ("ΜΟΤΑΜΙΤΗΣ", "Ι", "Con Potamitis"), ("ΜΑΜΑΟΑΝΝΟΥ", "Ε", "Ezekias Papayoannu"),
 ]
 TURKISH_MEMBERS = {
     "riza": "Halit Ali Rıza", "suleyman": "Ümit Süleyman Onan", "suleyamn": "Ümit Süleyman Onan", "nalbantoglu": "Burhan Nalbandoğlu",
@@ -80,9 +86,14 @@ TURKISH_MEMBERS = {
 }
 TEXT_LABEL = "Tutanak Metni"
 ROLES = [  # (shape or folded label, canonical name, role)
-    ("HPOEAPEYON", "Meclis Başkanı", "baskan"), ("TOYPKOZ TPAMMATEYZ", "Katip", "katip"), ("EAAHN TPAMMATEYZ", "Katip", "katip"),
-    ("HPOEAPOZ", "Glafkos Klerides", "baskan"), ("TPAMMATEYZ", "Katip", "katip"), ("AHTIHPOEAPOZ", "Orhan Müderrisoğlu", "baskan"),
-    ("KATIP", "Katip", "katip"), ("MEOAIZ PEIZI", "Glafkos Klerides", "baskan"), ("MEOAIZ PEIZ YEKIAI", "Orhan Müderrisoğlu", "baskan"),
+    ("HPOEAPEYON", "Meclis Başkanı", "baskan"), ("PEYON", "Meclis Başkanı", "baskan"), ("EYON", "Meclis Başkanı", "baskan"),
+    ("TOYPKOZ TPAMMATEYZ", "Katip", "katip"), ("TPAMMATEYZ TOYPKOZ", "Katip", "katip"), ("EAAHN TPAMMATEYZ", "Katip", "katip"),
+    ("HPOEAPOZ", "Glafkos Klerides", "baskan"), ("PRESIDENT", "Glafkos Klerides", "baskan"),
+    ("APOZ", "Glafkos Klerides", "baskan"), ("POZ", "Glafkos Klerides", "baskan"),
+    ("TPAMMATEYZ", "Katip", "katip"), ("TEYZ", "Katip", "katip"), ("TEYZE", "Katip", "katip"), ("ATEYZ", "Katip", "katip"),
+    ("AHTIHPOEAPOZ", "Orhan Müderrisoğlu", "baskan"),
+    ("KATIP", "Katip", "katip"), ("TYPK KATIP", "Katip", "katip"),
+    ("MEOAIZ PEIZI", "Glafkos Klerides", "baskan"), ("MEOAIZ PEIZ YEKIAI", "Orhan Müderrisoğlu", "baskan"),
     ("PEIZ YEKIAI", "Orhan Müderrisoğlu", "baskan"),
 ]
 _GM_SHAPES = [(shape(s), shape(i), n) for s, i, n in GREEK_MEMBERS]
