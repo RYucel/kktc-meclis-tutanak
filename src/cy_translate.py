@@ -234,13 +234,20 @@ def _reset_conn() -> None:
         _tls.conn = None
 
 
-def _call_nim(api_key: str, model: str, instruction: str, user_text: str, retries: int = 10) -> str:
+def _call_nim(
+    api_key: str,
+    model: str,
+    instruction: str,
+    user_text: str,
+    retries: int = 10,
+    enable_thinking: bool = False,
+) -> str:
     dyn_max_tokens = min(_max_tokens, max(768, int(len(user_text) * 1.15) + 512))
     payload = {
         "model": model,
         "temperature": 0.1,
         "max_tokens": dyn_max_tokens,
-        "chat_template_kwargs": {"enable_thinking": False},
+        "chat_template_kwargs": {"enable_thinking": enable_thinking},
         "messages": [
             {"role": "system", "content": f"{SYSTEM_PROMPT}\n{instruction}"},
             {"role": "user", "content": user_text},
@@ -314,12 +321,24 @@ def translate_batch(items: list[tuple[str, str]], api_key: str, model: str) -> d
             return {h: cleaned}
         retry_inst = (
             SINGLE_INSTRUCTION
-            + " UYARI: Çıktıda hiçbir Yunanca cümle veya Yunanca harf kalmamalıdır; metnin tamamını eksiksiz Türkçeye çevir."
+            + " UYARI: Parantez içi konuşmacı adları dahil (ör. (L. DİMİTRİADİS:)) çıktıda kesinlikle hiçbir Yunanca harf "
+            "bırakma; bozuk OCR satırlarında ise okunabilen tüm Yunanca kelimeleri Türkçeye çevirip anlamsız OCR gürültüsünü atla."
         )
         raw = _call_nim(api_key, model, retry_inst, src)
         cleaned = re.sub(r"^\s*<<<0>>>\s*", "", raw).strip()
         if is_valid_turkish_translation(src, cleaned):
             return {h: cleaned}
+        if len(src) <= 800:
+            raw = _call_nim(
+                api_key,
+                model,
+                retry_inst,
+                "Aşağıdaki Yunanca tutanak metnini yalnızca Türkçe olarak çevir (Yunanca harf bırakma):\n\n" + src,
+                enable_thinking=True,
+            )
+            cleaned = re.sub(r"^\s*<<<0>>>\s*", "", raw).strip()
+            if is_valid_turkish_translation(src, cleaned):
+                return {h: cleaned}
         if cleaned:
             tr_greek = len(_GREEK_RE.findall(cleaned))
             alpha = sum(1 for c in cleaned if c.isalpha()) or 1
