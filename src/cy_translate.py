@@ -234,7 +234,7 @@ def _reset_conn() -> None:
         _tls.conn = None
 
 
-def _call_nim(api_key: str, model: str, instruction: str, user_text: str, retries: int = 14) -> str:
+def _call_nim(api_key: str, model: str, instruction: str, user_text: str, retries: int = 10) -> str:
     dyn_max_tokens = min(_max_tokens, max(512, int(len(user_text) * 0.85) + 320))
     payload = {
         "model": model,
@@ -279,17 +279,14 @@ def _call_nim(api_key: str, model: str, instruction: str, user_text: str, retrie
                     last_err = RuntimeError(f"HTTP 429: {msg} hdrs={rl_hdrs}")
                 ra = resp.getheader("retry-after") or resp.getheader("Retry-After")
                 _reset_conn()
-                wait = min(8.0 * (1.35**attempt) + random.random() * 3.0, 35.0)
+                wait = min(12.0 * (1.3**attempt) + random.random() * 4.0, 45.0)
                 if ra:
                     try:
                         wait = max(wait, min(float(ra) + random.random() * 2.0, 60.0))
                     except ValueError:
                         pass
-                # NVCF 429s are primarily concurrent-slot rejections: apply only a brief global
-                # stagger so finishing workers immediately refill freed GPU slots, while this
-                # excess worker backs off locally.
-                _trigger_cooldown(min(wait, 3.0))
-                time.sleep(wait)
+                # Clear NIM's 60s sliding-window counter cleanly in one pause to prevent retry livelock
+                _trigger_cooldown(max(wait, 62.0))
                 continue
             if resp.status >= 500:
                 time.sleep(min(2.0 * (1.6**attempt) + random.random() * 1.5, 45.0))
