@@ -1,0 +1,55 @@
+# Kıbrıs Meclis Tutanakları Açık Veri Arşivi (1960–2026)
+
+> Bağımsız açık veri projesi. Kıbrıs Türk Meclisleri (`1963–2026`) ile Kıbrıs Cumhuriyeti Temsilciler Meclisi (`1960–2026`) tutanaklarını konuşmacı bazlı, iki dilli (Yunanca aslı + Türkçe çevirisi) ve karşılaştırmalı olarak sunar.
+> Resmî meclis siteleri: https://evrakcm.gov.ct.tr · https://www.parliament.cy
+
+Canlı Arama ve Karşılaştırma Arayüzü: https://kktcmeclisarsivi.org
+Hugging Face Veri Seti (CC BY 4.0): https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak
+
+---
+
+## 1. Tarayıcı İçi WebMCP Ajan Araçları (`document.modelContext` / `navigator.modelContext`)
+
+`https://kktcmeclisarsivi.org/` açıldığında sayfa, W3C WebMCP (`registerTool`) standardıyla doğrudan tarayıcı içi DuckDB-WASM motorunu ve statik indeksleri kullanan 5 salt-okunur (`readOnlyHint: true`) araç kaydeder (ek olarak `window.meclisMCP.callTool(name, args)` ile de çağrılabilir):
+
+1. `search_speeches`
+   - Parametreler: `{ query, speaker, wing ("all"|"north"|"cyprus_republic"), meclis, from_year, to_year, topic_id, limit (1..50), offset }`
+   - Çıktı: `{ total, count, offset, items: [{ speech_id, tarih, meclis, donem, birlesim, speaker_name, speaker_role, language, text_tr, text_original, word_count, source_url, permalink, citation }] }`
+2. `compare_parliaments`
+   - İki meclis kanadında (`Kıbrıs Türk Meclisleri` vs `Kıbrıs Cumhuriyeti Temsilciler Meclisi`) eşzamanlı konu, dönem veya tarihsel dönüm noktası kıyaslaması yapar.
+   - Parametreler: `{ query, topic_id, milestone_id, from_year, to_year, limit_per_side (1..20) }`
+   - Hazır `milestone_id` değerleri: `kurulus_1960`, `kriz_1963`, `doruk_1977`, `annan_2002`, `crans_2015`, `mulkiyet_su`.
+   - Çıktı: Her iki taraf için `total_speeches`, `top_speakers` ve `speeches` (Yunanca aslı + Türkçe çeviri).
+3. `get_speaker_profile`
+   - Parametreler: `{ name }`
+   - Çıktı: Eşleşen siyasetçinin konuşma/kelime/birleşim sayıları, görev aldığı dönemler, resmî özgeçmişi (`mp_bios.json`), yıllık dağılımı, ağırlık verdiği konular (`speaker_topics.json`) ve öne çıkan kavramları.
+4. `get_speech_context`
+   - Parametreler: `{ speech_id, speaker_hint, window (0..10) }`
+   - Çıktı: Hedef konuşma, aynı birleşimdeki önceki/sonraki komşu konuşmalar, resmî PDF/DOCX bağlantısı ve alıntı metni.
+5. `list_archive_catalog`
+   - Parametreler: `{ include_concepts (boolean) }`
+   - Çıktı: Meclis kanatları, dönem listesi, tarihsel dönüm noktaları ve 20 birleştirilmiş konu başlığı kataloğu.
+
+---
+
+## 2. Doğrudan Statik JSON İndeksleri (0ms HTTP GET)
+
+- Konuşmacı dizini ve yıllık zaman çizgisi: `https://kktcmeclisarsivi.org/speakers_index.json`
+- Dönemlere göre vekil listeleri ve meclis dağılımları: `https://kktcmeclisarsivi.org/terms_index.json`
+- 20 konu başlığı + 92 kavram ve 1960–2026 dönem trendleri: `https://kktcmeclisarsivi.org/topics_index.json`
+- Konuşmacı bazlı konu ağırlıkları (milletvekili/bakan konuşmaları): `https://kktcmeclisarsivi.org/speaker_topics.json`
+- Resmî vekil özgeçmişleri: `https://kktcmeclisarsivi.org/mp_bios.json`
+
+---
+
+## 3. Doğrudan DuckDB / Parquet Uç Noktaları
+
+- Tüm konuşmalar (~1.306.315 satır, `speaker_name ASC, tarih DESC` sıralı):
+  `https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/data/speeches.parquet`
+- Birleşim tam metinleri (~3.970 belge):
+  `https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/data/documents.parquet`
+- Dönem parçaları (hızlı tarama için):
+  `https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/terms_cache/KC.parquet` (1960–1964 Kıbrıs Cumhuriyeti %100 Türkçe çevirili)
+  `https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/terms_cache/KKTC_10.parquet` vb.
+
+Önemli sütunlar (`speeches.parquet`): `speech_id`, `doc_id`, `meclis` (`KKTC`, `KKTC_KM`, `KKTC_ARA`, `KTFD`, `KTFD_KM`, `KTY`, `TCM`, `KC`), `donem`, `birlesim`, `oturum`, `tarih` (`YYYY-MM-DD`), `turn_index`, `speaker_name`, `speaker_title`, `constituency`, `speaker_role`, `modifiers` (`Türkçe`, `Yunanca`, `Yunanca/Türkçe`), `text` (orijinal metin), `text_tr` (Yunanca→Türkçe yapay zekâ çevirisi, nullable), `word_count`, `source_file`, `source_url`.

@@ -666,6 +666,86 @@
 .check-inline { display:flex; align-items:center; gap:7px; margin:7px 0 0; font-family:inherit; font-size:12px; font-weight:400; text-transform:none; letter-spacing:0; color:var(--ink-soft); cursor:pointer; }
 @media (min-width: 901px) { .ocr-tol { margin-left: calc((100% - 24px - 150px) * 1.35 / 3 + 12px); } }
 .check-inline input[type="checkbox"] { width:14px; height:14px; margin:0; accent-color:#b31b1b; }
+
+  /* Dual-Parliament Wing Switcher & Milestones */
+  .wing-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  @media (max-width: 820px) { .wing-bar { grid-template-columns: 1fr; } }
+  .wing-card {
+    text-align: left;
+    background: var(--folio);
+    border: 1.5px solid var(--rule-strong);
+    border-radius: 10px;
+    padding: 13px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: var(--shadow-sm);
+    font-family: var(--sans);
+  }
+  .wing-card:hover { border-color: var(--ink-soft); transform: translateY(-1px); }
+  .wing-card.active { border-color: var(--crimson); background: linear-gradient(180deg, #FFFFFF 0%, #FFF9F8 100%); box-shadow: 0 4px 14px rgba(185, 28, 28, 0.08); }
+  .wing-card.cy.active { border-color: var(--olive); background: linear-gradient(180deg, #FFFFFF 0%, #F4F9F5 100%); box-shadow: 0 4px 14px rgba(46, 83, 57, 0.10); }
+  .wing-card.cmp.active { border-color: var(--brass); background: linear-gradient(180deg, #FFFFFF 0%, #FFFBF2 100%); box-shadow: 0 4px 14px rgba(154, 123, 62, 0.12); }
+  .wing-kicker { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted); font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+  .wing-card.active .wing-kicker { color: var(--crimson); }
+  .wing-card.cy.active .wing-kicker { color: var(--olive); }
+  .wing-card.cmp.active .wing-kicker { color: #7C5313; }
+  .wing-title { font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--ink); margin: 4px 0 3px; line-height: 1.2; }
+  .wing-sub { font-size: 12px; color: var(--ink-soft); }
+
+  .milestone-strip {
+    background: var(--folio);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--brass);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .ms-chip {
+    padding: 5px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.14s;
+  }
+  .ms-chip:hover { border-color: var(--brass); background: #FFF8EB; }
+  .ms-chip.active { background: #7C5313; border-color: #7C5313; color: #fff; }
+  .ms-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--olive); display: inline-block; }
+  .ms-dot.partial { background: var(--brass); }
+  .ms-chip.active .ms-dot { background: #FDE68A; }
+
+  /* Side-by-Side Comparison View */
+  #compare-view { display: none; animation: fadeUp 0.2s ease-out; }
+  .compare-panel { background: var(--folio); border: 1px solid var(--rule-strong); border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+  .compare-form-grid { display: grid; grid-template-columns: 1.4fr 1.1fr 0.65fr 0.65fr auto; gap: 10px; align-items: end; }
+  @media (max-width: 900px) { .compare-form-grid { grid-template-columns: 1fr 1fr; } }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; margin-top: 14px; }
+  @media (max-width: 960px) { .compare-grid { grid-template-columns: 1fr; } }
+  .cmp-col { background: var(--folio); border: 1px solid var(--rule-strong); border-radius: 10px; padding: 16px 18px; box-shadow: var(--shadow-sm); }
+  .cmp-col.north { border-top: 3px solid var(--crimson); }
+  .cmp-col.cy { border-top: 3px solid var(--olive); }
+  .cmp-col-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--rule); margin-bottom: 12px; }
+  .cmp-col-title { font-family: var(--serif); font-size: 20px; font-weight: 700; margin: 0; }
+  .cmp-col-sub { font-size: 12px; color: var(--ink-muted); margin-top: 3px; }
+  .cmp-count { font-family: var(--mono); font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: var(--paper); border: 1px solid var(--rule); white-space: nowrap; }
+  .cmp-speakers { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .cmp-notice { background: #F8FAF7; border: 1px dashed #B5CEB9; border-radius: 8px; padding: 16px; font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); }
+  .term-pill.upcoming { opacity: 0.72; border-style: dashed; }
 </style>
 </head>
 <body>
@@ -673,23 +753,26 @@
 <header class="masthead">
   <div class="masthead-inner">
     <div>
-      <div class="kicker">Bağımsız Açık Veri Projesi · KKTC Meclis Tutanakları</div>
+      <div class="kicker">Bağımsız Açık Veri Projesi · İki Toplumlu Meclis Tutanakları Arşivi</div>
       <h1>Cumhuriyet Meclisi Konuşma Arşivi</h1>
-      <p class="masthead-sub">1960'tan günümüze tüm meclis tutanaklarında konuşmacı bazlı ve tam metin arama</p>
+      <p class="masthead-sub">1960'tan günümüze Kıbrıs Türk Meclisleri &amp; Kıbrıs Cumhuriyeti Temsilciler Meclisi (Yunanca + Türkçe Çeviri)</p>
     </div>
     <div class="telemetry">
       <div class="tel-item">
-        <div class="tel-val" id="stat-speeches">1.272.408</div>
+        <div class="tel-val" id="stat-speeches">1.306.315</div>
         <div class="tel-lbl">Konuşma Bloğu</div>
       </div>
       <div class="tel-item">
-        <div class="tel-val" id="stat-docs">3.694</div>
+        <div class="tel-val" id="stat-docs">3.970</div>
         <div class="tel-lbl">Birleşim</div>
       </div>
       <div class="tel-item">
         <div class="tel-val" id="stat-span">1960–2026</div>
         <div class="tel-lbl">Tarih Aralığı</div>
       </div>
+      <button type="button" class="hf-pill" id="btn-webmcp-info" title="Tarayıcı içi W3C WebMCP ajan araçları">
+        WebMCP · 5 Araç
+      </button>
       <a class="hf-pill" href="https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak" target="_blank" rel="noopener">
         HF Veri Seti ↗
       </a>
@@ -704,14 +787,36 @@
       <span>En son yüklenen tutanak: <strong>Yükleniyor...</strong></span>
     </div>
     <div class="freshness-note" id="freshness-note">
-      <strong>Bağımsız bir açık veri projesidir; resmî Cumhuriyet Meclisi sitesi değildir.</strong> Resmî tutanaklar: <a href="https://evrakcm.gov.ct.tr/siteler/belgeler/tutanaklar/Shared%20Documents/Forms/Belge%20Grntleme.aspx" target="_blank" rel="noopener">evrakcm.gov.ct.tr</a>.
-      1960–1995 arası taranmış PDF belgelerinde eski OCR kaynaklı küçük yazım farkları bulunabilir; her konuşmanın altında orijinal resmî Meclis tutanağı bağlantısı yer alır.
+      <strong>Bağımsız bir açık veri projesidir; resmî meclis sitesi değildir.</strong> Resmî tutanaklar:
+      <a href="https://evrakcm.gov.ct.tr/siteler/belgeler/tutanaklar/Shared%20Documents/Forms/Belge%20Grntleme.aspx" target="_blank" rel="noopener">evrakcm.gov.ct.tr</a> ·
+      <a href="https://www.parliament.cy" target="_blank" rel="noopener">parliament.cy</a>.
+      1960–1995 taranmış PDF belgelerinde OCR kaynaklı küçük farklar ve 1960–1964 Yunanca tutanaklarda yapay zekâ Türkçe çevirisi yer alır; her kartta orijinal belge bağlantısı bulunur.
     </div>
   </div>
 </div>
 
 <main class="container">
-  <nav class="mode-tabs" role="tablist" aria-label="Görünüm Seçimi">
+  <section class="wing-bar" id="wing-bar" aria-label="Meclis Kapsamı Seçimi">
+    <button type="button" class="wing-card active" data-wing="north" id="wing-north">
+      <div class="wing-kicker"><span>Kıbrıs Türk Meclisleri · 1963–2026</span><span id="wing-north-badge">KKTC · KTFD · KTY · TCM</span></div>
+      <div class="wing-title">Cumhuriyet Meclisi &amp; Öncül Meclisler</div>
+      <div class="wing-sub" id="wing-north-sub">3.747 birleşim · 1.283.172 konuşma · Arama, vekiller ve gündem</div>
+    </button>
+    <button type="button" class="wing-card cy" data-wing="cy" id="wing-cy">
+      <div class="wing-kicker"><span>Kıbrıs Cumhuriyeti · 1960–2026</span><span id="wing-cy-badge">Türkçe Çeviri + Yunanca</span></div>
+      <div class="wing-title">Temsilciler Meclisi (Βουλή)</div>
+      <div class="wing-sub" id="wing-cy-sub">1960–1964 (%100 çevrili, 223 birleşim) yayında · 1964–2026 aşamalı</div>
+    </button>
+    <button type="button" class="wing-card cmp" data-wing="compare" id="wing-compare">
+      <div class="wing-kicker"><span>İki Toplumlu Karşılaştırma</span><span>Yan Yana</span></div>
+      <div class="wing-title">İki Mecliste Aynı Gündem</div>
+      <div class="wing-sub">Anayasa krizi, Denktaş–Makarios, Annan Planı, Crans-Montana veya özel konu kıyasla</div>
+    </button>
+  </section>
+
+  <section class="milestone-strip" id="milestone-strip" aria-label="Tarihsel Dönüm Noktaları"></section>
+
+  <nav class="mode-tabs" id="mode-tabs" role="tablist" aria-label="Görünüm Seçimi">
     <button type="button" class="mode-tab active" id="tab-search" role="tab" aria-selected="true">
       Konuşma &amp; Metin Ara
     </button>
@@ -846,6 +951,43 @@
       <div class="topic-card-box" id="topics-trend-body"></div>
     </div>
   </section>
+
+  <section id="compare-view" aria-label="İki Mecliste Yan Yana Karşılaştırma">
+    <form class="compare-panel" id="compare-form">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+        <div>
+          <strong style="font-family:var(--serif);font-size:20px">Kuzey &amp; Güney Meclis Tutanakları Karşılaştırması</strong>
+          <div style="font-size:12.5px;color:var(--ink-soft)">Aynı konu, kavram veya tarih aralığında her iki meclisteki konuşma yoğunluğunu, öne çıkan siyasetçileri ve metinleri yan yana görün.</div>
+        </div>
+        <button type="button" class="btn-ghost" id="cmp-clear-btn">Temizle</button>
+      </div>
+      <div class="compare-form-grid">
+        <div class="field">
+          <label for="cmp-q">Konu / Kelime</label>
+          <input id="cmp-q" placeholder="Örn: anayasa, belediye, su, federasyon, mülkiyet...">
+        </div>
+        <div class="field">
+          <label for="cmp-topic">Veya Birleştirilmiş Gündem Başlığı</label>
+          <select id="cmp-topic">
+            <option value="">— Serbest Kelime —</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="cmp-from">Baş. Yılı</label>
+          <input id="cmp-from" type="number" min="1960" max="2026" placeholder="1960">
+        </div>
+        <div class="field">
+          <label for="cmp-to">Bitiş Yılı</label>
+          <input id="cmp-to" type="number" min="1960" max="2026" placeholder="2026">
+        </div>
+        <div>
+          <button type="submit" class="btn-primary" id="cmp-submit">Karşılaştır</button>
+        </div>
+      </div>
+      <div id="cmp-milestone-banner" style="margin-top:10px;display:none;font-size:12.5px;color:var(--ink-soft);padding:8px 12px;border-radius:6px;background:#FFF8EB;border:1px solid #FDE68A"></div>
+    </form>
+    <div id="compare-results"></div>
+  </section>
 </main>
 
 <div class="drawer-backdrop" id="drawer-backdrop">
@@ -862,8 +1004,8 @@
 </div>
 
 <footer>
-  <div>Orijinal tutanakların hakları <strong>KKTC Cumhuriyet Meclisi</strong>'ne aittir (<a href="https://evrakcm.gov.ct.tr/siteler/belgeler/tutanaklar/Shared%20Documents/Forms/Belge%20Grntleme.aspx" target="_blank" rel="noopener">evrakcm.gov.ct.tr</a>).</div>
-  <div>Sunucusuz DuckDB-WASM · Açık Veri: <a href="https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak" target="_blank" rel="noopener">stevevaius/KKTC_Meclis_Tutanak</a> (CC BY 4.0)</div>
+  <div>Orijinal tutanakların hakları <strong>KKTC Cumhuriyet Meclisi</strong> (<a href="https://evrakcm.gov.ct.tr/siteler/belgeler/tutanaklar/Shared%20Documents/Forms/Belge%20Grntleme.aspx" target="_blank" rel="noopener">evrakcm.gov.ct.tr</a>) ve <strong>Kıbrıs Cumhuriyeti Temsilciler Meclisi</strong>'ne (<a href="https://www.parliament.cy" target="_blank" rel="noopener">parliament.cy</a>) aittir.</div>
+  <div>Sunucusuz DuckDB-WASM · <a href="./llms.txt" target="_blank" rel="noopener">llms.txt / WebMCP</a> · Açık Veri: <a href="https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak" target="_blank" rel="noopener">stevevaius/KKTC_Meclis_Tutanak</a> (CC BY 4.0)</div>
 </footer>
 
 <script type="module">
@@ -880,6 +1022,41 @@ const QUICK_LEADERS = [
   "İrsen Küçük", "Ferdi Sabit Soyer", "Serdar Denktaş", "Mustafa Akıncı",
   "Ersin Tatar", "Tufan Erhürman", "Ünal Üstel", "Sibel Siber"
 ];
+const QUICK_CY_FALLBACK = [
+  "Glafkos Klerides", "Halit Ali Rıza", "Petros Stilyanu", "Ezekias Papayoannu",
+  "Ahmet Mithat Berberoğlu", "Vasos Lisaridis", "Yorgos Tombazos", "Lellos Dimitriadis",
+  "Andreas Ziartidis", "Ümit Süleyman Onan", "Burhan Nalbandoğlu", "Spiros Kiprianu"
+];
+
+const HISTORICAL_MILESTONES = [
+  { id: 'kurulus_1960', label: '1960–62 Kuruluş & Belediyeler', q: 'belediye', topic: '', from: '1960', to: '1962', dual: true,
+    note: 'Kıbrıs Cumhuriyeti kuruluş dönemi: belediyeler, bütçe ve anayasal yetki paylaşımı (Temsilciler Meclisi 1960–62 tutanakları hazır).' },
+  { id: 'kriz_1963', label: '1963–64 Anayasa Krizi', q: 'anayasa', topic: '', from: '1963', to: '1964', dual: true,
+    note: '1963–1964 Anayasa Krizi: Türk Cemaat Meclisi ile Temsilciler Meclisi eşzamanlı tutanakları yayında.' },
+  { id: 'doruk_1977', label: '1977–79 Denktaş–Makarios', q: 'federasyon', topic: '', from: '1977', to: '1979', dual: false,
+    note: '1977–1979 Denktaş–Makarios ve Denktaş–Kiprianu Doruk Anlaşmaları dönemindeki meclis tartışmaları (Güney 2. aşamada öncelikli eklenecek).' },
+  { id: 'annan_2002', label: '2002–04 Annan Planı', q: 'Annan', topic: '', from: '2002', to: '2004', dual: false,
+    note: '2002–2004 Annan Planı, referandum ve AB üyeliği görüşmeleri (Güney 2. aşamada ilk sırada eklenecek).' },
+  { id: 'crans_2015', label: '2015–17 Crans-Montana', q: 'müzakere', topic: '', from: '2015', to: '2017', dual: false,
+    note: 'Crans-Montana Kıbrıs Konferansı ve federasyon müzakereleri (Güney 2. aşamada ilk sırada eklenecek).' },
+  { id: 'mulkiyet_su', label: 'Mülkiyet & Su Politikaları', q: 'mülkiyet', topic: '', from: '', to: '', dual: true,
+    note: '1960’tan günümüze taşınmaz mülkiyet, koçan, iskan ve su temini tartışmaları.' },
+];
+
+const CY_PARLIAMENT_PERIODS = [
+  { id: 'KC', donem: 1, label: 'Α΄ Dönem (1960–1970)', years: '1960–1970', liveNote: '1960–1964 (Synodos A–D) %100 Türkçe çevirili yayında · 1964–1970 2. aşamada eklenecek' },
+  { id: 'KC:2', donem: 2, label: 'Β΄ Dönem (1970–1976)', years: '1970–1976', note: '1974 öncesi ve sonrası dönem tutanakları (parliament.cy arşivinden aktarılacak).' },
+  { id: 'KC:3', donem: 3, label: 'Γ΄ Dönem (1976–1981)', years: '1976–1981', priority: true, note: 'Denktaş–Makarios & Denktaş–Kiprianu Doruk Görüşmeleri dönemi — 2. aşamada öncelikli aktarılacak.' },
+  { id: 'KC:4', donem: 4, label: 'Δ΄ Dönem (1981–1985)', years: '1981–1985', note: 'V. Yasama Yılları tutanakları (parliament.cy arşivinden aktarılacak).' },
+  { id: 'KC:5', donem: 5, label: 'Ε΄ Dönem (1985–1991)', years: '1985–1991', note: '1985–1991 tutanakları (parliament.cy arşivinden aktarılacak).' },
+  { id: 'KC:6', donem: 6, label: 'ΣΤ΄ Dönem (1991–1996)', years: '1991–1996', note: '1991–1996 tutanakları (parliament.cy arşivinden aktarılacak).' },
+  { id: 'KC:7', donem: 7, label: 'Ζ΄ Dönem (1996–2001)', years: '1996–2001', note: 'AB katılım müzakereleri başlangıcı (parliament.cy arşivinden aktarılacak).' },
+  { id: 'KC:8', donem: 8, label: 'Η΄ Dönem (2001–2006)', years: '2001–2006', priority: true, note: 'Annan Planı, 2004 Referandumu & AB Üyeliği dönemi — 2. aşamada ilk sırada aktarılacak.' },
+  { id: 'KC:9', donem: 9, label: 'Θ΄ Dönem (2006–2011)', years: '2006–2011', note: 'Hristofyas–Talat müzakere süreci (parliament.cy arşivinden aktarılacak).' },
+  { id: 'KC:10', donem: 10, label: 'Ι΄ Dönem (2011–2016)', years: '2011–2016', priority: true, note: 'Ekonomik kriz ve 2015–16 müzakereleri — 2. aşamada öncelikli aktarılacak.' },
+  { id: 'KC:11', donem: 11, label: 'ΙΑ΄ Dönem (2016–2021)', years: '2016–2021', priority: true, note: 'Crans-Montana Kıbrıs Konferansı & pandemi dönemi — 2. aşamada ilk sırada aktarılacak.' },
+  { id: 'KC:12', donem: 12, label: 'ΙΒ΄ Dönem (2021–2026)', years: '2021–2026', priority: true, note: 'Güncel Temsilciler Meclisi dönemi — 2. aşamada öncelikli aktarılacak.' },
+];
 
 const $ = id => document.getElementById(id);
 let speakersIndex = [];
@@ -892,6 +1069,9 @@ let conceptsById = new Map();
 let topicTermsById = new Map();
 let speakerTopicsData = null;
 let mpBios = {};
+let kcOnlySpeakers = new Set();
+let activeWing = 'north'; // 'north' | 'cy' | 'compare'
+let activeMilestoneId = '';
 let activeView = 'search'; // 'search' | 'terms' | 'topics'
 let activeTermId = 'KKTC:10';
 let activeTopicsSub = 'term'; // 'term' | 'trend'
@@ -908,6 +1088,7 @@ let conn = null;
 let duckReadyPromise = null;
 let lastQueryState = null;
 let lastItems = [];
+let compareItems = { north: [], cy: [], terms: [] };
 
 function escHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -966,9 +1147,29 @@ async function loadIndex() {
     const td = await rTerms.json();
     termsData = td.terms || [];
     for (const t of termsData) termsById.set(t.id, t);
+    const northSpeakers = new Set();
+    const cySpeakers = new Set();
+    let northDocs = 0, northSpeeches = 0, cyDocs = 0, cySpeeches = 0;
+    for (const t of termsData) {
+      if (t.meclis === 'KC') {
+        cyDocs += Number(t.docs || 0);
+        cySpeeches += Number(t.speeches || 0);
+        for (const m of (t.members || [])) if (m.s > 0) cySpeakers.add(m.n);
+      } else {
+        northDocs += Number(t.docs || 0);
+        northSpeeches += Number(t.speeches || 0);
+        for (const m of (t.members || [])) if (m.s > 0) northSpeakers.add(m.n);
+      }
+    }
+    kcOnlySpeakers = new Set([...cySpeakers].filter(n => !northSpeakers.has(n)));
+    if ($('wing-north-sub') && northDocs) {
+      $('wing-north-sub').textContent = `${northDocs.toLocaleString('tr-TR')} birleşim · ${northSpeeches.toLocaleString('tr-TR')} konuşma · Arama, vekiller ve gündem`;
+    }
+    if ($('wing-cy-sub') && cyDocs) {
+      $('wing-cy-sub').textContent = `1960–1964 (%100 çevrili, ${cyDocs.toLocaleString('tr-TR')} birleşim · ${cySpeeches.toLocaleString('tr-TR')} konuşma) yayında · 1964–2026 aşamalı`;
+    }
     if (termsData.length) {
       activeTermId = termsData[0].id;
-      $('terms-count-badge').textContent = `${termsData.length} Dönem · 1960–2026`;
     }
   }
 
@@ -978,6 +1179,10 @@ async function loadIndex() {
     for (const cp of (topicsIndex.concepts || [])) conceptsById.set(cp.id, cp);
     for (const tt of (topicsIndex.terms || [])) topicTermsById.set(tt.id, tt);
     $('topics-count-badge').textContent = `${(topicsIndex.topics||[]).length} Konu · ${(topicsIndex.concepts||[]).length} Kavram`;
+    if ($('cmp-topic')) {
+      $('cmp-topic').innerHTML = '<option value="">— Serbest Kelime —</option>' +
+        (topicsIndex.topics || []).map(tp => `<option value="${escHtml(tp.id)}">${escHtml(tp.label)}</option>`).join('');
+    }
   }
 
   if (rSpkTopics && rSpkTopics.ok) {
@@ -1312,24 +1517,113 @@ function renderDossier(name) {
   if (cy) cy.onclick = () => { $('from_year').value = ''; $('to_year').value = ''; runSearch(0); };
 }
 
+function getCyQuickLeaders() {
+  const kc = termsById.get('KC');
+  const skip = new Set(['Katip', 'Meclis Başkanı', 'Tutanak Metni', 'PRESIDENT', 'Geçici Başkan', 'Geçici Katip']);
+  const live = kc ? (kc.members || []).filter(m => !skip.has(m.n) && m.s > 0).map(m => m.n).slice(0, 12) : [];
+  return live.length >= 6 ? live : QUICK_CY_FALLBACK;
+}
+
+function renderQuickBar() {
+  const list = activeWing === 'cy' ? getCyQuickLeaders() : QUICK_LEADERS;
+  $('quick-bar').innerHTML = '<span class="quick-lbl">Hızlı Seçim:</span>' + list.map(name =>
+    `<button type="button" class="chip" data-name="${escHtml(name)}">${escHtml(name)}</button>`
+  ).join('');
+}
+
+function renderMilestones() {
+  $('milestone-strip').innerHTML =
+    '<span class="quick-lbl" style="margin-right:2px">Tarihsel Dönüm Noktaları (İki Meclis):</span>' +
+    HISTORICAL_MILESTONES.map(ms => `
+      <button type="button" class="ms-chip${activeMilestoneId === ms.id ? ' active' : ''}" data-ms="${escHtml(ms.id)}" title="${escHtml(ms.note)}">
+        <span class="ms-dot${ms.dual ? '' : ' partial'}"></span>
+        ${escHtml(ms.label)}
+      </button>
+    `).join('');
+}
+
+function updateTermsBadgeForWing() {
+  if (activeWing === 'cy') {
+    const liveKc = termsData.filter(t => t.meclis === 'KC').length;
+    $('terms-count-badge').textContent = `${CY_PARLIAMENT_PERIODS.length} Dönem (${liveKc} aktif) · 1960–2026`;
+  } else {
+    const nCnt = termsData.filter(t => t.meclis !== 'KC').length;
+    $('terms-count-badge').textContent = `${nCnt} Dönem · 1963–2026`;
+  }
+}
+
+function setActiveWing(wing, { updateHistory = true, runCurrent = true } = {}) {
+  activeWing = ['north', 'cy', 'compare'].includes(wing) ? wing : 'north';
+  $('wing-north').classList.toggle('active', activeWing === 'north');
+  $('wing-cy').classList.toggle('active', activeWing === 'cy');
+  $('wing-compare').classList.toggle('active', activeWing === 'compare');
+
+  const isCmp = activeWing === 'compare';
+  $('mode-tabs').style.display = isCmp ? 'none' : 'flex';
+  $('compare-view').style.display = isCmp ? 'block' : 'none';
+  if (!isCmp) activeMilestoneId = '';
+  renderMilestones();
+  updateTermsBadgeForWing();
+
+  if (isCmp) {
+    $('search-view').style.display = 'none';
+    $('terms-view').style.display = 'none';
+    $('topics-view').style.display = 'none';
+    if (runCurrent) runComparison();
+    if (updateHistory) syncUrl();
+    return;
+  }
+
+  if (activeWing === 'cy') {
+    $('meclis').value = 'KC';
+    $('donem').value = '';
+    if (!String(activeTermId).startsWith('KC')) activeTermId = 'KC';
+    $('speaker').placeholder = 'Örn: Glafkos Klerides, Halit Ali Rıza, Vasos Lisaridis...';
+  } else {
+    if ($('meclis').value === 'KC') $('meclis').value = '';
+    if (String(activeTermId).startsWith('KC')) activeTermId = termsData.find(t => t.meclis !== 'KC')?.id || 'KKTC:10';
+    $('speaker').placeholder = 'Örn: Tufan Erhürman, Derviş Eroğlu, Özker Özgür...';
+  }
+  renderQuickBar();
+  setActiveView(activeView, false);
+  if (activeView === 'search' && runCurrent) {
+    const hasSearch = Boolean(activeTopicFilter) || ['speaker', 'q', 'donem', 'from_year', 'to_year', 'role', 'lang'].some(f => $(f).value.trim());
+    if (hasSearch) runSearch(0);
+    else renderDirectoryLanding();
+  }
+  if (updateHistory) syncUrl();
+}
+
 function renderDirectoryLanding() {
   $('dossier').style.display = 'none';
   $('btn-clear').style.display = 'none';
   $('btn-export').style.display = 'none';
   $('pager').innerHTML = '';
-  $('results-count').textContent = 'En çok söz alan siyasetçilerden birini seçin veya yukarıdan konuşmacı/kelime arayın.';
-  const generic = new Set(['Meclis Başkanı', 'Katip', 'Geçici Başkan', 'Geçici Katip', 'Sesler']);
-  const top = speakersIndex.filter(s => !generic.has(s.n) && !s.r && isMatchedSpeaker(s)).slice(0, 24);
+  const generic = new Set(['Meclis Başkanı', 'Katip', 'Geçici Başkan', 'Geçici Katip', 'Sesler', 'Tutanak Metni', 'PRESIDENT']);
+  const isCy = activeWing === 'cy';
+  let top = [];
+  if (isCy) {
+    const kc = termsById.get('KC');
+    const kcCounts = new Map((kc?.members || []).map(m => [m.n, m]));
+    top = (kc?.members || [])
+      .filter(m => !generic.has(m.n) && m.s > 0)
+      .slice(0, 24)
+      .map(m => speakersByName.get(m.n) || { n: m.n, s: m.s, w: m.w || 0, a: '1960', b: '1964', c: m.c ? [m.c] : [], t: m.t ? [m.t] : [] });
+    $('results-count').textContent = 'Kıbrıs Cumhuriyeti Temsilciler Meclisi konuşmacılarından birini seçin veya yukarıdan Türkçe/Yunanca arama yapın.';
+  } else {
+    top = speakersIndex.filter(s => !generic.has(s.n) && !s.r && isMatchedSpeaker(s) && !kcOnlySpeakers.has(s.n)).slice(0, 24);
+    $('results-count').textContent = 'En çok söz alan siyasetçilerden birini seçin veya yukarıdan konuşmacı/kelime arayın.';
+  }
   $('results').innerHTML = `
     <div class="dir-heading">
-      <div>Öne Çıkan Konuşmacılar (1960–2026) <span>Tıklayarak tüm konuşmalarını anında listeleyin</span></div>
-      ${termsData.length ? `<button type="button" class="btn-ghost" id="open-terms-cta">Dönemlere Göre Tüm Vekiller (${termsData.length} Dönem) →</button>` : ''}
+      <div>${isCy ? 'Kıbrıs Cumhuriyeti Meclisi — Öne Çıkan Konuşmacılar (1960–1964)' : 'Kıbrıs Türk Meclisleri — Öne Çıkan Konuşmacılar (1963–2026)'} <span>Tıklayarak profilini, ağırlık verdiği konuları ve tüm konuşmalarını açın</span></div>
+      ${termsData.length ? `<button type="button" class="btn-ghost" id="open-terms-cta">${isCy ? 'Temsilciler Meclisi Dönemleri (1960–2026) →' : `Dönemlere Göre Tüm Vekiller (${termsData.filter(t => t.meclis !== 'KC').length} Dönem) →`}</button>` : ''}
     </div>
     <div class="dir-grid">
       ${top.map(s => `
         <div class="dir-card" data-pick="${escHtml(s.n)}">
           <div class="dir-name">${escHtml(s.n)}</div>
-          <div class="dir-meta">${s.s.toLocaleString('tr-TR')} söz · ${s.w.toLocaleString('tr-TR')} kelime · ${(s.a||'?').slice(0,4)}–${(s.b||'?').slice(0,4)}</div>
+          <div class="dir-meta">${Number(s.s || 0).toLocaleString('tr-TR')} söz · ${Number(s.w || 0).toLocaleString('tr-TR')} kelime · ${(s.a||'?').slice(0,4)}–${(s.b||'?').slice(0,4)}</div>
           <div class="dir-role">${escHtml((s.t && s.t[0]) || (s.c && s.c[0]) || 'Milletvekili')}</div>
         </div>
       `).join('')}
@@ -1340,6 +1634,9 @@ function renderDirectoryLanding() {
 }
 
 function setActiveView(view, updateHistory = true) {
+  if (activeWing === 'compare') activeWing = 'north';
+  $('mode-tabs').style.display = 'flex';
+  $('compare-view').style.display = 'none';
   activeView = ['terms', 'topics'].includes(view) ? view : 'search';
   const isSearch = activeView === 'search';
   const isTerms = activeView === 'terms';
@@ -1469,7 +1766,12 @@ function renderTopicsView() {
   if (isTrend) {
     renderTopicsTrendPane();
   } else {
-    $('topics-nav').innerHTML = buildTermPillsHtml(topicsIndex.terms, activeTermId);
+    const scopedTerms = activeWing === 'cy'
+      ? topicsIndex.terms.filter(t => t.meclis === 'KC')
+      : topicsIndex.terms.filter(t => t.meclis !== 'KC');
+    const navList = scopedTerms.length ? scopedTerms : topicsIndex.terms;
+    if (!navList.some(t => t.id === activeTermId)) activeTermId = navList[0].id;
+    $('topics-nav').innerHTML = buildTermPillsHtml(navList, activeTermId);
     renderTopicsTermBody();
   }
 }
@@ -1638,9 +1940,32 @@ function renderTermsDirectory() {
     $('terms-nav').innerHTML = '<div class="empty-state">Dönem listesi yüklenemedi.</div>';
     return;
   }
+  if (activeWing === 'cy') {
+    const pills = CY_PARLIAMENT_PERIODS.map(p => {
+      const liveTerm = termsById.get(p.id);
+      const isLive = Boolean(liveTerm);
+      const badge = isLive ? p.years : `${p.years} · ${p.priority ? 'Öncelikli' : 'Sırada'}`;
+      return `
+        <button type="button" class="term-pill${p.id === activeTermId ? ' active' : ''}${isLive ? '' : ' upcoming'}" data-term="${escHtml(p.id)}" title="${escHtml(isLive ? p.liveNote : p.note)}">
+          ${escHtml(p.label)}<small>${escHtml(badge)}</small>
+        </button>
+      `;
+    }).join('');
+    $('terms-nav').innerHTML = `
+      <div class="term-era-row">
+        <div class="term-era-lbl">Kıbrıs Cumhuriyeti Temsilciler Meclisi Yasama Dönemleri (1960–2026)</div>
+        ${pills}
+      </div>
+    `;
+    renderActiveTermBody();
+    return;
+  }
+  const northTerms = termsData.filter(t => t.meclis !== 'KC');
+  const navTerms = northTerms.length ? northTerms : termsData;
+  if (!navTerms.some(t => t.id === activeTermId)) activeTermId = navTerms[0].id;
   const groups = [];
   const gMap = new Map();
-  for (const t of termsData) {
+  for (const t of navTerms) {
     const g = t.group || 'Dönemler';
     if (!gMap.has(g)) { const arr = []; gMap.set(g, arr); groups.push([g, arr]); }
     gMap.get(g).push(t);
@@ -1660,6 +1985,53 @@ function renderTermsDirectory() {
 }
 
 function renderActiveTermBody() {
+  if (activeWing === 'cy' && !termsById.has(activeTermId)) {
+    const cyPeriod = CY_PARLIAMENT_PERIODS.find(p => p.id === activeTermId) || CY_PARLIAMENT_PERIODS[0];
+    if (!termsById.has(cyPeriod.id)) {
+      const yrBounds = cyPeriod.years.split('–');
+      $('term-agenda-slot').innerHTML = '';
+      $('term-members-list').innerHTML = '';
+      $('term-hero').innerHTML = `
+        <div class="term-hero-top">
+          <div>
+            <h2>Kıbrıs Cumhuriyeti Temsilciler Meclisi · ${escHtml(cyPeriod.label)} <span style="font-family:var(--mono);font-size:16px;color:var(--ink-muted);font-weight:500">(${escHtml(cyPeriod.years)})</span></h2>
+            <div class="term-hero-sub">
+              <span class="tag">${cyPeriod.priority ? '2. Aşama · Öncelikli Aktarılacak Dönem' : '2. Aşama · Sırada'}</span>
+              <span class="tag olive">Kaynak: parliament.cy (Yunanca aslı + Türkçe çeviri)</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button type="button" class="btn-ghost" id="cy-open-north-same-yr">Aynı Yıllarda Kıbrıs Türk Meclisini Gör (${escHtml(cyPeriod.years)}) →</button>
+            <button type="button" class="btn-ghost" id="cy-jump-live-btn">Yayındaki 1960–1964 Dönemine Dön</button>
+          </div>
+        </div>
+        <div class="cmp-notice" style="margin-top:12px">
+          ${escHtml(cyPeriod.note)} Bu dönemin tutanakları indirildikçe ve Türkçeye çevrildikçe bu sekmede tüm milletvekilleri, konu ağırlıkları ve iki dilli tutanaklarıyla Kuzey meclisleriyle aynı yapıda görünecektir.
+        </div>
+      `;
+      $('cy-open-north-same-yr').onclick = () => {
+        activeWing = 'north';
+        $('wing-north').classList.add('active');
+        $('wing-cy').classList.remove('active');
+        $('meclis').value = '';
+        $('donem').value = '';
+        $('from_year').value = yrBounds[0] || '';
+        $('to_year').value = yrBounds[1] || '';
+        $('speaker').value = '';
+        $('q').value = '';
+        updateTermsBadgeForWing();
+        renderQuickBar();
+        setActiveView('search');
+        runSearch(0);
+      };
+      $('cy-jump-live-btn').onclick = () => {
+        activeTermId = 'KC';
+        renderTermsDirectory();
+        syncUrl();
+      };
+      return;
+    }
+  }
   const term = termsById.get(activeTermId) || termsData[0];
   if (!term) return;
   activeTermId = term.id;
@@ -1835,6 +2207,45 @@ function openMemberSpeeches(name, forceAll = false) {
 
 const SEARCH_TEXT_SQL = "translate(lower(coalesce(text || ' ' || text_tr, text)), 'ıâîû', 'iaiu')";
 
+async function ensureShardRegistered(shardFname) {
+  const tbl = `term_${shardFname}`;
+  if (shardFname && !registeredShards.has(tbl)) {
+    await db.registerFileURL(tbl, TERMS_CACHE_BASE + shardFname, duckdb.DuckDBDataProtocol.HTTP, false);
+    registeredShards.add(tbl);
+  }
+  return tbl;
+}
+
+function buildTextTopicClauses({ q = '', topicFilter = null, fromYear = '', toYear = '', useOcrVariants = true } = {}) {
+  const clauses = [];
+  const highlightTerms = [];
+  if (fromYear && /^\d{4}$/.test(String(fromYear))) clauses.push(`tarih >= ${sqlQuote(fromYear + '-01-01')}`);
+  if (toYear && /^\d{4}$/.test(String(toYear))) clauses.push(`tarih <= ${sqlQuote(toYear + '-12-31')}`);
+  const terms = parseQueryTerms(q || '');
+  highlightTerms.push(...terms);
+  for (const term of terms) {
+    const tNorm = normQueryTerm(term);
+    const forms = (useOcrVariants && ocrVariants && !/\s/.test(tNorm) && ocrVariants[tNorm])
+      ? [tNorm, ...ocrVariants[tNorm]]
+      : [tNorm];
+    clauses.push(forms.length === 1
+      ? `contains(${SEARCH_TEXT_SQL}, ${sqlQuote(tNorm)})`
+      : '(' + forms.map(v => `contains(${SEARCH_TEXT_SQL}, ${sqlQuote(v)})`).join(' OR ') + ')');
+    for (const v of forms.slice(1)) if (!highlightTerms.includes(v)) highlightTerms.push(v);
+  }
+  if (topicFilter && (topicFilter.rx || topicFilter.terms?.length)) {
+    if (topicFilter.rx) {
+      clauses.push(`regexp_matches(${SEARCH_TEXT_SQL}, ${sqlQuote(topicFilter.rx)})`);
+    } else {
+      clauses.push('(' + topicFilter.terms.map(v => `contains(${SEARCH_TEXT_SQL}, ${sqlQuote(v)})`).join(' OR ') + ')');
+    }
+    for (const v of (topicFilter.terms || [])) {
+      if (!highlightTerms.includes(v)) highlightTerms.push(v);
+    }
+  }
+  return { clauses, highlightTerms };
+}
+
 function buildWhereSql() {
   const clauses = [];
   const spkRaw = $('speaker').value.trim();
@@ -1849,51 +2260,47 @@ function buildWhereSql() {
     }
   }
   const meclis = $('meclis').value.trim();
-  if (meclis) clauses.push(`meclis = ${sqlQuote(meclis)}`);
+  if (meclis) {
+    clauses.push(`meclis = ${sqlQuote(meclis)}`);
+  } else if (activeWing === 'north' && !spkRaw) {
+    clauses.push(`meclis <> 'KC'`);
+  } else if (activeWing === 'cy') {
+    clauses.push(`meclis = 'KC'`);
+  }
   const donem = $('donem').value.trim();
   if (donem && /^\d+$/.test(donem)) clauses.push(`donem = ${Number(donem)}`);
-  const fy = $('from_year').value.trim();
-  if (fy && /^\d{4}$/.test(fy)) clauses.push(`tarih >= ${sqlQuote(fy + '-01-01')}`);
-  const ty = $('to_year').value.trim();
-  if (ty && /^\d{4}$/.test(ty)) clauses.push(`tarih <= ${sqlQuote(ty + '-12-31')}`);
   const role = $('role').value.trim();
   if (role) clauses.push(`speaker_role = ${sqlQuote(role)}`);
   const lang = $('lang').value.trim();
   if (lang) clauses.push(`modifiers = ${sqlQuote(lang)}`);
 
-  const terms = parseQueryTerms($('q').value);
-  const highlightTerms = [...terms];
-  for (const term of terms) {
-    const tNorm = normQueryTerm(term);
-    const forms = [tNorm, ...termVariants(tNorm)];
-    clauses.push(forms.length === 1
-      ? `contains(${SEARCH_TEXT_SQL}, ${sqlQuote(tNorm)})`
-      : '(' + forms.map(v => `contains(${SEARCH_TEXT_SQL}, ${sqlQuote(v)})`).join(' OR ') + ')');
-    for (const v of forms.slice(1)) if (!highlightTerms.includes(v)) highlightTerms.push(v);
-  }
-  if (activeTopicFilter && (activeTopicFilter.rx || activeTopicFilter.terms?.length)) {
-    if (activeTopicFilter.rx) {
-      clauses.push(`regexp_matches(${SEARCH_TEXT_SQL}, ${sqlQuote(activeTopicFilter.rx)})`);
-    } else {
-      clauses.push(
-        '(' + activeTopicFilter.terms.map(v => `contains(${SEARCH_TEXT_SQL}, ${sqlQuote(v)})`).join(' OR ') + ')'
-      );
-    }
-    for (const v of (activeTopicFilter.terms || [])) {
-      if (!highlightTerms.includes(v)) highlightTerms.push(v);
-    }
-  }
+  const tt = buildTextTopicClauses({
+    q: $('q').value,
+    topicFilter: activeTopicFilter,
+    fromYear: $('from_year').value.trim(),
+    toYear: $('to_year').value.trim(),
+    useOcrVariants: !$('ocr_tol') || $('ocr_tol').checked,
+  });
+  clauses.push(...tt.clauses);
+
   return {
     empty: false,
     resolved,
-    terms: highlightTerms,
+    terms: tt.highlightTerms,
     sql: clauses.length ? clauses.join(' AND ') : '1=1',
   };
 }
 
 function syncUrl() {
   const p = new URLSearchParams();
-  if (activeView === 'terms') {
+  if (activeWing !== 'north') p.set('wing', activeWing);
+  if (activeWing === 'compare') {
+    if (activeMilestoneId) p.set('milestone', activeMilestoneId);
+    if ($('cmp-q')?.value.trim()) p.set('cmp_q', $('cmp-q').value.trim());
+    if ($('cmp-topic')?.value) p.set('cmp_topic', $('cmp-topic').value);
+    if ($('cmp-from')?.value.trim()) p.set('cmp_from', $('cmp-from').value.trim());
+    if ($('cmp-to')?.value.trim()) p.set('cmp_to', $('cmp-to').value.trim());
+  } else if (activeView === 'terms') {
     p.set('view', 'terms');
     if (activeTermId) p.set('term', activeTermId);
   } else if (activeView === 'topics') {
@@ -1908,7 +2315,7 @@ function syncUrl() {
   } else {
     for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role', 'lang', 'sort']) {
       const v = $(f).value.trim();
-      if (v && !(f === 'sort' && v === 'newest')) p.set(f, v);
+      if (v && !(f === 'sort' && v === 'newest') && !(activeWing === 'cy' && f === 'meclis' && v === 'KC')) p.set(f, v);
     }
     if ($('ocr_tol') && !$('ocr_tol').checked) p.set('ocr', '0');
     if (activeTopicFilter) {
@@ -1917,6 +2324,223 @@ function syncUrl() {
   }
   const qs = p.toString();
   history.replaceState(null, '', qs ? ('?' + qs) : location.pathname);
+}
+
+function hasTermMatch(rawStr, termsList) {
+  if (!termsList || !termsList.length) return false;
+  const hay = normQueryTerm(rawStr || '');
+  return termsList.some(t => hay.includes(normQueryTerm(t)));
+}
+function renderCardBodyHtml(it, mode, termsList = [], maxLen = 440) {
+  if (!it.text_tr) return `<p class="sc-body">${highlightSnippet(it.text, termsList, maxLen)}</p>`;
+  if (mode === 'orig') return `<p class="sc-body">${highlightSnippet(it.text, termsList, maxLen)}</p>`;
+  if (mode === 'both') {
+    const subLen = Math.min(360, maxLen);
+    return `<div class="bilingual-grid" style="margin-bottom:12px">
+      <div class="bi-pane"><div class="bi-hdr">Türkçe Çeviri</div><p class="sc-body" style="margin:0">${highlightSnippet(it.text_tr, termsList, subLen)}</p></div>
+      <div class="bi-pane"><div class="bi-hdr">Orijinal (Yunanca)</div><p class="sc-body" style="margin:0">${highlightSnippet(it.text, termsList, subLen)}</p></div>
+    </div>`;
+  }
+  return `<p class="sc-body">${highlightSnippet(it.text_tr, termsList, maxLen)}</p>`;
+}
+
+// ---------- Dual-Parliament Side-by-Side Comparison ----------
+function resolveSideTables(side, fromYear, toYear) {
+  const isCy = side === 'cy';
+  const fy = /^\d{4}$/.test(String(fromYear || '')) ? Number(fromYear) : 1960;
+  const ty = /^\d{4}$/.test(String(toYear || '')) ? Number(toYear) : 2026;
+  const sideTerms = termsData.filter(t => isCy ? t.meclis === 'KC' : t.meclis !== 'KC');
+  if (isCy && sideTerms.length) {
+    const maxLiveYr = Math.max(...sideTerms.map(t => Number((t.max_date || '1964').slice(0, 4)) || 1964));
+    if (fy > maxLiveYr) return { emptyWindow: true, files: [] };
+  }
+  const overlapping = sideTerms.filter(t => {
+    const tMin = Number((t.min_date || t.years || '1960').slice(0, 4)) || 1960;
+    const tMax = Number((t.max_date || String(tMin)).slice(0, 4)) || tMin;
+    return tMax >= fy && tMin <= ty;
+  });
+  if (overlapping.length > 0 && overlapping.length <= 3) {
+    return {
+      emptyWindow: false,
+      files: overlapping.map(t => t.donem != null ? `${t.meclis}_${t.donem}.parquet` : `${t.meclis}.parquet`),
+    };
+  }
+  return { emptyWindow: false, files: [] };
+}
+
+async function queryParliamentSide({ side, whereClauses, fromYear = '', toYear = '', limit = 8 }) {
+  const route = resolveSideTables(side, fromYear, toYear);
+  if (route.emptyWindow) return { total: 0, topSpeakers: [], rows: [] };
+  const c = await ensureDuckDB();
+  let readExpr = "read_parquet('speeches.parquet')";
+  let readMetaExpr = "read_parquet('speeches.parquet', file_row_number=true)";
+  if (route.files.length === 1) {
+    const tbl = await ensureShardRegistered(route.files[0]);
+    readExpr = `read_parquet('${tbl}')`;
+    readMetaExpr = `read_parquet('${tbl}', file_row_number=true)`;
+  } else if (route.files.length > 1) {
+    const tbls = await Promise.all(route.files.map(ensureShardRegistered));
+    const arrLit = `[${tbls.map(t => `'${t}'`).join(', ')}]`;
+    readExpr = `read_parquet(${arrLit})`;
+    readMetaExpr = null;
+  }
+  const sideClause = side === 'cy' ? "meclis = 'KC'" : "meclis <> 'KC'";
+  const whereSql = [sideClause, ...whereClauses].join(' AND ');
+  const rowsPromise = readMetaExpr
+    ? c.query(`
+        WITH matched AS (
+          SELECT file_row_number AS _rn, word_count, tarih
+          FROM ${readMetaExpr} WHERE ${whereSql}
+        ),
+        top_rows AS (
+          SELECT _rn FROM matched ORDER BY word_count DESC, tarih DESC NULLS LAST LIMIT ${Number(limit)}
+        )
+        SELECT ${SPEECH_COLS.split(',').map(col => 's.' + col.trim()).join(', ')}
+        FROM ${readMetaExpr} s
+        JOIN top_rows t ON s.file_row_number = t._rn
+        ORDER BY s.word_count DESC, s.tarih DESC NULLS LAST
+      `)
+    : c.query(`
+        SELECT ${SPEECH_COLS}
+        FROM ${readExpr} WHERE ${whereSql}
+        ORDER BY word_count DESC, tarih DESC NULLS LAST
+        LIMIT ${Number(limit)}
+      `);
+  const [cntRes, spkRes, rowsRes] = await Promise.all([
+    c.query(`SELECT COUNT(*)::DOUBLE AS total FROM ${readExpr} WHERE ${whereSql}`),
+    c.query(`SELECT speaker_name, COUNT(*)::DOUBLE AS cnt FROM ${readExpr} WHERE ${whereSql} AND speaker_name IS NOT NULL GROUP BY 1 ORDER BY cnt DESC LIMIT 5`),
+    rowsPromise,
+  ]);
+  const total = Number(cntRes.toArray()[0]?.toJSON()?.total || 0);
+  const topSpeakers = spkRes.toArray().map(r => { const j = r.toJSON(); return { name: j.speaker_name, count: Number(j.cnt || 0) }; });
+  const rows = rowsRes.toArray().map(r => r.toJSON());
+  return { total, topSpeakers, rows };
+}
+
+function renderComparisonColumn(side, res, { q, fromYear, toYear, termsList }) {
+  const isCy = side === 'cy';
+  const title = isCy ? 'Kıbrıs Cumhuriyeti Temsilciler Meclisi (KC)' : 'Kıbrıs Türk Meclisleri (KKTC / KTFD / KTY / TCM)';
+  const sub = isCy ? '1960–1964 yayında (%100 Türkçe çevirili) · 1964–2026 2. aşama' : '1963–2026 tam arşiv · KKTC, KTFD, KTY, TCM';
+  const speakersHtml = res.topSpeakers.length
+    ? `<div class="cmp-speakers"><span class="quick-lbl" style="align-self:center">Öne Çıkanlar:</span>${res.topSpeakers.map(sp =>
+        `<button type="button" class="chip" data-cmp-pick="${escHtml(sp.name)}" data-cmp-wing="${isCy ? 'cy' : 'north'}">${escHtml(sp.name)} (${sp.count.toLocaleString('tr-TR')})</button>`
+      ).join('')}</div>`
+    : '';
+  let bodyHtml = '';
+  if (res.rows.length) {
+    bodyHtml = res.rows.map((it, idx) => {
+      const hasTr = Boolean(it.text_tr);
+      const defaultMode = hasTr
+        ? ((termsList.length && hasTermMatch(it.text, termsList) && !hasTermMatch(it.text_tr, termsList)) ? 'both' : 'tr')
+        : 'orig';
+      const code = [it.meclis, it.donem ? `D${it.donem}` : '', it.birlesim ? `B${it.birlesim}` : ''].filter(Boolean).join(' · ');
+      return `
+        <article class="speech-card" style="padding:14px 16px">
+          <div class="sc-head">
+            <div>
+              <span class="sc-speaker" data-cmp-pick="${escHtml(it.speaker_name)}" data-cmp-wing="${isCy ? 'cy' : 'north'}" style="font-size:17px">${escHtml(it.speaker_name)}</span>
+              ${hasTr ? '<span class="tag" style="margin-left:6px;background:var(--crimson-tint);color:var(--crimson-dark)">TR+EL</span>' : ''}
+            </div>
+            <div class="sc-meta">
+              <span>${escHtml(it.tarih || 'Tarihsiz')}</span>
+              <span class="sc-code">${escHtml(code)}</span>
+            </div>
+          </div>
+          ${hasTr ? `<div class="lang-tabs" data-cmp-side="${side}" data-idx="${idx}">
+            <button type="button" class="lang-tab${defaultMode === 'tr' ? ' active' : ''}" data-bmode="tr">Türkçe Çeviri</button>
+            <button type="button" class="lang-tab${defaultMode === 'both' ? ' active' : ''}" data-bmode="both">Yan Yana</button>
+            <button type="button" class="lang-tab${defaultMode === 'orig' ? ' active' : ''}" data-bmode="orig">Orijinal Yunanca</button>
+          </div>` : ''}
+          <div class="sc-body-wrap" data-cmp-side="${side}" data-idx="${idx}">${renderCardBodyHtml(it, defaultMode, termsList, 300)}</div>
+          <div class="sc-foot">
+            <button type="button" class="btn-ghost cmp-read-btn" data-cmp-side="${side}" data-idx="${idx}">Tam Konuşmayı Oku</button>
+            <a class="sc-src" href="${escHtml(it.source_url)}" target="_blank" rel="noopener">Belge ↗</a>
+          </div>
+        </article>
+      `;
+    }).join('');
+  } else if (isCy && Number(fromYear || 0) > 1964) {
+    bodyHtml = `
+      <div class="cmp-notice">
+        <strong>1964–2026 Kıbrıs Cumhuriyeti Dönemi (2. Aşama):</strong><br>
+        Şu an sistemde <strong>1960–1964</strong> (223 birleşim · 23.143 konuşma, %100 Türkçe çevirili) yayındadır. Seçtiğiniz <strong>${escHtml(fromYear || '1965')}–${escHtml(toYear || '2026')}</strong> aralığındaki <em>parliament.cy</em> tutanakları (Denktaş–Makarios, Annan Planı ve Crans-Montana öncelikli olarak) bir sonraki aşamada bu sütuna otomatik eklenecektir.
+        <div style="margin-top:10px">
+          <button type="button" class="btn-ghost" id="cmp-try-1963">1963–1964 Anayasa Krizi ile İki Tarafı Yan Yana Gör →</button>
+        </div>
+      </div>
+    `;
+  } else {
+    bodyHtml = `<div class="empty-state" style="padding:22px">Bu filtreyle eşleşen konuşma bulunamadı.</div>`;
+  }
+  return `
+    <div class="cmp-col ${side}">
+      <div class="cmp-col-head">
+        <div>
+          <h3 class="cmp-col-title">${escHtml(title)}</h3>
+          <div class="cmp-col-sub">${escHtml(sub)}</div>
+        </div>
+        <div class="cmp-count">${res.total.toLocaleString('tr-TR')} konuşma</div>
+      </div>
+      ${speakersHtml}
+      ${bodyHtml}
+    </div>
+  `;
+}
+
+async function runComparison() {
+  syncUrl();
+  const q = $('cmp-q').value.trim();
+  const topicId = $('cmp-topic').value;
+  const fromYear = $('cmp-from').value.trim();
+  const toYear = $('cmp-to').value.trim();
+  const ms = HISTORICAL_MILESTONES.find(m => m.id === activeMilestoneId);
+  const banner = $('cmp-milestone-banner');
+  if (ms) {
+    banner.style.display = 'block';
+    banner.innerHTML = `<strong>${escHtml(ms.label)}:</strong> ${escHtml(ms.note)}`;
+  } else {
+    banner.style.display = 'none';
+  }
+  const tp = topicId ? topicsById.get(topicId) : null;
+  const tt = buildTextTopicClauses({ q, topicFilter: tp, fromYear, toYear, useOcrVariants: true });
+  if (!tt.clauses.length) {
+    $('compare-results').innerHTML = '<div class="empty-state">Karşılaştırmak için yukarıdan bir <strong>Tarihsel Dönüm Noktası</strong> seçin ya da konu/kelime/yıl aralığı girip <strong>Karşılaştır</strong> düğmesine basın.</div>';
+    return;
+  }
+  $('compare-results').innerHTML = `<div class="loading-box"><div class="spinner"></div><div><strong>İki meclis aynı anda taranıyor...</strong><div style="font-size:13px;color:var(--ink-soft);margin-top:2px">Kıbrıs Türk Meclisleri ve Kıbrıs Cumhuriyeti Meclisi verileri karşılaştırılıyor.</div></div></div>`;
+  setEngineStatus('busy', 'İki meclis karşılaştırması çalıştırılıyor...');
+  try {
+    const t0 = performance.now();
+    const [northRes, cyRes] = await Promise.all([
+      queryParliamentSide({ side: 'north', whereClauses: tt.clauses, fromYear, toYear, limit: 8 }),
+      queryParliamentSide({ side: 'cy', whereClauses: tt.clauses, fromYear, toYear, limit: 8 }),
+    ]);
+    const msTaken = Math.round(performance.now() - t0);
+    compareItems = { north: northRes.rows, cy: cyRes.rows, terms: tt.highlightTerms };
+    setEngineStatus('ok', `İki meclis karşılaştırması tamamlandı (${msTaken.toLocaleString('tr-TR')} ms) · DuckDB-WASM`);
+    $('compare-results').innerHTML = `
+      <div class="compare-grid">
+        ${renderComparisonColumn('north', northRes, { q, fromYear, toYear, termsList: tt.highlightTerms })}
+        ${renderComparisonColumn('cy', cyRes, { q, fromYear, toYear, termsList: tt.highlightTerms })}
+      </div>
+    `;
+    const try1963 = $('cmp-try-1963');
+    if (try1963) try1963.onclick = () => applyMilestone('kriz_1963');
+  } catch (err) {
+    $('compare-results').innerHTML = `<div class="empty-state" style="color:var(--crimson)"><strong>Karşılaştırma hatası:</strong> ${escHtml(err.message)}</div>`;
+    setEngineStatus('err', 'Hata: ' + err.message);
+  }
+}
+
+function applyMilestone(id) {
+  const ms = HISTORICAL_MILESTONES.find(m => m.id === id);
+  if (!ms) return;
+  activeMilestoneId = ms.id;
+  if ($('cmp-q')) $('cmp-q').value = ms.q || '';
+  if ($('cmp-topic')) $('cmp-topic').value = (ms.topic && topicsById.has(ms.topic)) ? ms.topic : '';
+  if ($('cmp-from')) $('cmp-from').value = ms.from || '';
+  if ($('cmp-to')) $('cmp-to').value = ms.to || '';
+  setActiveWing('compare', { updateHistory: true, runCurrent: true });
 }
 
 async function runSearch(offset = 0) {
@@ -1970,10 +2594,7 @@ async function runSearch(offset = 0) {
 
   try {
     const c = await ensureDuckDB();
-    if (shardFname && !registeredShards.has(targetTable)) {
-      await db.registerFileURL(targetTable, TERMS_CACHE_BASE + shardFname, duckdb.DuckDBDataProtocol.HTTP, false);
-      registeredShards.add(targetTable);
-    }
+    if (shardFname) targetTable = await ensureShardRegistered(shardFname);
     const t0 = performance.now();
     const sortVal = $('sort').value;
     const orderSql = sortVal === 'oldest' ? 'tarih ASC NULLS LAST, turn_index ASC'
@@ -2027,23 +2648,6 @@ async function runSearch(offset = 0) {
       return;
     }
 
-    function hasTermMatch(rawStr, termsList) {
-      if (!termsList || !termsList.length) return false;
-      const hay = normQueryTerm(rawStr || '');
-      return termsList.some(t => hay.includes(normQueryTerm(t)));
-    }
-    function renderCardBodyHtml(it, mode) {
-      if (!it.text_tr) return `<p class="sc-body">${highlightSnippet(it.text, w.terms)}</p>`;
-      if (mode === 'orig') return `<p class="sc-body">${highlightSnippet(it.text, w.terms)}</p>`;
-      if (mode === 'both') {
-        return `<div class="bilingual-grid" style="margin-bottom:12px">
-          <div class="bi-pane"><div class="bi-hdr">Türkçe Çeviri</div><p class="sc-body" style="margin:0">${highlightSnippet(it.text_tr, w.terms, 360)}</p></div>
-          <div class="bi-pane"><div class="bi-hdr">Orijinal (Yunanca)</div><p class="sc-body" style="margin:0">${highlightSnippet(it.text, w.terms, 360)}</p></div>
-        </div>`;
-      }
-      return `<p class="sc-body">${highlightSnippet(it.text_tr, w.terms)}</p>`;
-    }
-
     $('results').innerHTML = rows.map((it, idx) => {
       const code = [it.meclis, it.donem ? `D${it.donem}` : '', it.birlesim ? `B${it.birlesim}` : '', it.oturum ? `O${it.oturum}` : ''].filter(Boolean).join(' · ');
       const hasTr = Boolean(it.text_tr);
@@ -2072,7 +2676,7 @@ async function runSearch(offset = 0) {
             <button type="button" class="lang-tab${defaultMode === 'both' ? ' active' : ''}" data-bmode="both">Yan Yana</button>
             <button type="button" class="lang-tab${defaultMode === 'orig' ? ' active' : ''}" data-bmode="orig">Orijinal Yunanca</button>
           </div>` : ''}
-          <div class="sc-body-wrap" data-idx="${idx}">${renderCardBodyHtml(it, defaultMode)}</div>
+          <div class="sc-body-wrap" data-idx="${idx}">${renderCardBodyHtml(it, defaultMode, w.terms)}</div>
           <div class="sc-foot">
             <div class="sc-actions">
               <button type="button" class="btn-ghost read-btn" data-idx="${idx}">Tam Konuşmayı Oku</button>
@@ -2084,7 +2688,7 @@ async function runSearch(offset = 0) {
         </article>
       `;
     }).join('');
-    lastItems._renderCardBody = renderCardBodyHtml;
+    lastItems._renderCardBody = (it, m) => renderCardBodyHtml(it, m, w.terms);
 
     const pagerHtml = [];
     if (offset > 0) pagerHtml.push(`<button type="button" class="btn-ghost" id="pg-prev">← Önceki Sayfa</button>`);
@@ -2313,10 +2917,57 @@ $('btn-export').onclick = async () => {
   }
 };
 
-// Quick chips
-$('quick-bar').innerHTML = '<span class="quick-lbl">Hızlı Seçim:</span>' + QUICK_LEADERS.map(name =>
-  `<button type="button" class="chip" data-name="${name}">${name}</button>`
-).join('');
+// Quick chips & wing/milestone navigation
+renderQuickBar();
+renderMilestones();
+$('wing-bar').onclick = e => {
+  const card = e.target.closest('.wing-card[data-wing]');
+  if (!card) return;
+  setActiveWing(card.dataset.wing);
+};
+$('milestone-strip').onclick = e => {
+  const chip = e.target.closest('.ms-chip[data-ms]');
+  if (chip) applyMilestone(chip.dataset.ms);
+};
+$('compare-form').onsubmit = e => { e.preventDefault(); activeMilestoneId = ''; renderMilestones(); runComparison(); };
+$('cmp-clear-btn').onclick = () => {
+  activeMilestoneId = '';
+  renderMilestones();
+  $('cmp-q').value = ''; $('cmp-topic').value = ''; $('cmp-from').value = ''; $('cmp-to').value = '';
+  syncUrl();
+  $('compare-results').innerHTML = '<div class="empty-state">Karşılaştırmak için yukarıdan bir <strong>Tarihsel Dönüm Noktası</strong> seçin ya da konu/kelime/yıl aralığı girin.</div>';
+};
+$('compare-results').onclick = e => {
+  const btab = e.target.closest('.lang-tab[data-bmode][data-cmp-side]');
+  if (btab) {
+    const grp = btab.closest('.lang-tabs');
+    const side = grp.dataset.cmpSide;
+    const idx = Number(grp.dataset.idx);
+    grp.querySelectorAll('.lang-tab').forEach(b => b.classList.toggle('active', b === btab));
+    const wrap = grp.parentElement.querySelector(`.sc-body-wrap[data-cmp-side="${side}"][data-idx="${idx}"]`);
+    const arr = compareItems[side] || [];
+    if (wrap && arr[idx]) wrap.innerHTML = renderCardBodyHtml(arr[idx], btab.dataset.bmode, compareItems.terms || [], 300);
+    return;
+  }
+  const rd = e.target.closest('.cmp-read-btn[data-cmp-side]');
+  if (rd) {
+    const it = (compareItems[rd.dataset.cmpSide] || [])[Number(rd.dataset.idx)];
+    if (it) openSpeechDrawer(it);
+    return;
+  }
+  const pick = e.target.closest('[data-cmp-pick]');
+  if (pick) {
+    activeWing = pick.dataset.cmpWing === 'cy' ? 'cy' : 'north';
+    $('speaker').value = pick.dataset.cmpPick;
+    $('q').value = '';
+    $('from_year').value = ''; $('to_year').value = '';
+    activeTopicFilter = null;
+    setActiveWing(activeWing, { updateHistory: true, runCurrent: false });
+    setActiveView('search', false);
+    runSearch(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+};
 $('quick-bar').onclick = e => {
   const btn = e.target.closest('.chip');
   if (!btn) return;
@@ -2395,7 +3046,21 @@ $('btn-clear').onclick = () => {
 };
 $('search-form').onsubmit = e => { e.preventDefault(); runSearch(0); };
 $('ocr_tol').onchange = () => { if ($('q').value.trim()) runSearch(0); };
-for (const sel of ['meclis', 'role', 'lang', 'sort']) $(sel).onchange = () => { if (activeTopicFilter || ['speaker','q','meclis','donem','from_year','to_year','role','lang'].some(f => $(f).value.trim())) runSearch(0); };
+for (const sel of ['meclis', 'role', 'lang', 'sort']) $(sel).onchange = () => {
+  if (sel === 'meclis') {
+    const mv = $('meclis').value.trim();
+    if (mv === 'KC' && activeWing !== 'cy') {
+      activeWing = 'cy';
+      $('wing-north').classList.remove('active'); $('wing-cy').classList.add('active');
+      updateTermsBadgeForWing(); renderQuickBar();
+    } else if (mv && mv !== 'KC' && activeWing === 'cy') {
+      activeWing = 'north';
+      $('wing-cy').classList.remove('active'); $('wing-north').classList.add('active');
+      updateTermsBadgeForWing(); renderQuickBar();
+    }
+  }
+  if (activeTopicFilter || ['speaker','q','meclis','donem','from_year','to_year','role','lang'].some(f => $(f).value.trim())) runSearch(0);
+};
 
 // Smart synonym suggestion when user types a multi-variant term like "kibtek", "kiptek", "kthy", "covid"...
 $('q').addEventListener('input', () => {
@@ -2486,15 +3151,344 @@ $('term-members-list').onclick = e => {
   openMemberSpeeches(card.dataset.mp, forceAll);
 };
 
+// ---------- W3C WebMCP Integration (document.modelContext / navigator.modelContext / window.meclisMCP) ----------
+function serializeSpeechRow(r) {
+  return {
+    speech_id: r.speech_id,
+    doc_id: r.doc_id,
+    tarih: r.tarih || null,
+    meclis: r.meclis,
+    donem: r.donem != null ? Number(r.donem) : null,
+    birlesim: r.birlesim != null ? Number(r.birlesim) : null,
+    oturum: r.oturum != null ? Number(r.oturum) : null,
+    turn_index: r.turn_index != null ? Number(r.turn_index) : null,
+    speaker_name: r.speaker_name,
+    speaker_title: r.speaker_title || null,
+    constituency: r.constituency || null,
+    speaker_role: r.speaker_role || null,
+    language: r.modifiers || (r.text_tr ? 'Yunanca' : 'Türkçe'),
+    text_tr: r.text_tr || null,
+    text_original: r.text,
+    word_count: Number(r.word_count || 0),
+    source_url: r.source_url,
+    permalink: speechPermalink(r),
+    citation: speechCitation(r),
+  };
+}
+
+function buildWebMcpTools() {
+  return [
+    {
+      name: 'search_speeches',
+      description: 'Search Cyprus Turkish Parliaments (1963-2026) and Republic of Cyprus House of Representatives (1960-1964, bilingual Greek original + Turkish translation) by keyword, speaker name, parliamentary wing, year range, or unified topic_id.',
+      annotations: { readOnlyHint: true },
+      inputSchema: {
+        type: 'object',
+        properties: {
+          query: { type: 'string', description: 'Keyword or exact quoted phrase (Turkish or Greek).' },
+          speaker: { type: 'string', description: 'Speaker full or partial name, e.g. Tufan Erhürman or Glafkos Klerides.' },
+          wing: { type: 'string', enum: ['all', 'north', 'cyprus_republic'], description: 'Filter parliamentary wing (default all).' },
+          meclis: { type: 'string', description: 'Optional exact chamber code: KKTC, KKTC_KM, KKTC_ARA, KTFD, KTFD_KM, KTY, TCM, KC.' },
+          from_year: { type: 'integer', description: 'Start year YYYY (1960..2026).' },
+          to_year: { type: 'integer', description: 'End year YYYY (1960..2026).' },
+          topic_id: { type: 'string', description: 'Optional unified topic_id from list_archive_catalog.' },
+          sort: { type: 'string', enum: ['newest', 'oldest', 'longest'], description: 'Result sort order.' },
+          limit: { type: 'integer', description: 'Max speeches to return (1..50, default 10).' },
+          offset: { type: 'integer', description: 'Pagination offset (default 0).' },
+        },
+      },
+      execute: async (args = {}) => {
+        const c = await ensureDuckDB();
+        const clauses = [];
+        let resolvedSpk = [];
+        if (args.speaker) {
+          resolvedSpk = resolveSpeakers(String(args.speaker));
+          if (!resolvedSpk.length) return { total: 0, count: 0, offset: 0, items: [], note: 'No matching speaker found.' };
+          clauses.push(resolvedSpk.length === 1
+            ? `speaker_name = ${sqlQuote(resolvedSpk[0])}`
+            : `speaker_name IN (${resolvedSpk.map(sqlQuote).join(', ')})`);
+        }
+        if (args.meclis) clauses.push(`meclis = ${sqlQuote(String(args.meclis))}`);
+        else if (args.wing === 'north') clauses.push("meclis <> 'KC'");
+        else if (args.wing === 'cyprus_republic') clauses.push("meclis = 'KC'");
+
+        const tp = args.topic_id ? topicsById.get(String(args.topic_id)) : null;
+        const tt = buildTextTopicClauses({
+          q: args.query || '',
+          topicFilter: tp,
+          fromYear: args.from_year ? String(args.from_year) : '',
+          toYear: args.to_year ? String(args.to_year) : '',
+          useOcrVariants: true,
+        });
+        clauses.push(...tt.clauses);
+        const whereSql = clauses.length ? clauses.join(' AND ') : '1=1';
+
+        let tbl = 'speeches.parquet';
+        if (resolvedSpk.length !== 1 && (args.meclis === 'KC' || args.wing === 'cyprus_republic')) {
+          tbl = await ensureShardRegistered('KC.parquet');
+        }
+        const lim = Math.min(50, Math.max(1, Number(args.limit || 10)));
+        const off = Math.max(0, Number(args.offset || 0));
+        const ord = args.sort === 'oldest' ? 'tarih ASC NULLS LAST, turn_index ASC'
+                  : args.sort === 'longest' ? 'word_count DESC, tarih DESC NULLS LAST'
+                  : 'tarih DESC NULLS LAST, turn_index ASC';
+        const ordS = args.sort === 'oldest' ? 's.tarih ASC NULLS LAST, s.turn_index ASC'
+                   : args.sort === 'longest' ? 's.word_count DESC, s.tarih DESC NULLS LAST'
+                   : 's.tarih DESC NULLS LAST, s.turn_index ASC';
+
+        const res = await c.query(`
+          WITH matched AS (
+            SELECT file_row_number AS _rn, tarih, turn_index, word_count
+            FROM read_parquet('${tbl}', file_row_number=true) WHERE ${whereSql}
+          ),
+          top_rows AS (
+            SELECT _rn, (SELECT COUNT(*)::DOUBLE FROM matched) AS _total
+            FROM matched ORDER BY ${ord} LIMIT ${lim} OFFSET ${off}
+          )
+          SELECT t._total, ${SPEECH_COLS.split(',').map(col => 's.' + col.trim()).join(', ')}
+          FROM read_parquet('${tbl}', file_row_number=true) s
+          JOIN top_rows t ON s.file_row_number = t._rn
+          ORDER BY ${ordS}
+        `);
+        const rows = res.toArray().map(r => r.toJSON());
+        const total = rows.length ? Number(rows[0]._total || 0) : 0;
+        return { total, count: rows.length, offset: off, items: rows.map(serializeSpeechRow) };
+      },
+    },
+    {
+      name: 'compare_parliaments',
+      description: 'Compare speeches, volume counts, and top speakers side-by-side between Turkish Cypriot parliaments and Republic of Cyprus House of Representatives (KC) for a topic, keyword, year window, or milestone_id.',
+      annotations: { readOnlyHint: true },
+      inputSchema: {
+        type: 'object',
+        properties: {
+          query: { type: 'string', description: 'Keyword or phrase in Turkish or Greek.' },
+          topic_id: { type: 'string', description: 'Optional unified topic_id.' },
+          milestone_id: { type: 'string', enum: HISTORICAL_MILESTONES.map(m => m.id), description: 'Optional historical milestone preset.' },
+          from_year: { type: 'integer', description: 'Start year YYYY.' },
+          to_year: { type: 'integer', description: 'End year YYYY.' },
+          limit_per_side: { type: 'integer', description: 'Speeches returned per parliament side (1..20, default 6).' },
+        },
+      },
+      execute: async (args = {}) => {
+        const ms = args.milestone_id ? HISTORICAL_MILESTONES.find(m => m.id === args.milestone_id) : null;
+        const q = args.query ?? (ms?.q || '');
+        const topicId = args.topic_id ?? (ms?.topic || '');
+        const fromYear = args.from_year != null ? String(args.from_year) : (ms?.from || '');
+        const toYear = args.to_year != null ? String(args.to_year) : (ms?.to || '');
+        const tp = topicId ? topicsById.get(String(topicId)) : null;
+        const tt = buildTextTopicClauses({ q, topicFilter: tp, fromYear, toYear, useOcrVariants: true });
+        if (!tt.clauses.length) return { error: 'Provide query, topic_id, milestone_id, or year bounds.' };
+        const lim = Math.min(20, Math.max(1, Number(args.limit_per_side || 6)));
+        const [north, cy] = await Promise.all([
+          queryParliamentSide({ side: 'north', whereClauses: tt.clauses, fromYear, toYear, limit: lim }),
+          queryParliamentSide({ side: 'cy', whereClauses: tt.clauses, fromYear, toYear, limit: lim }),
+        ]);
+        return {
+          milestone: ms ? { id: ms.id, label: ms.label, note: ms.note } : null,
+          filter: { query: q || null, topic_id: topicId || null, from_year: fromYear || null, to_year: toYear || null },
+          coverage: {
+            north_years: '1963-2026',
+            cyprus_republic_live_years: '1960-1964',
+            cyprus_republic_planned_years: '1964-2026',
+          },
+          north_turkish_cypriot: {
+            total_speeches: north.total,
+            top_speakers: north.topSpeakers,
+            speeches: north.rows.map(serializeSpeechRow),
+          },
+          south_cyprus_republic: {
+            total_speeches: cy.total,
+            top_speakers: cy.topSpeakers,
+            speeches: cy.rows.map(serializeSpeechRow),
+          },
+        };
+      },
+    },
+    {
+      name: 'get_speaker_profile',
+      description: 'Get a politician profile: total speeches, word counts, active years, constituencies, official biography, terms served, top weighted topics, and distinctive concepts.',
+      annotations: { readOnlyHint: true },
+      inputSchema: {
+        type: 'object',
+        required: ['name'],
+        properties: {
+          name: { type: 'string', description: 'Politician name, e.g. Tufan Erhürman, Derviş Eroğlu, Glafkos Klerides.' },
+        },
+      },
+      execute: async (args = {}) => {
+        const matches = resolveSpeakers(String(args.name || ''));
+        if (!matches.length) return { found: false, matches: [] };
+        const matchedName = matches[0];
+        const p = speakersByName.get(matchedName);
+        const spkProf = speakerTopicsData?.speakers?.[matchedName];
+        const tIds = speakerTopicsData?.topic_ids || [];
+        const bioObj = mpBios?.[matchedName] || null;
+        const termsServed = termsData
+          .filter(t => (t.members || []).some(m => m.n === matchedName && m.s > 0))
+          .map(t => {
+            const m = t.members.find(x => x.n === matchedName);
+            return { term_id: t.id, label: t.label, years: t.years, meclis: t.meclis, party: m?.p || null, constituency: m?.c || null, role: m?.t || null, speeches: Number(m?.s || 0) };
+          });
+        return {
+          found: true,
+          matched_name: matchedName,
+          other_matches: matches.slice(1, 8),
+          speech_count: Number(p?.s || 0),
+          word_count: Number(p?.w || 0),
+          doc_count: Number(p?.d || 0),
+          active_years: { from: p?.a || null, to: p?.b || null },
+          constituencies: p?.c || [],
+          titles: p?.t || [],
+          biography: bioObj ? { bio: bioObj.bio, source_url: bioObj.url || null } : null,
+          terms_served: termsServed,
+          yearly_timeline: (p?.y || []).map(([yr, cnt]) => ({ year: yr, speeches: Number(cnt) })),
+          top_topics: spkProf ? (spkProf.t || []).map(([idx, cnt]) => {
+            const tp = topicsById.get(tIds[idx]);
+            return { topic_id: tp?.id || tIds[idx], label: tp?.label || tIds[idx], speeches: Number(cnt), pct: spkProf.m ? Number(((cnt / spkProf.m) * 100).toFixed(2)) : 0 };
+          }) : [],
+          distinctive_concepts: spkProf ? (spkProf.d || []).map(([cIdx, cnt, lift]) => {
+            const cp = conceptsById.get(cIdx);
+            return { concept_id: cIdx, label: cp?.label || String(cIdx), speeches: Number(cnt), lift: Number(lift) };
+          }) : [],
+        };
+      },
+    },
+    {
+      name: 'get_speech_context',
+      description: 'Fetch a single speech by speech_id with its full Turkish translation, original text, and surrounding parliamentary turns from the same sitting.',
+      annotations: { readOnlyHint: true },
+      inputSchema: {
+        type: 'object',
+        required: ['speech_id'],
+        properties: {
+          speech_id: { type: 'string', description: 'Exact speech_id string.' },
+          speaker_hint: { type: 'string', description: 'Optional canonical speaker_name for faster Parquet row-group pruning.' },
+          window: { type: 'integer', description: 'Number of turns before and after to include (0..10, default 2).' },
+        },
+      },
+      execute: async (args = {}) => {
+        const c = await ensureDuckDB();
+        const sid = String(args.speech_id || '').trim();
+        if (!sid) return { error: 'speech_id is required.' };
+        const spk = args.speaker_hint ? resolveSpeakers(String(args.speaker_hint))[0] : null;
+        const focusSql = spk
+          ? `SELECT ${SPEECH_COLS} FROM 'speeches.parquet' WHERE speaker_name = ${sqlQuote(spk)} AND speech_id = ${sqlQuote(sid)} LIMIT 1`
+          : `SELECT ${SPEECH_COLS} FROM 'speeches.parquet' WHERE speech_id = ${sqlQuote(sid)} LIMIT 1`;
+        let row = (await c.query(focusSql)).toArray()[0]?.toJSON();
+        if (!row && spk) {
+          row = (await c.query(`SELECT ${SPEECH_COLS} FROM 'speeches.parquet' WHERE speech_id = ${sqlQuote(sid)} LIMIT 1`)).toArray()[0]?.toJSON();
+        }
+        if (!row) return { found: false, speech_id: sid };
+        const win = Math.min(10, Math.max(0, Number(args.window ?? 2)));
+        const ti = Number(row.turn_index || 0);
+        const ctxSql = `SELECT ${SPEECH_COLS} FROM 'speeches.parquet' WHERE doc_id = ${sqlQuote(row.doc_id)} AND turn_index BETWEEN ${Math.max(0, ti - win)} AND ${ti + win} ORDER BY turn_index ASC`;
+        const turns = (await c.query(ctxSql)).toArray().map(r => serializeSpeechRow(r.toJSON()));
+        const focus = serializeSpeechRow(row);
+        return { found: true, speech: focus, surrounding_turns: turns, source_url: focus.source_url, permalink: focus.permalink, citation: focus.citation };
+      },
+    },
+    {
+      name: 'list_archive_catalog',
+      description: 'List parliamentary wings, legislative terms (including Republic of Cyprus periods), historical comparison milestones, and unified agenda topics.',
+      annotations: { readOnlyHint: true },
+      inputSchema: {
+        type: 'object',
+        properties: {
+          include_concepts: { type: 'boolean', description: 'Include all 92 unified concepts (default false).' },
+        },
+      },
+      execute: async (args = {}) => ({
+        wings: [
+          { id: 'north', label: 'Kıbrıs Türk Meclisleri (1963–2026)', chambers: ['KKTC', 'KKTC_KM', 'KKTC_ARA', 'KTFD', 'KTFD_KM', 'KTY', 'TCM'] },
+          { id: 'cy', label: 'Kıbrıs Cumhuriyeti Temsilciler Meclisi (1960–2026)', chambers: ['KC'], live_years: '1960-1964', bilingual_translated_pct: 100 },
+          { id: 'compare', label: 'İki Mecliste Karşılaştır (Yan Yana)' },
+        ],
+        milestones: HISTORICAL_MILESTONES,
+        cyprus_republic_periods: CY_PARLIAMENT_PERIODS,
+        terms: termsData.map(t => ({ id: t.id, meclis: t.meclis, donem: t.donem, label: t.label, years: t.years, docs: Number(t.docs), speeches: Number(t.speeches) })),
+        topics: (topicsIndex?.topics || []).map(tp => ({ id: tp.id, label: tp.label, total: Number(tp.total), note: tp.note })),
+        concepts: args.include_concepts ? (topicsIndex?.concepts || []).map(cp => ({ id: cp.id, label: cp.label, total: Number(cp.total), note: cp.note })) : undefined,
+      }),
+    },
+  ];
+}
+
+function initWebMCP() {
+  const tools = buildWebMcpTools();
+  const byName = new Map(tools.map(t => [t.name, t]));
+  const targets = [document.modelContext, navigator.modelContext].filter(Boolean);
+  for (const tgt of new Set(targets)) {
+    if (typeof tgt.registerTool !== 'function') continue;
+    for (const tool of tools) {
+      try {
+        const res = tgt.registerTool(tool);
+        if (res && typeof res.catch === 'function') res.catch(() => {});
+      } catch (_) {}
+    }
+  }
+  window.meclisMCP = {
+    version: '1.0.0',
+    listTools: () => tools.map(t => ({ name: t.name, description: t.description, inputSchema: t.inputSchema, annotations: t.annotations })),
+    callTool: async (name, args = {}) => {
+      const t = byName.get(String(name));
+      if (!t) throw new Error(`Unknown WebMCP tool: ${name}`);
+      return t.execute(args || {});
+    },
+  };
+}
+
+function openWebMcpInfoDrawer() {
+  const tools = window.meclisMCP ? window.meclisMCP.listTools() : [];
+  const w3cActive = Boolean(document.modelContext?.registerTool || navigator.modelContext?.registerTool);
+  $('drawer-backdrop').classList.add('open');
+  $('drawer-title').textContent = 'WebMCP · Yapay Zekâ Ajan Araçları';
+  $('drawer-sub').innerHTML = `Tarayıcı İçi Standart: <strong>W3C Model Context Protocol</strong> · <a href="./llms.txt" target="_blank" rel="noopener" style="color:var(--crimson)">llms.txt şemasını aç ↗</a>`;
+  $('drawer-body').innerHTML = `
+    <div class="cite-box">
+      <div class="cite-lbl">Ajan Erişimi ve Durum</div>
+      <div class="cite-text" style="font-size:14px">
+        Tarayıcı WebMCP API (<code>document.modelContext</code> / <code>navigator.modelContext</code>): <strong>${w3cActive ? 'Aktif ve Kayıtlı' : 'Sayfa hazır (uyumlu ajan tarayıcıyla otomatik bağlanır)'}</strong><br>
+        Doğrudan JS Köprüsü: <code>window.meclisMCP.callTool(name, args)</code> · Tüm veriler doğrudan tarayıcı içi DuckDB-WASM ile sorgulanır.
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${tools.map(t => `
+        <div class="ctx-turn" style="margin:0;border-color:var(--rule-strong)">
+          <div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--crimson-dark);margin-bottom:4px">${escHtml(t.name)}</div>
+          <div style="font-size:13.5px;color:var(--ink);margin-bottom:6px">${escHtml(t.description)}</div>
+          <div style="font-family:var(--mono);font-size:11.5px;color:var(--ink-muted)">Parametreler: ${escHtml(Object.keys(t.inputSchema?.properties || {}).join(', '))}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+$('btn-webmcp-info').onclick = () => openWebMcpInfoDrawer();
+
 // Boot!
 await loadIndex();
+initWebMCP();
 // Hydrate URL params if present
 const urlP = new URLSearchParams(location.search);
 if (urlP.get('ocr') === '0' && $('ocr_tol')) $('ocr_tol').checked = false;
 for (const f of ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role', 'lang', 'sort']) {
   if (urlP.has(f)) $(f).value = urlP.get(f);
 }
-if (urlP.get('term') && (termsById.has(urlP.get('term')) || topicTermsById.has(urlP.get('term')))) {
+if (urlP.has('cmp_q')) $('cmp-q').value = urlP.get('cmp_q');
+if (urlP.has('cmp_topic')) $('cmp-topic').value = urlP.get('cmp_topic');
+if (urlP.has('cmp_from')) $('cmp-from').value = urlP.get('cmp_from');
+if (urlP.has('cmp_to')) $('cmp-to').value = urlP.get('cmp_to');
+if (urlP.get('milestone')) {
+  const ms = HISTORICAL_MILESTONES.find(m => m.id === urlP.get('milestone'));
+  if (ms) {
+    activeMilestoneId = ms.id;
+    if (!urlP.has('cmp_q')) $('cmp-q').value = ms.q || '';
+    if (!urlP.has('cmp_topic') && ms.topic && topicsById.has(ms.topic)) $('cmp-topic').value = ms.topic;
+    if (!urlP.has('cmp_from')) $('cmp-from').value = ms.from || '';
+    if (!urlP.has('cmp_to')) $('cmp-to').value = ms.to || '';
+  }
+}
+if (urlP.get('term') && (termsById.has(urlP.get('term')) || topicTermsById.has(urlP.get('term')) || CY_PARLIAMENT_PERIODS.some(p => p.id === urlP.get('term')))) {
   activeTermId = urlP.get('term');
 }
 if (urlP.get('sub') === 'trend') activeTopicsSub = 'trend';
@@ -2509,13 +3503,17 @@ if (urlP.get('topic') && topicsById.has(urlP.get('topic'))) {
   activeTopicFilter = { kind: 'concept', id: cp.id, label: cp.label, note: cp.note, terms: cp.terms, rx: cp.rx || '' };
   renderSynonymBanner();
 }
+const reqWing = urlP.get('wing') || (urlP.get('milestone') ? 'compare' : (urlP.get('meclis') === 'KC' || String(urlP.get('term') || '').startsWith('KC') ? 'cy' : 'north'));
 // Start warming DuckDB-WASM in background right away
 ensureDuckDB().catch(() => {});
-if (urlP.get('view') === 'terms') {
+setActiveWing(reqWing, { updateHistory: false, runCurrent: false });
+if (reqWing === 'compare') {
+  runComparison();
+} else if (urlP.get('view') === 'terms') {
   setActiveView('terms', false);
 } else if (urlP.get('view') === 'topics') {
   setActiveView('topics', false);
-} else if (activeTopicFilter || ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role'].some(f => $(f).value.trim())) {
+} else if (activeTopicFilter || ['speaker', 'q', 'meclis', 'donem', 'from_year', 'to_year', 'role', 'lang'].some(f => $(f).value.trim())) {
   runSearch(0);
 } else {
   renderDirectoryLanding();
