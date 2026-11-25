@@ -234,11 +234,12 @@ def _reset_conn() -> None:
         _tls.conn = None
 
 
-def _call_nim(api_key: str, model: str, instruction: str, user_text: str, retries: int = 7) -> str:
+def _call_nim(api_key: str, model: str, instruction: str, user_text: str, retries: int = 14) -> str:
+    dyn_max_tokens = min(_max_tokens, max(512, int(len(user_text) * 0.85) + 320))
     payload = {
         "model": model,
         "temperature": 0.1,
-        "max_tokens": _max_tokens,
+        "max_tokens": dyn_max_tokens,
         "chat_template_kwargs": {"enable_thinking": False},
         "messages": [
             {"role": "system", "content": f"{SYSTEM_PROMPT}\n{instruction}"},
@@ -269,8 +270,25 @@ def _call_nim(api_key: str, model: str, instruction: str, user_text: str, retrie
                 raise SystemExit(f"NVIDIA NIM quota/billing HTTP 402: {msg}")
             last_err = RuntimeError(f"HTTP {resp.status}: {msg}")
             if resp.status == 429:
-                wait = min(12.0 * (1.5**attempt) + random.random() * 3.0, 65.0)
-                _trigger_cooldown(wait)
+                rl_hdrs = {
+                    k: v
+                    for k, v in resp.getheaders()
+                    if "ratelimit" in k.lower() or "retry" in k.lower()
+                }
+                if rl_hdrs:
+                    last_err = RuntimeError(f"HTTP 429: {msg} hdrs={rl_hdrs}")
+                ra = resp.getheader("retry-after") or resp.getheader("Retry-After")
+                _reset_conn()
+                wait = min(8.0 * (1.35**attempt) + random.random() * 3.0, 35.0)
+                if ra:
+                    try:
+                        wait = max(wait, min(float(ra) + random.random() * 2.0, 60.0))
+                    except ValueError:
+                        pass
+                # NVCF 429s are primarily concurrent-slot rejections: apply only a brief global
+                # stagger so finishing workers immediately refill freed GPU slots, while this
+                # excess worker backs off locally.
+                _trigger_cooldown(min(wait, 3.0))
                 time.sleep(wait)
                 continue
             if resp.status >= 500:
