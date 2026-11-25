@@ -111,3 +111,26 @@ def test_binary_split_preserves_left_half_when_right_half_raises(monkeypatch: py
     out = ct.translate_batch(items, api_key="dummy", model="dummy")
     assert out == {"h0": "Evet, Sayın Başkan.", "h1": "Tamamen katılıyorum."}
 
+
+def test_single_long_bilingual_chunk_splits_on_retry_failure(monkeypatch: pytest.MonkeyPatch) -> None:
+    greek_part = "Ἐρώτησις ὑποβληθεῖσα τὴν 21ην Σεπτεμβρίου 1960.\n" * 18
+    turkish_part = "Hükûmetin bu konudaki görüşü nedir ve ne zaman uygulanacaktır?\n" * 10
+    src = f"{greek_part}\n{turkish_part}".strip()
+    assert len(src) > 800
+
+    calls: list[str] = []
+
+    def fake_call(api_key: str, model: str, instruction: str, user_text: str) -> str:
+        calls.append(user_text)
+        # Fail full-chunk twice by echoing untranslated Greek; succeed once split on Greek half
+        if len(user_text) > len(greek_part) + 20:
+            return src
+        return "21 Eylül 1960 tarihinde sunulan soru."
+
+    monkeypatch.setattr(ct, "_call_nim", fake_call)
+    out = ct.translate_batch([("longh", src)], api_key="dummy", model="dummy")
+    assert "21 Eylül 1960 tarihinde sunulan soru." in out["longh"]
+    assert "Hükûmetin bu konudaki görüşü nedir" in out["longh"]
+    assert len(calls) >= 3
+
+

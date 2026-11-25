@@ -235,7 +235,7 @@ def _reset_conn() -> None:
 
 
 def _call_nim(api_key: str, model: str, instruction: str, user_text: str, retries: int = 10) -> str:
-    dyn_max_tokens = min(_max_tokens, max(512, int(len(user_text) * 0.85) + 320))
+    dyn_max_tokens = min(_max_tokens, max(768, int(len(user_text) * 1.15) + 512))
     payload = {
         "model": model,
         "temperature": 0.1,
@@ -325,6 +325,26 @@ def translate_batch(items: list[tuple[str, str]], api_key: str, model: str) -> d
             alpha = sum(1 for c in cleaned if c.isalpha()) or 1
             if (tr_greek / alpha) < 0.20:
                 return {h: cleaned}
+        if len(src) > 800:
+            mid = len(src) // 2
+            split_pos = src.rfind("\n", 0, mid + 200)
+            if split_pos < len(src) // 4:
+                split_pos = src.find("\n", mid)
+            if split_pos < 1 or split_pos >= len(src) - 1:
+                split_pos = src.rfind(" ", 0, mid + 100)
+            if 0 < split_pos < len(src) - 1:
+                left_src = src[:split_pos].strip()
+                right_src = src[split_pos:].strip()
+                if left_src and right_src and len(left_src) < len(src) and len(right_src) < len(src):
+                    parts_tr: list[str] = []
+                    for sub in (left_src, right_src):
+                        if not has_greek(sub):
+                            parts_tr.append(sub)
+                        else:
+                            sh = chunk_hash(sub)
+                            sub_res = translate_batch([(sh, sub)], api_key, model)
+                            parts_tr.append(sub_res[sh])
+                    return {h: "\n\n".join(parts_tr).strip()}
         raise RuntimeError(f"Single-chunk translation invalid/untranslated after retry (hash={h})")
 
     user_msg = "\n\n".join(f"<<<{i}>>>\n{txt}" for i, (_h, txt) in enumerate(items))
