@@ -30,13 +30,18 @@ _TAG_SPLIT_RE = re.compile(r"(?m)^\s*<<<(\d+)>>>\s*$")
 SYSTEM_PROMPT = (
     "Sen 1960-1964 Kıbrıs Cumhuriyeti Temsilciler Meclisi resmî tutanak çevirmenisin. "
     "Verilen Yunanca (Katharevousa) meclis konuşmalarını anlam kaybı olmadan, tam, doğru ve doğal resmî meclis Türkçesine çevir. "
-    "Eski OCR kaynaklı küçük Yunanca harf hatalarını bağlamdan düzelt.\n"
+    "Eski OCR kaynaklı küçük Yunanca harf hatalarını bağlamdan düzelt. "
+    "Metin içinde zaten Türkçe olan cümle veya bölümler varsa bunların kelimelerini değiştirmeden "
+    "(ör. eski Türkçe 'müstacel', 'tasvip', 'müzakere' gibi ifadeleri bozmadan) aynen koru; yalnızca Yunanca kısımları Türkçeye çevir. "
+    "Çıktıda hiçbir Yunanca kelime veya harf bırakma; kişi ve yer adlarını Türkçe yazılışlarıyla aktar "
+    "(Πάφος = Baf, Λεμεσός = Leymosun/Limasol, Αμμόχωστος = Mağusa, Λάρναξ = Larnaka, Λευκωσία = Lefkoşa, Κυρήνεια = Girne).\n"
     "Terminoloji: Βουλὴ τῶν Ἀντιπροσώπων = Temsilciler Meclisi, Πρόεδρος = Başkan, "
     "Ἀντιπρόεδρος = Başkan Vekili, Γραμματεύς = Kâtip, Ἑλληνικὴ Κοινότης = Rum Cemaati, "
     "Τουρκικὴ Κοινότης = Türk Cemaati, Ἕλληνες Βουλευταί = Rum Milletvekilleri, "
     "Τοῦρκοι Βουλευταί = Türk Milletvekilleri, Νομοσχέδιον = Yasa Tasarısı, "
     "Πρότασις Νόμου = Yasa Önerisi, Ἡμερησία Διάταξις = Gündem, "
-    "Ἐπιτροπὴ Ἐπιλογῆς = Seçim Komitesi, Κοινοβουλευτικὴ Ὁμάς = Meclis Grubu."
+    "Ἐπιτροπὴ Ἐπιλογῆς = Seçim Komitesi, Κοινοβουλευτικὴ Ὁμάς = Meclis Grubu, "
+    "ἐγκριθείς / ἐνεκρίθη = onaylanan / tasvip edilen, κατεπείγων = ivedi / müstacel."
 )
 
 MULTI_INSTRUCTION = (
@@ -105,7 +110,13 @@ def load_nvidia_api_key() -> str:
 
 
 def has_greek(text: str) -> bool:
-    return bool(_GREEK_RE.search(text or ""))
+    """Return True when text contains real Greek content rather than stray OCR characters in Turkish text."""
+    s = text or ""
+    g = len(_GREEK_RE.findall(s))
+    if g == 0:
+        return False
+    alpha = sum(1 for c in s if c.isalpha()) or 1
+    return g >= 30 or (g / alpha) >= 0.30
 
 
 def chunk_hash(chunk: str) -> str:
@@ -172,7 +183,7 @@ def load_cache(cache_path: Path) -> dict[str, str]:
 
 
 def lookup_translation(text: str, cache: dict[str, str], max_chars: int = 3000) -> str | None:
-    """Return full Turkish translation if text has Greek and every chunk is cached, else None."""
+    """Return full Turkish translation if text has Greek and every Greek chunk is cached, else None."""
     if not has_greek(text):
         return None
     chunks = split_greek_chunks(text, max_chars=max_chars)
@@ -180,6 +191,9 @@ def lookup_translation(text: str, cache: dict[str, str], max_chars: int = 3000) 
         return None
     parts: list[str] = []
     for ch in chunks:
+        if not has_greek(ch):
+            parts.append(ch)
+            continue
         tr = cache.get(chunk_hash(ch))
         if not tr:
             return None
@@ -191,12 +205,13 @@ def is_valid_turkish_translation(src: str, tr: str) -> bool:
     s = (tr or "").strip()
     if not s:
         return False
-    src_greek = len(_GREEK_RE.findall(src))
-    if src_greek < 4:
+    if not has_greek(src):
         return True
     tr_greek = len(_GREEK_RE.findall(s))
+    if tr_greek == 0:
+        return True
     alpha = sum(1 for c in s if c.isalpha()) or 1
-    return (tr_greek / alpha) < 0.25
+    return tr_greek < 15 and (tr_greek / alpha) < 0.05
 
 
 def _get_conn() -> http.client.HTTPSConnection:
@@ -280,11 +295,17 @@ def translate_batch(items: list[tuple[str, str]], api_key: str, model: str) -> d
         h, src = items[0]
         raw = _call_nim(api_key, model, SINGLE_INSTRUCTION, src)
         cleaned = re.sub(r"^\s*<<<0>>>\s*", "", raw).strip()
-        if not is_valid_turkish_translation(src, cleaned):
-            # One direct retry for single item
-            raw = _call_nim(api_key, model, SINGLE_INSTRUCTION, src)
-            cleaned = re.sub(r"^\s*<<<0>>>\s*", "", raw).strip()
-        return {h: cleaned} if cleaned else {}
+        if is_valid_turkish_translation(src, cleaned):
+            return {h: cleaned}
+        retry_inst = (
+            SINGLE_INSTRUCTION
+            + " UYARI: Çıktıda hiçbir Yunanca cümle veya Yunanca harf kalmamalıdır; metnin tamamını eksiksiz Türkçeye çevir."
+        )
+        raw = _call_nim(api_key, model, retry_inst, src)
+        cleaned = re.sub(r"^\s*<<<0>>>\s*", "", raw).strip()
+        if is_valid_turkish_translation(src, cleaned):
+            return {h: cleaned}
+        raise RuntimeError(f"Single-chunk translation invalid/untranslated after retry (hash={h})")
 
     user_msg = "\n\n".join(f"<<<{i}>>>\n{txt}" for i, (_h, txt) in enumerate(items))
     raw = _call_nim(api_key, model, MULTI_INSTRUCTION, user_msg)
@@ -331,19 +352,32 @@ def main() -> None:
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache = load_cache(cache_path)
 
-    vol_prefixes = tuple(f"Kıbrıs Cumhuriyeti Temsilciler Meclisi/Synodos {v} -" for v in args.vol) if args.vol else None
+    vol_order = (
+        {f"Kıbrıs Cumhuriyeti Temsilciler Meclisi/Synodos {v} -": idx for idx, v in enumerate(args.vol)}
+        if args.vol
+        else None
+    )
+    raw_speeches = [json.loads(ln) for ln in sp_path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+    if vol_order is not None:
+        def _vol_key(rec: dict) -> int | None:
+            did = rec["doc_id"]
+            for pref, idx in vol_order.items():
+                if did.startswith(pref):
+                    return idx
+            return None
+        matched_speeches = [(k, rec) for rec in raw_speeches if (k := _vol_key(rec)) is not None]
+        matched_speeches.sort(key=lambda pair: pair[0])
+        iter_speeches = [rec for _, rec in matched_speeches]
+    else:
+        iter_speeches = raw_speeches
+
     seen_docs: list[str] = []
     seen_doc_set: set[str] = set()
     needed: dict[str, str] = {}
     total_el_turns = 0
 
-    for line in sp_path.read_text(encoding="utf-8").splitlines():
-        if not line.strip():
-            continue
-        s = json.loads(line)
+    for s in iter_speeches:
         did = s["doc_id"]
-        if vol_prefixes and not did.startswith(vol_prefixes):
-            continue
         if did not in seen_doc_set:
             if args.limit_docs and len(seen_docs) >= args.limit_docs:
                 continue
@@ -353,6 +387,8 @@ def main() -> None:
             continue
         total_el_turns += 1
         for ch in split_greek_chunks(s["text"]):
+            if not has_greek(ch):
+                continue
             h = chunk_hash(ch)
             if h not in cache and h not in needed:
                 needed[h] = ch
