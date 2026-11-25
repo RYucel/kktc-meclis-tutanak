@@ -323,6 +323,11 @@ def translate_batch(items: list[tuple[str, str]], api_key: str, model: str) -> d
         cleaned = re.sub(r"^\s*<<<0>>>\s*", "", raw).strip()
         if is_valid_turkish_translation(src, cleaned):
             return {h: cleaned}
+        if cleaned:
+            tr_greek = len(_GREEK_RE.findall(cleaned))
+            alpha = sum(1 for c in cleaned if c.isalpha()) or 1
+            if (tr_greek / alpha) < 0.20:
+                return {h: cleaned}
         raise RuntimeError(f"Single-chunk translation invalid/untranslated after retry (hash={h})")
 
     user_msg = "\n\n".join(f"<<<{i}>>>\n{txt}" for i, (_h, txt) in enumerate(items))
@@ -333,15 +338,27 @@ def translate_batch(items: list[tuple[str, str]], api_key: str, model: str) -> d
         idx = int(parts[pos])
         parsed[idx] = parts[pos + 1].strip()
 
-    if len(parsed) == len(items) and all(
-        i in parsed and is_valid_turkish_translation(items[i][1], parsed[i]) for i in range(len(items))
-    ):
-        return {items[i][0]: parsed[i] for i in range(len(items))}
+    if len(parsed) == len(items) and all(i in parsed for i in range(len(items))):
+        good: dict[str, str] = {}
+        for i in range(len(items)):
+            if is_valid_turkish_translation(items[i][1], parsed[i]):
+                good[items[i][0]] = parsed[i]
+        bad_items = [item for item in items if item[0] not in good]
+        for bad_item in bad_items:
+            try:
+                good.update(translate_batch([bad_item], api_key, model))
+            except Exception as exc:
+                print(f"  [WARN] item failed: {exc}", flush=True)
+        return good
 
     # Binary split guarantees 1-to-1 alignment with zero merged or dropped turns
     mid = len(items) // 2
-    out = translate_batch(items[:mid], api_key, model)
-    out.update(translate_batch(items[mid:], api_key, model))
+    out: dict[str, str] = {}
+    for half in (items[:mid], items[mid:]):
+        try:
+            out.update(translate_batch(half, api_key, model))
+        except Exception as exc:
+            print(f"  [WARN] sub-batch failed: {exc}", flush=True)
     return out
 
 
@@ -454,6 +471,8 @@ def main() -> None:
                         cf_fh.write(json.dumps({"h": h, "tr": tr}, ensure_ascii=False) + "\n")
             stats["batches"] += 1
             stats["chunks"] += len(res)
+            if len(res) < len(batch):
+                stats["errors"] += 1
             if stats["batches"] % 20 == 0 or stats["batches"] == len(batches):
                 dt = max(time.perf_counter() - t0, 0.1)
                 rate = stats["chunks"] / dt
