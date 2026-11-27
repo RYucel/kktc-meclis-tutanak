@@ -6055,5 +6055,1393 @@
         "bio_url": "https://cm.gov.ct.tr/MilletvekilOzgecmis/KOTAK.doc"
       }
     ]
+  },
+  "KC:3": {
+    "meclis": "KC",
+    "donem": 3,
+    "partial": true,
+    "source": "https://www.parliament.cy",
+    "members": [
+      {
+        "name": "Nikos Vasiliadis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Fidias Paraskevaidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Dinos Konstandinu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kimon Panayidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristos Pelekanos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Vasos Lisaridis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristos Vakis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Doros Teodoru",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kiriakos Papadimitriu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Paris Lenas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Patrikios Pavlu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Mavronikolas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Haralambos Mihailidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Talis Mihailidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Feliks Kirillis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Stavros Poskotis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Tasos Papadopulos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "İraklis Dimostenus",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Leondios İerodiakonu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Lizos Karamihalis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Takis Hacıdimitriu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristos Kurtellaris",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Zaharias Tuluras",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristoforos Hristofidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yeoryos Savvidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Con Potamitis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Ladas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Takis Nemitsas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Stavros Ambizas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yeoryos Sattidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Prupolo Simbliromatiku",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Diataksis İmerisias",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Spiros Kiprianu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Alekos Mihailidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Aleksis Galanos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Ezekias Papeoannu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Ziartidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Yangu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Fandis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Antonis Tumazis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Antranik Aşciyan",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Pavlos Pavlakis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      }
+    ]
+  },
+  "KC:8": {
+    "meclis": "KC",
+    "donem": 8,
+    "partial": true,
+    "source": "https://www.parliament.cy",
+    "members": [
+      {
+        "name": "İonas Nikolau",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kikis Yangu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Zaharias Kulias",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Zaharias Zahariu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Maria Kiriaku",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Papapoliviu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Ayis Agapiu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Sotirula Haralambus",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Katsuridis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Aristofanis Yeoryu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Perdikis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kiriakos Tirimos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Pitokopitis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andonis Karas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Tasos Mihailidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yannos Lamaris",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yeoryos Yeoryu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristodulos Taramundas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Rikkos Erotokritu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Tornaritis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Hacıyeoryu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kostas Papakostas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Sofoklis Fittis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Prodromos Prodromu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Aristos Hrisostomu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristos Mavrokordatos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yannakis Toma",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Sotiris Sampson",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kostas Konstandinu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Stavros Evagoru",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andros Kiprianu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Takis Hacıyeoryu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andigoni Papadopulu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Varnava",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Kleantus",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Eleni Mavru",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristos Klerides",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Dinos Mihailidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Dimitris Silluris",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Lefteris Hristoforu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andrula Vasiliu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yanakis Omiru",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristos Purguridis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andonis Hacırusos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yeoryos Tasu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Vasos Lisaridis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Doros Hristodulidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Neofitos Konstandinu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Eleni Teoharus",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Angelidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Marinos Sizopulos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Benito Mandovani",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Dinos Hacınikola",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Petros Kalayciyan",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Panayotis Dimitriu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Adamos Adamu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Marios Matsakis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Anastasiadis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Lillikas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Markos Kiprianu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Tasos Papadopulos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Hristu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Doros Teodoru",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Keti Kleridu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Atina Kiriakidu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Stella Dimitriu Misiauli",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Dimitris Hristofyas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      }
+    ]
+  },
+  "KC:10": {
+    "meclis": "KC",
+    "donem": 10,
+    "partial": true,
+    "source": "https://www.parliament.cy",
+    "members": [
+      {
+        "name": "Zaharias Zahariu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Maria Kiriaku",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kostas Kosta",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Pambos Papayeoryu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristakis Ciovanis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Rikos Mapuridis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Adamos Adamu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Aristotelis Misos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Mihailidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Aristos Damianu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Panikos Stavrianos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Fakondis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Evyenios Hambullas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "İrini Haralambidu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Marios Mavridis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristos Mesis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Prodromos Prodromu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Zaharias Kulias",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Neofitos Konstandinu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yannakis Gavriil",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Eftimios Diplaros",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Nuris",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Perdikis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Kafkalias",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yeoryos Prokopiu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Yeoryu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andonis Andoniu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yeoryos Yeoryu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Sotiris Sampson",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Fidias Sarikas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kostas Konstandinu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Sofoklis Fittis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Stella Dimitriu Misiauli",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Stavros Evagoru",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Kiprianu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Dimitris Silluris",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Tornaritis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Averof Neofitu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Nikoledis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kiriakos Hacıyannis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikolas Papadopulos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Lukaidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Skevi Kukuma Kutra",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yannos Lamaris",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Rula Mavronikola",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Varnava",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yeoryos Tasu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Stella Kiriakidu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Atina Kiriakidu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Kutsu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Temistokleus",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Marios Karoyan",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Katsuridis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Vartkes Mahtesyan",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Benito Mandovani",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Angelos Votsis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andros Kiprianu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andonis Hacırusos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yanakis Omiru",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      }
+    ]
+  },
+  "KC:11": {
+    "meclis": "KC",
+    "donem": 11,
+    "partial": true,
+    "source": "https://www.parliament.cy",
+    "members": [
+      {
+        "name": "Annita Dimitriu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Eftimios Diplaros",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Zaharias Zahariu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Stefanos Stefanu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Onufrios Kulla",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Panikos Leonidu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Marinos Musiutas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Mihalis Yorgallas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Skevi Kukuma Kutra",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Kiprianu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Lukaidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Marios Mavridis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Eleni Mavru",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Dimitris Dimitriu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Linos Papayannis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yeoryos Prokopiu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Eleni Stavru",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Zaharias Kulias",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kostas Kosta",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Adamos Adamu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristos Orfanidis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Perdikis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristakis Ciovanis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Mariella Aristidu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Aristos Damianu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristiana Erotokritu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Anna Teologu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Haralambos Teopemptu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Kafkalias",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Ketiros",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Pavlos Milonas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Averof Neofitu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Karullas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Evantia Savva",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Marinos Sizopulos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andreas Fakondis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Nuris",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikos Tornaritis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kiriakos Hacıyannis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yeoryos Papadopulos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "İrini Haralambidu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yeoryos Yeoryu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Haralambos Pitokopitis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Angelos Votsis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kostis Efstatiu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Lillikas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristos Hristu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "İlias Miriantus",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Kostas Konstandinu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Vartkes Mahtesyan",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Stella Kiriakidu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yannakis Musas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andonella Mandovani",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andros Kiprianu",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Solon Kasinis",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Nikolas Papadopulos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Hristu Hristos",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Dimitris Silluris",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      }
+    ]
   }
 }

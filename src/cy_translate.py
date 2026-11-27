@@ -28,20 +28,22 @@ _GREEK_RE = re.compile(r"[\u0370-\u03ff\u1f00-\u1fff]")
 _TAG_SPLIT_RE = re.compile(r"(?m)^\s*<<<(\d+)>>>\s*$")
 
 SYSTEM_PROMPT = (
-    "Sen 1960-1964 Kıbrıs Cumhuriyeti Temsilciler Meclisi resmî tutanak çevirmenisin. "
-    "Verilen Yunanca (Katharevousa) meclis konuşmalarını anlam kaybı olmadan, tam, doğru ve doğal resmî meclis Türkçesine çevir. "
+    "Sen Kıbrıs Cumhuriyeti Temsilciler Meclisi (1960-2026) resmî tutanak çevirmenisin. "
+    "Verilen Yunanca (1960-1979 Katharevousa veya modern Yunanca) meclis konuşmalarını anlam kaybı olmadan, tam, doğru ve doğal resmî meclis Türkçesine çevir. "
     "Eski OCR kaynaklı küçük Yunanca harf hatalarını bağlamdan düzelt. "
     "Metin içinde zaten Türkçe olan cümle veya bölümler varsa bunların kelimelerini değiştirmeden "
     "(ör. eski Türkçe 'müstacel', 'tasvip', 'müzakere' gibi ifadeleri bozmadan) aynen koru; yalnızca Yunanca kısımları Türkçeye çevir. "
     "Çıktıda hiçbir Yunanca kelime veya harf bırakma; kişi ve yer adlarını Türkçe yazılışlarıyla aktar "
-    "(Πάφος = Baf, Λεμεσός = Leymosun/Limasol, Αμμόχωστος = Mağusa, Λάρναξ = Larnaka, Λευκωσία = Lefkoşa, Κυρήνεια = Girne).\n"
-    "Terminoloji: Βουλὴ τῶν Ἀντιπροσώπων = Temsilciler Meclisi, Πρόεδρος = Başkan, "
-    "Ἀντιπρόεδρος = Başkan Vekili, Γραμματεύς = Kâtip, Ἑλληνικὴ Κοινότης = Rum Cemaati, "
-    "Τουρκικὴ Κοινότης = Türk Cemaati, Ἕλληνες Βουλευταί = Rum Milletvekilleri, "
-    "Τοῦρκοι Βουλευταί = Türk Milletvekilleri, Νομοσχέδιον = Yasa Tasarısı, "
-    "Πρότασις Νόμου = Yasa Önerisi, Ἡμερησία Διάταξις = Gündem, "
-    "Ἐπιτροπὴ Ἐπιλογῆς = Seçim Komitesi, Κοινοβουλευτικὴ Ὁμάς = Meclis Grubu, "
-    "ἐγκριθείς / ἐνεκρίθη = onaylanan / tasvip edilen, κατεπείγων = ivedi / müstacel."
+    "(Πάφος = Baf, Λεμεσός = Leymosun/Limasol, Αμμόχωστος = Mağusa, Λάρνακα/Λάρναξ = Larnaka, Λευκωσία = Lefkoşa, Κερύνεια/Κυρήνεια = Girne).\n"
+    "Terminoloji: Βουλή των Αντιπροσώπων = Temsilciler Meclisi, Πρόεδρος = Başkan, "
+    "Προεδρεύων/Προεδρεύουσα = Geçici Başkan, Αντιπρόεδρος = Başkan Vekili, Γραμματέας/Γραμματεύς = Kâtip, "
+    "Ελληνική Κοινότητα = Rum Cemaati, Τουρκική Κοινότητα = Türk Cemaati, Τουρκοκύπριοι = Kıbrıslı Türkler, "
+    "Ελληνοκύπριοι = Kıbrıslı Rumlar, Νομοσχέδιο = Yasa Tasarısı, Πρόταση Νόμου = Yasa Önerisi, "
+    "Ημερήσια Διάταξη = Gündem, Σχέδιο Ανάν = Annan Planı, Κραν Μοντανά = Crans-Montana, "
+    "Διζωνική Δικοινοτική Ομοσπονδία = İki Bölgeli İki Toplumlu Federasyon, Δημοψήφισμα = Referandum, "
+    "Ευρωπαϊκή Ένωση = Avrupa Birliği, Αποκλειστική Οικονομική Ζώνη (ΑΟΖ) = Münhasır Ekonomik Bölge (MEB), "
+    "περιουσιακό = mülkiyet sorunu, εδαφικό = toprak düzenlemesi, εγγυήσεις = garantiler, "
+    "κατεπείγων = ivedi / müstacel."
 )
 
 MULTI_INSTRUCTION = (
@@ -60,8 +62,10 @@ _cooldown_until = 0.0
 _min_interval = 60.0 / 32.0
 _max_tokens = 4096
 _http_timeout = 90
+_base_scheme = "https"
+_base_host = NVIDIA_HOST
 _tls = threading.local()
-_conns: list[http.client.HTTPSConnection] = []
+_conns: list[http.client.HTTPConnection] = []
 
 
 def configure_rate_limit(rpm: float) -> None:
@@ -163,11 +167,10 @@ def split_greek_chunks(text: str, max_chars: int = 3000) -> list[str]:
     return _pack_units(paras, "\n\n", max_chars)
 
 
-def load_cache(cache_path: Path) -> dict[str, str]:
-    cache: dict[str, str] = {}
-    if not cache_path.exists():
-        return cache
-    with cache_path.open("r", encoding="utf-8") as f:
+def _read_single_cache(p: Path, out: dict[str, str]) -> None:
+    if not p.exists():
+        return
+    with p.open("r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if not line:
@@ -176,9 +179,18 @@ def load_cache(cache_path: Path) -> dict[str, str]:
                 rec = json.loads(line)
                 h, tr = rec.get("h"), rec.get("tr")
                 if h and tr:
-                    cache[h] = tr
+                    out[h] = tr
             except json.JSONDecodeError:
                 continue
+
+
+def load_cache(cache_path: Path) -> dict[str, str]:
+    cache: dict[str, str] = {}
+    if cache_path.name == "cache.jsonl" and cache_path.parent.exists():
+        for extra in sorted(cache_path.parent.glob("cache_*.jsonl")):
+            _read_single_cache(extra, cache)
+    # Primary LLM cache (`cache.jsonl`) loads last so flagship LLM translations always take precedence
+    _read_single_cache(cache_path, cache)
     return cache
 
 
@@ -214,10 +226,13 @@ def is_valid_turkish_translation(src: str, tr: str) -> bool:
     return tr_greek < 15 and (tr_greek / alpha) < 0.05
 
 
-def _get_conn() -> http.client.HTTPSConnection:
+def _get_conn() -> http.client.HTTPConnection:
     conn = getattr(_tls, "conn", None)
     if conn is None:
-        conn = http.client.HTTPSConnection(NVIDIA_HOST, timeout=_http_timeout)
+        if _base_scheme == "http":
+            conn = http.client.HTTPConnection(_base_host, timeout=_http_timeout)
+        else:
+            conn = http.client.HTTPSConnection(_base_host, timeout=_http_timeout)
         _tls.conn = conn
         with _lock:
             _conns.append(conn)
@@ -398,28 +413,52 @@ def translate_batch(items: list[tuple[str, str]], api_key: str, model: str) -> d
     return out
 
 
+_PRIORITY_KW_RE = re.compile(
+    r"Κυπριακ|Ανάν|Ομοσπονδ|Διζωνικ|Κραν|Μονταν|συνομιλί|διαπραγματ|κατοχ|Τουρκοκύπρ|"
+    r"Ντενκτάς|Ακιντζί|Ταλάτ|Έρογλου|Μακαρί|Σύνταγμα|Δημοψήφισμ|περιουσ|εγγυήσ|ύδρευ|νερό|δήμ",
+    re.I,
+)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--speeches", default="data/cy_build/speeches.jsonl")
     ap.add_argument("--cache", default="data/cy_translations/cache.jsonl")
+    ap.add_argument("--write-cache", default="", help="Optional separate output JSONL for lock-free multi-process translation")
+    ap.add_argument("--base-url", default="", help="Optional OpenAI-compatible base URL, e.g. http://127.0.0.1:8091")
+    ap.add_argument("--reverse", action="store_true", help="Process remaining items from bottom to top")
     ap.add_argument("--model", default=DEFAULT_MODEL)
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--rpm", type=float, default=32.0, help="Global max requests/min across workers (0 = unlimited)")
     ap.add_argument("--max-batch-items", type=int, default=6)
     ap.add_argument("--max-batch-chars", type=int, default=3400)
     ap.add_argument("--vol", nargs="*", default=None, help="Optional volume letters filter, e.g. D A")
+    ap.add_argument("--donem", nargs="*", type=int, default=None, help="Optional donem filter, e.g. 8 10 11 3")
+    ap.add_argument("--roles", nargs="*", default=None, help="Optional speaker_role filter, e.g. milletvekili_bakan")
+    ap.add_argument("--priority-first", action="store_true", help="Order Cyprus-issue & MP speeches ahead of procedural/annex chunks")
     ap.add_argument("--limit-docs", type=int, default=0, help="Only process first N matching documents (0 = all)")
+    ap.add_argument("--limit-chunks", type=int, default=0, help="Only translate first N unique chunks (0 = all)")
     ap.add_argument("--budget", type=float, default=0, help="Stop cleanly after N seconds (cached chunks kept)")
     ap.add_argument("--max-tokens", type=int, default=4096, help="Completion token cap per request")
     ap.add_argument("--timeout", type=int, default=90, help="HTTP read timeout (s)")
     args = ap.parse_args()
     configure_rate_limit(args.rpm)
-    global _max_tokens, _http_timeout
+    global _max_tokens, _http_timeout, _base_scheme, _base_host
     _max_tokens, _http_timeout = args.max_tokens, args.timeout
+    if args.base_url:
+        from urllib.parse import urlparse
+        u = urlparse(args.base_url)
+        _base_scheme = u.scheme or "http"
+        _base_host = u.netloc or u.path
+        api_key = "local"
+    else:
+        _base_scheme, _base_host = "https", NVIDIA_HOST
+        api_key = load_nvidia_api_key()
 
-    api_key = load_nvidia_api_key()
     sp_path = Path(args.speeches)
     cache_path = Path(args.cache)
+    write_cache_path = Path(args.write_cache) if args.write_cache else cache_path
+    write_cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache = load_cache(cache_path)
 
@@ -428,7 +467,16 @@ def main() -> None:
         if args.vol
         else None
     )
+    donem_order = {d: idx for idx, d in enumerate(args.donem)} if args.donem else None
+    role_allow = set(args.roles) if args.roles else None
+
     raw_speeches = [json.loads(ln) for ln in sp_path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+    if role_allow is not None:
+        raw_speeches = [rec for rec in raw_speeches if rec.get("speaker_role") in role_allow]
+    if donem_order is not None:
+        matched_d = [(donem_order[rec.get("donem")], rec) for rec in raw_speeches if rec.get("donem") in donem_order]
+        matched_d.sort(key=lambda pair: pair[0])
+        raw_speeches = [rec for _, rec in matched_d]
     if vol_order is not None:
         def _vol_key(rec: dict) -> int | None:
             did = rec["doc_id"]
@@ -441,6 +489,24 @@ def main() -> None:
         iter_speeches = [rec for _, rec in matched_speeches]
     else:
         iter_speeches = raw_speeches
+
+    if args.priority_first:
+        def _prio_key(rec: dict) -> int:
+            role = rec.get("speaker_role") or ""
+            txt = rec.get("text") or ""
+            is_kw = bool(_PRIORITY_KW_RE.search(txt))
+            if is_kw and role == "milletvekili_bakan":
+                return 0
+            if is_kw and role != "metin":
+                return 1
+            if role == "milletvekili_bakan":
+                return 2
+            if is_kw:
+                return 3
+            if role in ("baskan", "gecici_baskan", "katip"):
+                return 4
+            return 5
+        iter_speeches = sorted(iter_speeches, key=_prio_key)
 
     seen_docs: list[str] = []
     seen_doc_set: set[str] = set()
@@ -465,6 +531,10 @@ def main() -> None:
                 needed[h] = ch
 
     items_todo = list(needed.items())
+    if args.reverse:
+        items_todo.reverse()
+    if args.limit_chunks:
+        items_todo = items_todo[: args.limit_chunks]
     # Pack chunks into batches <= 5 items and <= 2,400 chars
     batches: list[list[tuple[str, str]]] = []
     cur_b: list[tuple[str, str]] = []
@@ -500,7 +570,7 @@ def main() -> None:
             return 0
         res = translate_batch(batch, api_key, args.model)
         with _lock:
-            with cache_path.open("a", encoding="utf-8") as cf_fh:
+            with write_cache_path.open("a", encoding="utf-8") as cf_fh:
                 for h, tr in res.items():
                     if h not in cache and tr:
                         cache[h] = tr

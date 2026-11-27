@@ -790,7 +790,7 @@
       <strong>Bağımsız bir açık veri projesidir; resmî meclis sitesi değildir.</strong> Resmî tutanaklar:
       <a href="https://evrakcm.gov.ct.tr/siteler/belgeler/tutanaklar/Shared%20Documents/Forms/Belge%20Grntleme.aspx" target="_blank" rel="noopener">evrakcm.gov.ct.tr</a> ·
       <a href="https://www.parliament.cy" target="_blank" rel="noopener">parliament.cy</a>.
-      1960–1995 taranmış PDF belgelerinde OCR kaynaklı küçük farklar ve 1960–1964 Yunanca tutanaklarda yapay zekâ Türkçe çevirisi yer alır; her kartta orijinal belge bağlantısı bulunur.
+      1960–1995 taranmış PDF belgelerinde OCR kaynaklı küçük farklar ve Yunanca tutanaklarda yapay zekâ Türkçe çevirisi yer alır; her kartta orijinal belge bağlantısı bulunur.
     </div>
   </div>
 </div>
@@ -805,7 +805,7 @@
     <button type="button" class="wing-card cy" data-wing="cy" id="wing-cy">
       <div class="wing-kicker"><span>Kıbrıs Cumhuriyeti · 1960–2026</span><span id="wing-cy-badge">Türkçe Çeviri + Yunanca</span></div>
       <div class="wing-title">Temsilciler Meclisi (Βουλή)</div>
-      <div class="wing-sub" id="wing-cy-sub">1960–1964 (%100 çevrili, 223 birleşim) yayında · 1964–2026 aşamalı</div>
+      <div class="wing-sub" id="wing-cy-sub">1960–64, 1977–79, 2002–04 &amp; 2015–17 yayında · Türkçe çeviri + Yunanca</div>
     </button>
     <button type="button" class="wing-card cmp" data-wing="compare" id="wing-compare">
       <div class="wing-kicker"><span>İki Toplumlu Karşılaştırma</span><span>Yan Yana</span></div>
@@ -860,7 +860,7 @@
           <option value="KTY">Kıbrıs Türk Yönetimi (1970–75)</option>
           <option value="KKTC_ARA">KKTC Aradönem</option>
           <option value="TCM">Türk Cemaat Meclisi (1963)</option>
-          <option value="KC">Kıbrıs Cumhuriyeti (1960–64)</option>
+          <option value="KC">Kıbrıs Cumhuriyeti (1960–2026)</option>
         </select>
       </div>
       <div class="field">
@@ -886,10 +886,10 @@
       </div>
       <div class="field">
         <label for="lang">Dil</label>
-        <select id="lang" title="1960–1964 Kıbrıs Cumhuriyeti iki dilli tutanakları için konuşma dili filtresi">
+        <select id="lang" title="Kıbrıs Cumhuriyeti iki dilli tutanakları için konuşma dili filtresi">
           <option value="">Tümü</option>
-          <option value="Türkçe">Türkçe (1960–64)</option>
-          <option value="Yunanca">Yunanca (1960–64)</option>
+          <option value="Türkçe">Türkçe</option>
+          <option value="Yunanca">Yunanca (TR Çevirili)</option>
           <option value="Yunanca/Türkçe">İki Dilli</option>
         </select>
       </div>
@@ -1030,32 +1030,32 @@ const QUICK_CY_FALLBACK = [
 
 const HISTORICAL_MILESTONES = [
   { id: 'kurulus_1960', label: '1960–62 Kuruluş & Belediyeler', q: 'belediye', topic: '', from: '1960', to: '1962', dual: true,
-    note: 'Kıbrıs Cumhuriyeti kuruluş dönemi: belediyeler, bütçe ve anayasal yetki paylaşımı (Temsilciler Meclisi 1960–62 tutanakları hazır).' },
+    note: 'Kıbrıs Cumhuriyeti kuruluş dönemi: belediyeler, bütçe ve anayasal yetki paylaşımı (Temsilciler Meclisi 1960–62 tutanakları yayında).' },
   { id: 'kriz_1963', label: '1963–64 Anayasa Krizi', q: 'anayasa', topic: '', from: '1963', to: '1964', dual: true,
     note: '1963–1964 Anayasa Krizi: Türk Cemaat Meclisi ile Temsilciler Meclisi eşzamanlı tutanakları yayında.' },
-  { id: 'doruk_1977', label: '1977–79 Denktaş–Makarios', q: 'federasyon', topic: '', from: '1977', to: '1979', dual: false,
-    note: '1977–1979 Denktaş–Makarios ve Denktaş–Kiprianu Doruk Anlaşmaları dönemindeki meclis tartışmaları (Güney 2. aşamada öncelikli eklenecek).' },
-  { id: 'annan_2002', label: '2002–04 Annan Planı', q: 'Annan', topic: '', from: '2002', to: '2004', dual: false,
-    note: '2002–2004 Annan Planı, referandum ve AB üyeliği görüşmeleri (Güney 2. aşamada ilk sırada eklenecek).' },
-  { id: 'crans_2015', label: '2015–17 Crans-Montana', q: 'müzakere', topic: '', from: '2015', to: '2017', dual: false,
-    note: 'Crans-Montana Kıbrıs Konferansı ve federasyon müzakereleri (Güney 2. aşamada ilk sırada eklenecek).' },
+  { id: 'doruk_1977', label: '1977–79 Denktaş–Makarios', q: 'federasyon', topic: '', from: '1977', to: '1979', dual: true,
+    note: '1977–1979 Denktaş–Makarios ve Denktaş–Kiprianu Doruk Anlaşmaları döneminde KTFD Meclisi ve Temsilciler Meclisi (Γ΄ Dönem) tartışmaları yayında.' },
+  { id: 'annan_2002', label: '2002–04 Annan Planı', q: 'Annan', topic: '', from: '2002', to: '2004', dual: true,
+    note: '2002–2004 Annan Planı, referandum ve AB üyeliği görüşmeleri her iki mecliste (KKTC & Η΄ Dönem Temsilciler Meclisi) yan yana yayında.' },
+  { id: 'crans_2015', label: '2015–17 Crans-Montana', q: 'müzakere', topic: '', from: '2015', to: '2017', dual: true,
+    note: '2015–2017 Crans-Montana Kıbrıs Konferansı ve federasyon müzakereleri her iki mecliste (KKTC & Ι΄–ΙΑ΄ Dönem Temsilciler Meclisi) yan yana yayında.' },
   { id: 'mulkiyet_su', label: 'Mülkiyet & Su Politikaları', q: 'mülkiyet', topic: '', from: '', to: '', dual: true,
     note: '1960’tan günümüze taşınmaz mülkiyet, koçan, iskan ve su temini tartışmaları.' },
 ];
 
 const CY_PARLIAMENT_PERIODS = [
-  { id: 'KC', donem: 1, label: 'Α΄ Dönem (1960–1970)', years: '1960–1970', liveNote: '1960–1964 (Synodos A–D) %100 Türkçe çevirili yayında · 1964–1970 2. aşamada eklenecek' },
-  { id: 'KC:2', donem: 2, label: 'Β΄ Dönem (1970–1976)', years: '1970–1976', note: '1974 öncesi ve sonrası dönem tutanakları (parliament.cy arşivinden aktarılacak).' },
-  { id: 'KC:3', donem: 3, label: 'Γ΄ Dönem (1976–1981)', years: '1976–1981', priority: true, note: 'Denktaş–Makarios & Denktaş–Kiprianu Doruk Görüşmeleri dönemi — 2. aşamada öncelikli aktarılacak.' },
-  { id: 'KC:4', donem: 4, label: 'Δ΄ Dönem (1981–1985)', years: '1981–1985', note: 'V. Yasama Yılları tutanakları (parliament.cy arşivinden aktarılacak).' },
-  { id: 'KC:5', donem: 5, label: 'Ε΄ Dönem (1985–1991)', years: '1985–1991', note: '1985–1991 tutanakları (parliament.cy arşivinden aktarılacak).' },
-  { id: 'KC:6', donem: 6, label: 'ΣΤ΄ Dönem (1991–1996)', years: '1991–1996', note: '1991–1996 tutanakları (parliament.cy arşivinden aktarılacak).' },
-  { id: 'KC:7', donem: 7, label: 'Ζ΄ Dönem (1996–2001)', years: '1996–2001', note: 'AB katılım müzakereleri başlangıcı (parliament.cy arşivinden aktarılacak).' },
-  { id: 'KC:8', donem: 8, label: 'Η΄ Dönem (2001–2006)', years: '2001–2006', priority: true, note: 'Annan Planı, 2004 Referandumu & AB Üyeliği dönemi — 2. aşamada ilk sırada aktarılacak.' },
-  { id: 'KC:9', donem: 9, label: 'Θ΄ Dönem (2006–2011)', years: '2006–2011', note: 'Hristofyas–Talat müzakere süreci (parliament.cy arşivinden aktarılacak).' },
-  { id: 'KC:10', donem: 10, label: 'Ι΄ Dönem (2011–2016)', years: '2011–2016', priority: true, note: 'Ekonomik kriz ve 2015–16 müzakereleri — 2. aşamada öncelikli aktarılacak.' },
-  { id: 'KC:11', donem: 11, label: 'ΙΑ΄ Dönem (2016–2021)', years: '2016–2021', priority: true, note: 'Crans-Montana Kıbrıs Konferansı & pandemi dönemi — 2. aşamada ilk sırada aktarılacak.' },
-  { id: 'KC:12', donem: 12, label: 'ΙΒ΄ Dönem (2021–2026)', years: '2021–2026', priority: true, note: 'Güncel Temsilciler Meclisi dönemi — 2. aşamada öncelikli aktarılacak.' },
+  { id: 'KC', donem: 1, label: 'Α΄ Dönem (1960–1970)', years: '1960–1970', liveNote: '1960–1964 (Synodos A–D) %100 Türkçe çevirili yayında · 1964–1970 sıradaki aşamada eklenecek' },
+  { id: 'KC:2', donem: 2, label: 'Β΄ Dönem (1970–1976)', years: '1970–1976', note: '1970–1976 dönem tutanakları (parliament.cy arşivinden sıradaki aşamada aktarılacak).' },
+  { id: 'KC:3', donem: 3, label: 'Γ΄ Dönem (1976–1981)', years: '1976–1981', priority: true, liveNote: '1977–1979 Denktaş–Makarios & Kiprianu Doruk Anlaşmaları dönemi (124 birleşim) yayında', note: 'Denktaş–Makarios & Denktaş–Kiprianu Doruk Görüşmeleri dönemi.' },
+  { id: 'KC:4', donem: 4, label: 'Δ΄ Dönem (1981–1985)', years: '1981–1985', note: '1981–1985 tutanakları (parliament.cy arşivinden sıradaki aşamada aktarılacak).' },
+  { id: 'KC:5', donem: 5, label: 'Ε΄ Dönem (1985–1991)', years: '1985–1991', note: '1985–1991 tutanakları (parliament.cy arşivinden sıradaki aşamada aktarılacak).' },
+  { id: 'KC:6', donem: 6, label: 'ΣΤ΄ Dönem (1991–1996)', years: '1991–1996', note: '1991–1996 tutanakları (parliament.cy arşivinden sıradaki aşamada aktarılacak).' },
+  { id: 'KC:7', donem: 7, label: 'Ζ΄ Dönem (1996–2001)', years: '1996–2001', note: 'AB katılım müzakereleri başlangıcı (parliament.cy arşivinden sıradaki aşamada aktarılacak).' },
+  { id: 'KC:8', donem: 8, label: 'Η΄ Dönem (2001–2006)', years: '2001–2006', priority: true, liveNote: '2002–2004 Annan Planı, Referandum & AB Üyeliği dönemi (128 birleşim) yayında', note: 'Annan Planı, 2004 Referandumu & AB Üyeliği dönemi.' },
+  { id: 'KC:9', donem: 9, label: 'Θ΄ Dönem (2006–2011)', years: '2006–2011', note: 'Hristofyas–Talat müzakere süreci (parliament.cy arşivinden sıradaki aşamada aktarılacak).' },
+  { id: 'KC:10', donem: 10, label: 'Ι΄ Dönem (2011–2016)', years: '2011–2016', priority: true, liveNote: '2015–2016 müzakere süreci (63 birleşim) yayında', note: 'Ekonomik kriz ve 2015–16 müzakereleri.' },
+  { id: 'KC:11', donem: 11, label: 'ΙΑ΄ Dönem (2016–2021)', years: '2016–2021', priority: true, liveNote: '2016–2017 Crans-Montana Kıbrıs Konferansı dönemi (63 birleşim) yayında', note: 'Crans-Montana Kıbrıs Konferansı & pandemi dönemi.' },
+  { id: 'KC:12', donem: 12, label: 'ΙΒ΄ Dönem (2021–2026)', years: '2021–2026', priority: true, note: 'Güncel Temsilciler Meclisi dönemi (sıradaki aşamada aktarılacak).' },
 ];
 
 const $ = id => document.getElementById(id);
@@ -1166,7 +1166,8 @@ async function loadIndex() {
       $('wing-north-sub').textContent = `${northDocs.toLocaleString('tr-TR')} birleşim · ${northSpeeches.toLocaleString('tr-TR')} konuşma · Arama, vekiller ve gündem`;
     }
     if ($('wing-cy-sub') && cyDocs) {
-      $('wing-cy-sub').textContent = `1960–1964 (%100 çevrili, ${cyDocs.toLocaleString('tr-TR')} birleşim · ${cySpeeches.toLocaleString('tr-TR')} konuşma) yayında · 1964–2026 aşamalı`;
+      const kcTermCnt = termsData.filter(t => t.meclis === 'KC' && t.docs > 0).length;
+      $('wing-cy-sub').textContent = `${cyDocs.toLocaleString('tr-TR')} birleşim · ${cySpeeches.toLocaleString('tr-TR')} konuşma · ${kcTermCnt} dönem yayında (TR+EL)`;
     }
     if (termsData.length) {
       activeTermId = termsData[0].id;
@@ -1517,10 +1518,33 @@ function renderDossier(name) {
   if (cy) cy.onclick = () => { $('from_year').value = ''; $('to_year').value = ''; runSearch(0); };
 }
 
+function aggregateCyMembers() {
+  const skip = new Set(['Katip', 'Meclis Başkanı', 'Tutanak Metni', 'PRESIDENT', 'Geçici Başkan', 'Geçici Katip', 'Bir Milletvekili', 'Milletvekilleri', 'Bakan']);
+  const agg = new Map();
+  for (const t of termsData) {
+    if (t.meclis !== 'KC') continue;
+    for (const m of (t.members || [])) {
+      if (!m.n || skip.has(m.n) || !(m.s > 0)) continue;
+      const cur = agg.get(m.n) || { n: m.n, s: 0, w: 0, c: m.c || '', t: m.t || '' };
+      cur.s += Number(m.s || 0);
+      cur.w += Number(m.w || 0);
+      if (!cur.t && m.t) cur.t = m.t;
+      if (!cur.c && m.c) cur.c = m.c;
+      agg.set(m.n, cur);
+    }
+  }
+  return [...agg.values()].sort((a, b) => b.s - a.s);
+}
+
 function getCyQuickLeaders() {
-  const kc = termsById.get('KC');
-  const skip = new Set(['Katip', 'Meclis Başkanı', 'Tutanak Metni', 'PRESIDENT', 'Geçici Başkan', 'Geçici Katip']);
-  const live = kc ? (kc.members || []).filter(m => !skip.has(m.n) && m.s > 0).map(m => m.n).slice(0, 12) : [];
+  const curated = [
+    'Glafkos Klerides', 'Dimitris Hristofyas', 'Dimitris Silluris', 'Yanakis Omiru',
+    'Alekos Mihailidis', 'Vasos Lisaridis', 'Averof Neofitu', 'Andros Kiprianu',
+    'Nikos Anastasiadis', 'Tasos Papadopulos', 'Yorgos Perdikis', 'Halit Ali Rıza',
+  ];
+  const present = curated.filter(n => speakersByName.has(n));
+  if (present.length >= 8) return present;
+  const live = aggregateCyMembers().map(m => m.n).slice(0, 12);
   return live.length >= 6 ? live : QUICK_CY_FALLBACK;
 }
 
@@ -1603,12 +1627,9 @@ function renderDirectoryLanding() {
   const isCy = activeWing === 'cy';
   let top = [];
   if (isCy) {
-    const kc = termsById.get('KC');
-    const kcCounts = new Map((kc?.members || []).map(m => [m.n, m]));
-    top = (kc?.members || [])
-      .filter(m => !generic.has(m.n) && m.s > 0)
+    top = aggregateCyMembers()
       .slice(0, 24)
-      .map(m => speakersByName.get(m.n) || { n: m.n, s: m.s, w: m.w || 0, a: '1960', b: '1964', c: m.c ? [m.c] : [], t: m.t ? [m.t] : [] });
+      .map(m => speakersByName.get(m.n) || { n: m.n, s: m.s, w: m.w || 0, a: '1960', b: '2017', c: m.c ? [m.c] : [], t: m.t ? [m.t] : [] });
     $('results-count').textContent = 'Kıbrıs Cumhuriyeti Temsilciler Meclisi konuşmacılarından birini seçin veya yukarıdan Türkçe/Yunanca arama yapın.';
   } else {
     top = speakersIndex.filter(s => !generic.has(s.n) && !s.r && isMatchedSpeaker(s) && !kcOnlySpeakers.has(s.n)).slice(0, 24);
@@ -1616,7 +1637,7 @@ function renderDirectoryLanding() {
   }
   $('results').innerHTML = `
     <div class="dir-heading">
-      <div>${isCy ? 'Kıbrıs Cumhuriyeti Meclisi — Öne Çıkan Konuşmacılar (1960–1964)' : 'Kıbrıs Türk Meclisleri — Öne Çıkan Konuşmacılar (1963–2026)'} <span>Tıklayarak profilini, ağırlık verdiği konuları ve tüm konuşmalarını açın</span></div>
+      <div>${isCy ? 'Kıbrıs Cumhuriyeti Meclisi — Öne Çıkan Konuşmacılar (1960–2026)' : 'Kıbrıs Türk Meclisleri — Öne Çıkan Konuşmacılar (1963–2026)'} <span>Tıklayarak profilini, ağırlık verdiği konuları ve tüm konuşmalarını açın</span></div>
       ${termsData.length ? `<button type="button" class="btn-ghost" id="open-terms-cta">${isCy ? 'Temsilciler Meclisi Dönemleri (1960–2026) →' : `Dönemlere Göre Tüm Vekiller (${termsData.filter(t => t.meclis !== 'KC').length} Dönem) →`}</button>` : ''}
     </div>
     <div class="dir-grid">
@@ -2347,19 +2368,19 @@ function renderCardBodyHtml(it, mode, termsList = [], maxLen = 440) {
 // ---------- Dual-Parliament Side-by-Side Comparison ----------
 function resolveSideTables(side, fromYear, toYear) {
   const isCy = side === 'cy';
+  const hasBound = /^\d{4}$/.test(String(fromYear || '')) || /^\d{4}$/.test(String(toYear || ''));
   const fy = /^\d{4}$/.test(String(fromYear || '')) ? Number(fromYear) : 1960;
   const ty = /^\d{4}$/.test(String(toYear || '')) ? Number(toYear) : 2026;
   const sideTerms = termsData.filter(t => isCy ? t.meclis === 'KC' : t.meclis !== 'KC');
-  if (isCy && sideTerms.length) {
-    const maxLiveYr = Math.max(...sideTerms.map(t => Number((t.max_date || '1964').slice(0, 4)) || 1964));
-    if (fy > maxLiveYr) return { emptyWindow: true, files: [] };
-  }
   const overlapping = sideTerms.filter(t => {
     const tMin = Number((t.min_date || t.years || '1960').slice(0, 4)) || 1960;
     const tMax = Number((t.max_date || String(tMin)).slice(0, 4)) || tMin;
     return tMax >= fy && tMin <= ty;
   });
-  if (overlapping.length > 0 && overlapping.length <= 3) {
+  if (isCy && sideTerms.length && hasBound && overlapping.length === 0) {
+    return { emptyWindow: true, files: [] };
+  }
+  if (overlapping.length > 0 && overlapping.length <= 4) {
     return {
       emptyWindow: false,
       files: overlapping.map(t => t.donem != null ? `${t.meclis}_${t.donem}.parquet` : `${t.meclis}.parquet`),
@@ -2370,7 +2391,7 @@ function resolveSideTables(side, fromYear, toYear) {
 
 async function queryParliamentSide({ side, whereClauses, fromYear = '', toYear = '', limit = 8 }) {
   const route = resolveSideTables(side, fromYear, toYear);
-  if (route.emptyWindow) return { total: 0, topSpeakers: [], rows: [] };
+  if (route.emptyWindow) return { total: 0, topSpeakers: [], rows: [], emptyWindow: true };
   const c = await ensureDuckDB();
   let readExpr = "read_parquet('speeches.parquet')";
   let readMetaExpr = "read_parquet('speeches.parquet', file_row_number=true)";
@@ -2420,7 +2441,7 @@ async function queryParliamentSide({ side, whereClauses, fromYear = '', toYear =
 function renderComparisonColumn(side, res, { q, fromYear, toYear, termsList }) {
   const isCy = side === 'cy';
   const title = isCy ? 'Kıbrıs Cumhuriyeti Temsilciler Meclisi (KC)' : 'Kıbrıs Türk Meclisleri (KKTC / KTFD / KTY / TCM)';
-  const sub = isCy ? '1960–1964 yayında (%100 Türkçe çevirili) · 1964–2026 2. aşama' : '1963–2026 tam arşiv · KKTC, KTFD, KTY, TCM';
+  const sub = isCy ? '1960–64, 1977–79, 2002–04 & 2015–17 yayında (TR+EL) · Kalan dönemler aşamalı' : '1963–2026 tam arşiv · KKTC, KTFD, KTY, TCM';
   const speakersHtml = res.topSpeakers.length
     ? `<div class="cmp-speakers"><span class="quick-lbl" style="align-self:center">Öne Çıkanlar:</span>${res.topSpeakers.map(sp =>
         `<button type="button" class="chip" data-cmp-pick="${escHtml(sp.name)}" data-cmp-wing="${isCy ? 'cy' : 'north'}">${escHtml(sp.name)} (${sp.count.toLocaleString('tr-TR')})</button>`
@@ -2459,13 +2480,13 @@ function renderComparisonColumn(side, res, { q, fromYear, toYear, termsList }) {
         </article>
       `;
     }).join('');
-  } else if (isCy && Number(fromYear || 0) > 1964) {
+  } else if (isCy && res.emptyWindow) {
     bodyHtml = `
       <div class="cmp-notice">
-        <strong>1964–2026 Kıbrıs Cumhuriyeti Dönemi (2. Aşama):</strong><br>
-        Şu an sistemde <strong>1960–1964</strong> (223 birleşim · 23.143 konuşma, %100 Türkçe çevirili) yayındadır. Seçtiğiniz <strong>${escHtml(fromYear || '1965')}–${escHtml(toYear || '2026')}</strong> aralığındaki <em>parliament.cy</em> tutanakları (Denktaş–Makarios, Annan Planı ve Crans-Montana öncelikli olarak) bir sonraki aşamada bu sütuna otomatik eklenecektir.
+        <strong>Kıbrıs Cumhuriyeti Ara Dönem Bilgisi:</strong><br>
+        Şu an sistemde <strong>1960–1964</strong>, <strong>1977–1979</strong> (Denktaş–Makarios), <strong>2002–2004</strong> (Annan Planı) ve <strong>2015–2017</strong> (Crans-Montana) dönemleri yayındadır. Seçtiğiniz <strong>${escHtml(fromYear || '')}–${escHtml(toYear || '')}</strong> ara yılları bir sonraki adımda eklenecektir.
         <div style="margin-top:10px">
-          <button type="button" class="btn-ghost" id="cmp-try-1963">1963–1964 Anayasa Krizi ile İki Tarafı Yan Yana Gör →</button>
+          <button type="button" class="btn-ghost" id="cmp-try-1963">2002–2004 Annan Planı Karşılaştırmasını Gör →</button>
         </div>
       </div>
     `;
@@ -2525,7 +2546,7 @@ async function runComparison() {
       </div>
     `;
     const try1963 = $('cmp-try-1963');
-    if (try1963) try1963.onclick = () => applyMilestone('kriz_1963');
+    if (try1963) try1963.onclick = () => applyMilestone('annan_2002');
   } catch (err) {
     $('compare-results').innerHTML = `<div class="empty-state" style="color:var(--crimson)"><strong>Karşılaştırma hatası:</strong> ${escHtml(err.message)}</div>`;
     setEngineStatus('err', 'Hata: ' + err.message);
@@ -3180,7 +3201,7 @@ function buildWebMcpTools() {
   return [
     {
       name: 'search_speeches',
-      description: 'Search Cyprus Turkish Parliaments (1963-2026) and Republic of Cyprus House of Representatives (1960-1964, bilingual Greek original + Turkish translation) by keyword, speaker name, parliamentary wing, year range, or unified topic_id.',
+      description: 'Search Cyprus Turkish Parliaments (1963-2026) and Republic of Cyprus House of Representatives (1960-64, 1977-79, 2002-04, 2015-17 live; bilingual Greek original + Turkish translation) by keyword, speaker name, parliamentary wing, year range, or unified topic_id.',
       annotations: { readOnlyHint: true },
       inputSchema: {
         type: 'object',
@@ -3289,8 +3310,8 @@ function buildWebMcpTools() {
           filter: { query: q || null, topic_id: topicId || null, from_year: fromYear || null, to_year: toYear || null },
           coverage: {
             north_years: '1963-2026',
-            cyprus_republic_live_years: '1960-1964',
-            cyprus_republic_planned_years: '1964-2026',
+            cyprus_republic_live_years: '1960-1964, 1977-1979, 2002-2004, 2015-2017',
+            cyprus_republic_planned_years: '1964-1976, 1980-2001, 2005-2014, 2018-2026',
           },
           north_turkish_cypriot: {
             total_speeches: north.total,

@@ -67,7 +67,7 @@ def test_aligned_batch_preserves_valid_items_and_retries_only_bad(monkeypatch: p
     items = [(f"h{i}", f"Συμφώνως τοῦ ἄρθρου {i} τοῦ Συντάγματος.") for i in range(12)]
     calls: list[str] = []
 
-    def fake_call(api_key: str, model: str, instruction: str, user_text: str) -> str:
+    def fake_call(api_key: str, model: str, instruction: str, user_text: str, **kwargs) -> str:
         calls.append(user_text)
         if len(calls) == 1:
             blocks = []
@@ -83,8 +83,8 @@ def test_aligned_batch_preserves_valid_items_and_retries_only_bad(monkeypatch: p
 
     monkeypatch.setattr(ct, "_call_nim", fake_call)
     out = ct.translate_batch(items, api_key="dummy", model="dummy")
-    # 1 initial batch call + 2 single-item retries for h5 only (never binary-splitting the 11 good items)
-    assert len(calls) == 3
+    # 1 initial batch call + 3 single-item retries for h5 only (never binary-splitting the 11 good items)
+    assert len(calls) == 4
     assert len(out) == 11
     for i in range(12):
         if i != 5:
@@ -99,7 +99,7 @@ def test_binary_split_preserves_left_half_when_right_half_raises(monkeypatch: py
         ("h3", "Δὲν ὑπάρχει ἀντίρρησις."),
     ]
 
-    def fake_call(api_key: str, model: str, instruction: str, user_text: str) -> str:
+    def fake_call(api_key: str, model: str, instruction: str, user_text: str, **kwargs) -> str:
         if "<<<3>>>" in user_text:
             # Tag mismatch on initial 4-item batch
             return "<<<0>>>\nEvet.\n<<<1>>>\nKatılıyorum."
@@ -120,7 +120,7 @@ def test_single_long_bilingual_chunk_splits_on_retry_failure(monkeypatch: pytest
 
     calls: list[str] = []
 
-    def fake_call(api_key: str, model: str, instruction: str, user_text: str) -> str:
+    def fake_call(api_key: str, model: str, instruction: str, user_text: str, **kwargs) -> str:
         calls.append(user_text)
         # Fail full-chunk twice by echoing untranslated Greek; succeed once split on Greek half
         if len(user_text) > len(greek_part) + 20:
@@ -132,5 +132,23 @@ def test_single_long_bilingual_chunk_splits_on_retry_failure(monkeypatch: pytest
     assert "21 Eylül 1960 tarihinde sunulan soru." in out["longh"]
     assert "Hükûmetin bu konudaki görüşü nedir" in out["longh"]
     assert len(calls) >= 3
+
+
+def test_short_stubborn_chunk_falls_back_to_enable_thinking(monkeypatch: pytest.MonkeyPatch) -> None:
+    src = "» τροποποιητικαὶ εἰσηγήσεις ; ἔντιμε κ. Πρόεδρε."
+    thinking_flags: list[bool] = []
+
+    def fake_call(api_key: str, model: str, instruction: str, user_text: str, **kwargs) -> str:
+        th = bool(kwargs.get("enable_thinking", False))
+        thinking_flags.append(th)
+        if not th:
+            return src
+        return "Değişiklik önergesi var mı, Sayın Başkan?"
+
+    monkeypatch.setattr(ct, "_call_nim", fake_call)
+    out = ct.translate_batch([("shorth", src)], api_key="dummy", model="dummy")
+    assert out == {"shorth": "Değişiklik önergesi var mı, Sayın Başkan?"}
+    assert thinking_flags == [False, False, True]
+
 
 
