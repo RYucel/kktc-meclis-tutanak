@@ -112,3 +112,55 @@ def test_nllb_normalizers_and_cache_precedence(tmp_path: Path) -> None:
     assert merged["abc"] == "llm_ver"
     assert merged["only_nllb"] == "ok_nllb"
 
+
+def test_harvest_attendance_with_parties_and_ib_page_offset() -> None:
+    pages = [
+        """Πρακτικά της Βουλής των Αντιπροσώπων
+ΙΒ΄ ΒΟΥΛΕΥΤΙΚΗ ΠΕΡΙΟΔΟΣ - ΣΥΝΟΔΟΣ Α΄
+Συνεδρίαση 16ης Σεπτεμβρίου 2021
+(Αρ. 1)
+ΠΡΟΕΔΡΟΣ:
+Κηρύσσω την έναρξη της συνεδρίας.
+ΒΟΥΛΕΥΤΡΙΑ:
+Συμφωνούμε.
+Σ. ΣΤΕΦΑΝΟΥ:
+Ευχαριστώ, κυρία Πρόεδρε.
+(Ώρα λήξης: 6.00 μ.μ.)
+Παρόντες βουλευτές (αλφαβητικά κατά κόμμα)
+ΔΗΣΥ
+Νεοφύτου Αβέρωφ
+ΑΚΕΛ-Αριστερά-Νέες Δυνάμεις
+Στεφάνου Στέφανος
+ΔΗΠΑ-Συνεργασία
+Καρογιάν Μάριος
+ΑΠΟΝΤΕΣ
+Κάποιος Απών"""
+    ]
+    rows = cm.harvest_attendance_with_parties(pages)
+    assert ("ΝΕΟΦΥΤΟΥ ΑΒΕΡΩΦ", "DİSİ") in rows
+    assert ("ΣΤΕΦΑΝΟΥ ΣΤΕΦΑΝΟΣ", "AKEL") in rows
+    assert ("ΚΑΡΟΓΙΑΝ ΜΑΡΙΟΣ", "DİPA") in rows
+    assert all("ΑΠΩΝ" not in pair for pair, _ in rows)
+
+    resolver = cm.PeriodSpeakerResolver(12, [pair for pair, _ in rows])
+    doc, sp = cm.parse_sitting(
+        pages=pages,
+        text_source="pdf_digital",
+        donem=12,
+        iso_date="2021-09-16",
+        seq_in_day=1,
+        file_title="IB_A.pdf",
+        source_url="https://www.parliament.cy/ib_a.pdf",
+        resolver=resolver,
+        page_offset=41,
+        forced_yy=1,
+    )
+    assert doc["donem"] == 12
+    assert doc["yasama_yili"] == 1
+    assert [(s["speaker_name"], s["source_url"]) for s in sp] == [
+        ("Annita Dimitriu", "https://www.parliament.cy/ib_a.pdf#page=42"),
+        ("Bir Milletvekili", "https://www.parliament.cy/ib_a.pdf#page=42"),
+        ("Stefanos Stefanu", "https://www.parliament.cy/ib_a.pdf#page=42"),
+    ]
+
+

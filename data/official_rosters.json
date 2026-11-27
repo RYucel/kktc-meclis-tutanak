@@ -7443,5 +7443,535 @@
         "note": ""
       }
     ]
+  },
+  "KC:12": {
+    "meclis": "KC",
+    "donem": 12,
+    "partial": true,
+    "source": "https://www.parliament.cy",
+    "members": [
+      {
+        "name": "Nikos Yeoryu",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Sotiris İoannu",
+        "constituency": "",
+        "party": "ELAM",
+        "note": ""
+      },
+      {
+        "name": "Savia Orfanidu",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Dimitris Dimitriu",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Nikos Ketiros",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Karullas",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Hristos Hristofidis",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Andreas Apostolu",
+        "constituency": "",
+        "party": "EDEK",
+        "note": ""
+      },
+      {
+        "name": "Yannakis Gavriil",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Stavros Papaduris",
+        "constituency": "",
+        "party": "Ekologlar",
+        "note": ""
+      },
+      {
+        "name": "Fotini Tsiridu",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Andreas Kafkalias",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Marina Nikolau",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Onufrios Kulla",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Andreas Pasiurtidis",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Hristos Hristofias",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Zaharias Kulias",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Haris Yeoryiadis",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Kukumas",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Hrisis Pandelidis",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Alekos Trifonidis",
+        "constituency": "",
+        "party": "DİPA",
+        "note": ""
+      },
+      {
+        "name": "Kostas Kosta",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Panikos Leonidu",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Prodromos Alambritis",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Aristos Damianu",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Valendinos Fakondis",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Linos Papayannis",
+        "constituency": "",
+        "party": "ELAM",
+        "note": ""
+      },
+      {
+        "name": "Haralambos Pazaros",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Hrisantos Savvidis",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Haralambos Teopemptu",
+        "constituency": "",
+        "party": "Ekologlar",
+        "note": ""
+      },
+      {
+        "name": "Hristos Orfanidis",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Lukaidis",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Aleksandra Attalidu",
+        "constituency": "",
+        "party": "Bağımsız",
+        "note": ""
+      },
+      {
+        "name": "Teodoru Superman",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Hristiana Erotokritu",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Nikolas Papadopulos",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Nikos Tornaritis",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Mihalis Yakumi",
+        "constituency": "",
+        "party": "DİPA",
+        "note": ""
+      },
+      {
+        "name": "Marinos Musiutas",
+        "constituency": "",
+        "party": "DİPA",
+        "note": ""
+      },
+      {
+        "name": "Pavlos Milonas",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Hristos Senekis",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Nikos Sikas",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Hristos Hristu",
+        "constituency": "",
+        "party": "ELAM",
+        "note": ""
+      },
+      {
+        "name": "Stefanos Stefanu",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Kostis Efstatiu",
+        "constituency": "",
+        "party": "Bağımsız",
+        "note": ""
+      },
+      {
+        "name": "Marinos Sizopulos",
+        "constituency": "",
+        "party": "EDEK",
+        "note": ""
+      },
+      {
+        "name": "Efthimios Diplaros",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Marios Mavridis",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "İrini Haralambidu",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Andros Kiprianu",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Annita Dimitriu",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Kiriakos Hacıyannis",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Averof Neofitu",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "İlias Miriantus",
+        "constituency": "",
+        "party": "EDEK",
+        "note": ""
+      },
+      {
+        "name": "Andreas Temistokleus",
+        "constituency": "",
+        "party": "Bağımsız",
+        "note": ""
+      },
+      {
+        "name": "Vartkes Mahtesyan",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Marios Karoyan",
+        "constituency": "",
+        "party": "DİPA",
+        "note": ""
+      },
+      {
+        "name": "Yannakis Musas",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Andonella Mandovani",
+        "constituency": "",
+        "party": "",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Penindaeks",
+        "constituency": "",
+        "party": "DİPA",
+        "note": ""
+      },
+      {
+        "name": "Hacıyanni Kiriaku",
+        "constituency": "",
+        "party": "Ekologlar",
+        "note": ""
+      },
+      {
+        "name": "Seneki Hristu",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Efstatiu Kosti",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Papaduri Stavru",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Anastasia Hasiku",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Konstandinos Konstandinu",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Marios Pelekanos",
+        "constituency": "",
+        "party": "ELAM",
+        "note": ""
+      },
+      {
+        "name": "Andreas Papaharalambus",
+        "constituency": "",
+        "party": "ELAM",
+        "note": ""
+      },
+      {
+        "name": "Adamos Aspris",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Litsa Drusiotu",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Mihalis Paraskeva",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Andreas Konstandinu",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Nikoleta Konstandinu",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Lisandridis",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Yorgos Kareskakis",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Mihalis Kununis",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Dimitris Suglis",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Yakumi Mihali",
+        "constituency": "",
+        "party": "Ekologlar",
+        "note": ""
+      },
+      {
+        "name": "Panikos Ksiurupas",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Aryendula İoannu",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Efrem Hristu",
+        "constituency": "",
+        "party": "AKEL",
+        "note": ""
+      },
+      {
+        "name": "Linos Hacıyeoryu",
+        "constituency": "",
+        "party": "ELAM",
+        "note": ""
+      },
+      {
+        "name": "Deana Konstandinidi",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Dimitris Baros",
+        "constituency": "",
+        "party": "DİKO",
+        "note": ""
+      },
+      {
+        "name": "Dimos Yeoryadis",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Haralambos Petridis",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      },
+      {
+        "name": "Mihalis Fellas",
+        "constituency": "",
+        "party": "DİSİ",
+        "note": ""
+      }
+    ]
   }
 }

@@ -110,6 +110,14 @@ CANONICAL_NAME_OVERRIDES: dict[str, str] = {
     "ΜΑΧΤΕΣΙΑΝ ΒΑΡΤΚΕΣ": "Vartkes Mahtesyan",
     "ΚΑΛΑΪΤΖΙΑΝ ΠΕΤΡΟΣ": "Petros Kalayciyan",
     "ΚΑΛΑΙΤΖΙΑΝ ΠΕΤΡΟΣ": "Petros Kalayciyan",
+    "ΑΤΤΑΛΙΔΟΥ ΑΛΕΞΑΝΔΡΑ": "Aleksandra Attalidu",
+    "ΓΕΩΡΓΙΑΔΗΣ ΧΑΡΗΣ": "Haris Yeoryiadis",
+    "ΤΣΙΡΙΔΟΥ ΦΩΤΕΙΝΗ": "Fotini Tsiridu",
+    "ΤΡΥΦΩΝΙΔΗΣ ΑΛΕΚΟΣ": "Alekos Trifonidis",
+    "ΟΡΦΑΝΙΔΟΥ ΣΑΒΙΑ": "Savia Orfanidu",
+    "ΔΙΠΛΑΡΟΣ ΕΥΘΥΜΙΟΣ": "Efthimios Diplaros",
+    "ΠΑΠΑΔΟΥΡΗΣ ΣΤΑΥΡΟΣ": "Stavros Papaduris",
+    "ΑΛΑΜΠΡΙΤΗΣ ΠΡΟΔΡΟΜΟΣ": "Prodromos Alambritis",
 }
 
 # English/international spellings for 0ms autocomplete discoverability in speakers_index.json
@@ -183,6 +191,9 @@ _ROSTER_BAD_SUBSTR = (
     "ΝΟΜΟΣΧΕΔ", "ΕΠΙΤΡΟΠ", "ΦΥΣΙΚ", "ΡΥΘΜΙΣ", "ΠΕΡΙΕΧΟΜ", "ΣΥΝΕΔΡ",
     "ΚΕΦΑΛΑΙ", "ΕΚΘΕΣ", "ΥΠΟΥΡΓ", "ΠΡΟΕΔΡ", "ΓΡΑΜΜΑΤ", "ΤΜΗΜ", "ΔΗΜΟΚΡΑΤ",
     "ΤΥΠΟΓΡΑΦ", "ΛΕΥΚΩΣ", "ΑΜΜΟΧΩΣΤ", "ΛΕΜΕΣ", "ΛΑΡΝΑΚ", "ΚΕΡΥΝ", "ΠΑΦΟ",
+    "ΔΥΝΑΜΕΙΣ", "ΣΥΜΜΑΧΙΑ", "ΕΚΠΑΙΔΕΥΤ", "ΔΗΜΟΣΙΑΣ", "ΣΥΣΤΗΜΑΤ", "ΥΓΕΙΑΣ",
+    "ΕΘΝΙΚ", "ΚΟΙΝΩΝΙΚ", "ΑΡΙΣΤΕΡ", "ΣΥΝΕΡΓΑΣ", "ΚΙΝΗΜΑ", "ΠΑΡΑΤΑΞ",
+    "ΚΟΜΜΑ", "ΣΟΣΙΑΛΙΣΤ", "ΠΟΛΙΤΩΝ", "ΑΝΕΞΑΡΤΗΤ", "ΛΑΙΚ",
 )
 
 _VOICELESS = set("πτκφθχσςξψΠΤΚΦΘΧΣΞΨ")
@@ -546,6 +557,14 @@ class PeriodSpeakerResolver:
             seed_pairs.extend(["ΟΜΗΡΟΥ ΓΙΑΝΝΑΚΗΣ", "ΝΕΟΦΥΤΟΥ ΑΒΕΡΩΦ", "ΚΥΠΡΙΑΝΟΥ ΑΝΤΡΟΣ", "ΠΑΠΑΔΟΠΟΥΛΟΣ ΝΙΚΟΛΑΣ", "ΣΥΛΛΟΥΡΗΣ ΔΗΜΗΤΡΗΣ"])
         elif donem == 11:
             seed_pairs.extend(["ΣΥΛΛΟΥΡΗΣ ΔΗΜΗΤΡΗΣ", "ΝΕΟΦΥΤΟΥ ΑΒΕΡΩΦ", "ΚΥΠΡΙΑΝΟΥ ΑΝΤΡΟΣ", "ΠΑΠΑΔΟΠΟΥΛΟΣ ΝΙΚΟΛΑΣ", "ΔΗΜΗΤΡΙΟΥ ΑΝΝΙΤΑ"])
+        elif donem == 12:
+            seed_pairs.extend([
+                "ΔΗΜΗΤΡΙΟΥ ΑΝΝΙΤΑ", "ΚΟΥΛΙΑΣ ΖΑΧΑΡΙΑΣ", "ΝΕΟΦΥΤΟΥ ΑΒΕΡΩΦ", "ΣΤΕΦΑΝΟΥ ΣΤΕΦΑΝΟΣ",
+                "ΠΑΠΑΔΟΠΟΥΛΟΣ ΝΙΚΟΛΑΣ", "ΧΡΙΣΤΟΥ ΧΡΙΣΤΟΣ", "ΣΙΖΟΠΟΥΛΟΣ ΜΑΡΙΝΟΣ", "ΚΑΡΟΓΙΑΝ ΜΑΡΙΟΣ",
+                "ΘΕΟΠΕΜΠΤΟΥ ΧΑΡΑΛΑΜΠΟΣ", "ΑΤΤΑΛΙΔΟΥ ΑΛΕΞΑΝΔΡΑ", "ΛΟΥΚΑΪΔΗΣ ΓΙΩΡΓΟΣ", "ΔΑΜΙΑΝΟΥ ΑΡΙΣΤΟΣ",
+                "ΧΑΡΑΛΑΜΠΙΔΟΥ ΕΙΡΗΝΗ", "ΕΡΩΤΟΚΡΙΤΟΥ ΧΡΙΣΤΙΑΝΑ", "ΓΕΩΡΓΙΑΔΗΣ ΧΑΡΗΣ", "ΤΟΡΝΑΡΙΤΗΣ ΝΙΚΟΣ",
+                "ΔΙΠΛΑΡΟΣ ΕΥΘΥΜΙΟΣ", "ΤΣΙΡΙΔΟΥ ΦΩΤΕΙΝΗ", "ΤΡΥΦΩΝΙΔΗΣ ΑΛΕΚΟΣ",
+            ])
 
         seen_canon: set[str] = set()
         for pair in seed_pairs:
@@ -574,6 +593,8 @@ class PeriodSpeakerResolver:
             return "Yanakis Omiru"
         if self.donem == 11:
             return "Dimitris Silluris"
+        if self.donem == 12:
+            return "Annita Dimitriu"
         return "Meclis Başkanı"
 
     def resolve_person_token(self, raw_label: str) -> tuple[str, str]:
@@ -710,8 +731,8 @@ def classify_speaker_line(
             return active_chair, "gecici_baskan", "Geçici Başkan", "deputy_chair_carried", False, active_chair
         return "Geçici Başkan", "gecici_baskan", "Geçici Başkan", "role", False, active_chair
 
-    # Unidentified MP(s) (`ΒΟΥΛΕΥΤΗΣ` / `ΒΟΥΛΕΥΤΕΣ` / `ΒΟΥΛΕΥΤΑΙ`)
-    if sh_nospace in ("BOYAEΥTHZ", "BOYAEYTHZ"):
+    # Unidentified MP(s) (`ΒΟΥΛΕΥΤΗΣ` / `ΒΟΥΛΕΥΤΡΙΑ` / `ΒΟΥΛΕΥΤΕΣ` / `ΒΟΥΛΕΥΤΑΙ`)
+    if sh_nospace in ("BOYAEΥTHZ", "BOYAEYTHZ", "BOYAEYTPIA"):
         return "Bir Milletvekili", "milletvekili_bakan", None, "role", False, active_chair
     if sh_nospace in ("BOYAEYTEZ", "BOYAEYTAI"):
         return "Milletvekilleri", "milletvekili_bakan", None, "role", False, active_chair
@@ -738,10 +759,13 @@ def parse_sitting(
     source_url: str,
     resolver: PeriodSpeakerResolver,
     trans_cache: dict[str, str] | None = None,
+    page_offset: int = 0,
+    forced_yy: int | None = None,
 ) -> tuple[dict, list[dict]]:
     """Parse one sitting's extracted pages into `(doc_row, speech_rows)`."""
     trans_cache = trans_cache or {}
-    yy, birlesim_hdr = extract_header_meta(pages[0] if pages else "", file_title)
+    yy_hdr, birlesim_hdr = extract_header_meta(pages[0] if pages else "", file_title)
+    yy = forced_yy if forced_yy is not None else yy_hdr
     birlesim = birlesim_hdr or seq_in_day
     suffix = f" ({birlesim}. birleşim)" if birlesim_hdr else (f" (#{seq_in_day})" if seq_in_day > 1 else "")
     if seq_in_day > 1 and birlesim_hdr:
@@ -845,7 +869,7 @@ def parse_sitting(
     speeches: list[dict] = []
     doc_blocks: list[str] = []
     for t_i, t in enumerate(turns_raw):
-        page = t["page"] or 1
+        page = (t["page"] or 1) + page_offset
         tr = lookup_translation(t["text"], trans_cache) if trans_cache else None
         surl = f"{source_url}#page={page}" if page else source_url
         speeches.append({
@@ -902,10 +926,202 @@ def parse_sitting(
         "page_count": len(pages),
         "text_source": text_source,
         "source_file": file_title,
-        "source_url": f"{source_url}#page=1",
+        "source_url": f"{source_url}#page={page_offset + 1}",
         "sha256": None,
     }
     return doc_row, speeches
+
+
+_PARTY_HEADER_MAP = [
+    ("ΔΗΣΥ", "DİSİ"),
+    ("ΑΚΕΛ", "AKEL"),
+    ("ΔΗΚΟ", "DİKO"),
+    ("ΕΛΑΜ", "ELAM"),
+    ("ΕΔΕΚ", "EDEK"),
+    ("ΔΗΠΑ", "DİPA"),
+    ("ΚΙΝΗΜΑ ΟΙΚΟΛΟΓΩΝ", "Ekologlar"),
+    ("ΟΙΚΟΛΟΓΩΝ", "Ekologlar"),
+    ("ΑΝΕΞΑΡΤΗΤΟΙ", "Bağımsız"),
+    ("ΜΗ ΕΓΓΕΓΡΑΜΜΕΝΟΙ", "Bağımsız"),
+]
+
+
+def harvest_attendance_with_parties(pages: list[str]) -> list[tuple[str, str]]:
+    """Extract `(CLEAN_EL_PAIR, party_tr)` from post-sitting attendance rolls (party-grouped in 2021-2026)."""
+    tail = "\n".join(pages[max(0, len(pages) - 8) :])
+    m_end = _END_SITTING_RE.search(tail)
+    if not m_end:
+        return []
+    att = tail[m_end.end() :]
+    m_toc = re.search(r"\b(?:ΠΕΡΙΕΧΟΜΕΝΑ|ΑΠΟΝΤΕΣ)\b", att, re.I)
+    if m_toc:
+        att = att[: m_toc.start()]
+    pat = re.compile(
+        r"\b([Α-ΩΆ-ΏἈ-῿][α-ωά-ώἀ-ῷϊϋΐΰ]{2,20}\s+[Α-ΩΆ-ΏἈ-῿][α-ωά-ώἀ-ῷϊϋΐΰ]{2,20}(?:\s+(?:Στέλλα|Σκεύη))?)\b"
+    )
+    found: list[tuple[str, str]] = []
+    cur_party = ""
+    for ln in att.splitlines():
+        s = re.sub(r"\s+", " ", ln.strip())
+        if not s:
+            continue
+        up_ln = re.sub(r"[^Α-Ω]+", " ", clean_greek_token(s)).strip()
+        matched_party = False
+        for k, v in _PARTY_HEADER_MAP:
+            if up_ln == k or up_ln.startswith(k + " ") or (len(k) >= 8 and k in up_ln):
+                cur_party = v
+                matched_party = True
+                break
+        if matched_party:
+            continue
+        if "ΘΡΗΣΚΕΥΤΙΚ" in up_ln:
+            cur_party = ""
+            continue
+        for m in pat.finditer(s):
+            up = clean_greek_token(m.group(1))
+            if len(up.split()) not in (2, 3):
+                continue
+            if any(bad in up for bad in _ROSTER_BAD_SUBSTR):
+                continue
+            found.append((up, cur_party))
+    return found
+
+
+def build_consolidated_period(
+    vol_dir: Path,
+    donem: int,
+    out_dir: Path,
+    translations_path: Path | None = None,
+) -> dict:
+    """Split & parse consolidated multi-sitting `parliament.cy` PDFs (using PDF TOC bookmarks) into JSONL."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    vols = json.loads((vol_dir / "manifest.json").read_text(encoding="utf-8"))
+    trans_cache = load_cache(translations_path) if (translations_path and translations_path.exists()) else {}
+
+    page_cache_dir = out_dir / "_pages_cache"
+    page_cache_dir.mkdir(parents=True, exist_ok=True)
+
+    extracted: list[tuple[dict, str, int, int, int, list[str], str]] = []  # (vol, iso_date, seq, start_p0, yy, pages, tsrc)
+    roster_counts: Counter = Counter()
+    party_votes: dict[str, Counter] = defaultdict(Counter)
+    day_seq: dict[str, int] = defaultdict(int)
+
+    for v in vols:
+        pdf_path = vol_dir / f"{v['code']}.pdf"
+        doc = pymupdf.open(pdf_path)
+        n_total = len(doc)
+        toc = [t for t in doc.get_toc() if t[0] == 1 and "ΣΕΛΙΔΑ" not in t[1].upper()]
+        sittings_meta: list[tuple[str, int, int, str]] = []  # (title, start_0idx, end_0idx_excl, iso_date)
+        for ti, t_entry in enumerate(toc):
+            title_raw = t_entry[1].replace("\u200e", "").strip()
+            start_0 = max(0, int(t_entry[2]) - 1)
+            end_0 = max(start_0 + 1, int(toc[ti + 1][2]) - 1) if (ti + 1) < len(toc) else n_total
+            m_dt = re.search(r"(\d{1,2})\.(\d{1,2})\.(\d{4})", title_raw)
+            if not m_dt:
+                continue
+            dd, mm, yyyy = int(m_dt.group(1)), int(m_dt.group(2)), int(m_dt.group(3))
+            iso_date = f"{yyyy:04d}-{mm:02d}-{dd:02d}"
+            sittings_meta.append((title_raw, start_0, end_0, iso_date))
+
+        # Check if volume needs ToUnicode repair
+        sample = "\n".join(doc[i].get_text("text") for i in range(min(5, n_total)))
+        tsrc = "pdf_digital"
+        if needs_tounicode_repair(sample):
+            nfix = fix_broken_tounicode(doc)
+            if nfix > 0:
+                raw_bytes = doc.tobytes()
+                doc.close()
+                doc = pymupdf.open("pdf", raw_bytes)
+                tsrc = "pdf_tounicode_repaired"
+
+        for title_raw, start_0, end_0, iso_date in sittings_meta:
+            day_seq[iso_date] += 1
+            seq = day_seq[iso_date]
+            cache_file = page_cache_dir / f"D{donem}_{iso_date}_{seq:02d}.json"
+            if cache_file.exists():
+                cached = json.loads(cache_file.read_text(encoding="utf-8"))
+                pages = cached["pages"]
+                tsrc_use = cached["text_source"]
+            else:
+                pages = [doc[p_i].get_text("text") for p_i in range(start_0, end_0)]
+                tsrc_use = tsrc
+                cache_file.write_text(
+                    json.dumps({"pages": pages, "text_source": tsrc_use}, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+            for pair, pty in harvest_attendance_with_parties(pages):
+                roster_counts[pair] += 1
+                if pty:
+                    party_votes[pair][pty] += 1
+            extracted.append((v, iso_date, seq, start_0, int(v["yy"]), pages, tsrc_use))
+        doc.close()
+        print(f"  [Consolidated {v['code']}] {len(sittings_meta)} sittings ({n_total} pages)", flush=True)
+
+    valid_pairs = [pair for pair, cnt in roster_counts.most_common() if cnt >= 6]
+    resolver = PeriodSpeakerResolver(donem, valid_pairs)
+
+    # Map canonical name -> top party vote
+    canon_party: dict[str, str] = {}
+    for pair in valid_pairs:
+        if party_votes.get(pair):
+            canon_party[greek_fullname_to_turkish(pair)] = party_votes[pair].most_common(1)[0][0]
+    if donem == 12:
+        canon_party.setdefault("Annita Dimitriu", "DİSİ")
+
+    docs: list[dict] = []
+    speeches: list[dict] = []
+    for v, iso_date, seq, start_0, yy, pages, tsrc_use in extracted:
+        doc_row, sp_rows = parse_sitting(
+            pages=pages,
+            text_source=tsrc_use,
+            donem=donem,
+            iso_date=iso_date,
+            seq_in_day=seq,
+            file_title=f"{v['label']}.pdf",
+            source_url=v["url"],
+            resolver=resolver,
+            trans_cache=trans_cache,
+            page_offset=start_0,
+            forced_yy=yy,
+        )
+        docs.append(doc_row)
+        speeches.extend(sp_rows)
+
+    for name, rows in (("documents", docs), ("speeches", speeches)):
+        with (out_dir / f"{name}.jsonl").open("w", encoding="utf-8") as f:
+            for r in rows:
+                f.write(json.dumps(r, ensure_ascii=False) + "\n")
+
+    roster_export = {
+        f"KC:{donem}": {
+            "meclis": "KC",
+            "donem": donem,
+            "partial": True,
+            "source": "https://www.parliament.cy",
+            "members": [
+                {"name": nm, "constituency": "", "party": canon_party.get(nm, ""), "note": ""}
+                for nm in resolver.members_canon
+            ],
+        }
+    }
+    (out_dir / "rosters.json").write_text(json.dumps(roster_export, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    summary = {
+        "donem": donem,
+        "documents": len(docs),
+        "speeches": len(speeches),
+        "translated_speeches": sum(1 for s in speeches if s.get("text_tr")),
+        "min_date": min((d["tarih"] for d in docs if d.get("tarih")), default=None),
+        "max_date": max((d["tarih"] for d in docs if d.get("tarih")), default=None),
+        "roles": dict(Counter(s["speaker_role"] for s in speeches)),
+        "methods": dict(Counter(s["canon_method"] for s in speeches)),
+        "roster_count": len(resolver.members_canon),
+        "roster_with_party": sum(1 for nm in resolver.members_canon if canon_party.get(nm)),
+        "top_speakers": Counter(s["speaker_name"] for s in speeches).most_common(15),
+        "top_unresolved_raw": Counter(s["speaker_name"] for s in speeches if s["canon_method"] == "cy_raw").most_common(20),
+    }
+    (out_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    return summary
 
 
 def build_modern_archive(
@@ -1033,19 +1249,29 @@ def build_modern_archive(
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--modern-dir", default="data/cy_raw/modern")
+    ap.add_argument("--consolidated-dir", default="", help="Optional consolidated-volume folder with manifest.json")
+    ap.add_argument("--donem", type=int, default=12, help="Donem number when using --consolidated-dir")
     ap.add_argument("--ocr-root", default="data/cy_pages/modern_1977_79")
     ap.add_argument("--out", default="data/cy_modern_build")
     ap.add_argument("--translations", default="data/cy_translations/cache.jsonl")
     ap.add_argument("--merge-cy-build", default="", help="Optional path to 1960-64 data/cy_build to merge")
     args = ap.parse_args()
 
-    summary = build_modern_archive(
-        modern_dir=Path(args.modern_dir),
-        ocr_root=Path(args.ocr_root),
-        out_dir=Path(args.out),
-        translations_path=Path(args.translations) if args.translations else None,
-        merge_cy_build=Path(args.merge_cy_build) if args.merge_cy_build else None,
-    )
+    if args.consolidated_dir:
+        summary = build_consolidated_period(
+            vol_dir=Path(args.consolidated_dir),
+            donem=args.donem,
+            out_dir=Path(args.out),
+            translations_path=Path(args.translations) if args.translations else None,
+        )
+    else:
+        summary = build_modern_archive(
+            modern_dir=Path(args.modern_dir),
+            ocr_root=Path(args.ocr_root),
+            out_dir=Path(args.out),
+            translations_path=Path(args.translations) if args.translations else None,
+            merge_cy_build=Path(args.merge_cy_build) if args.merge_cy_build else None,
+        )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 
 

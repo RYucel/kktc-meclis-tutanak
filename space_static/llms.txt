@@ -54,6 +54,7 @@ Hugging Face Veri Seti (CC BY 4.0): https://huggingface.co/datasets/stevevaius/K
   `https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/terms_cache/KC_8.parquet` (2002–2004 Η΄ Dönem — Annan Planı)
   `https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/terms_cache/KC_10.parquet` (2015–2016 Ι΄ Dönem)
   `https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/terms_cache/KC_11.parquet` (2016–2017 ΙΑ΄ Dönem — Crans-Montana)
+  `https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/terms_cache/KC_12.parquet` (2021–2026 ΙΒ΄ Güncel Dönem)
   `https://huggingface.co/datasets/stevevaius/KKTC_Meclis_Tutanak/resolve/main/terms_cache/KKTC_10.parquet` vb.
 
 Önemli sütunlar (`speeches.parquet`): `speech_id`, `doc_id`, `meclis` (`KKTC`, `KKTC_KM`, `KKTC_ARA`, `KTFD`, `KTFD_KM`, `KTY`, `TCM`, `KC`), `donem`, `birlesim`, `oturum`, `tarih` (`YYYY-MM-DD`), `turn_index`, `speaker_name`, `speaker_title`, `constituency`, `speaker_role`, `modifiers` (`Türkçe`, `Yunanca`, `Yunanca/Türkçe`), `text` (orijinal metin), `text_tr` (Yunanca→Türkçe yapay zekâ çevirisi, nullable), `word_count`, `source_file`, `source_url`.

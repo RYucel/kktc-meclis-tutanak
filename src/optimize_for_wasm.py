@@ -99,6 +99,7 @@ TERM_CATALOG = [
     ("KTY", 2, "KTY 2. Dönem", "1970–1975", "Kıbrıs Türk Yönetimi"),
     ("KTY", 1, "KTY 1. Dönem", "1967–1970", "Kıbrıs Türk Yönetimi"),
     ("TCM", None, "Türk Cemaat Meclisi", "1963", "1960–1963 Tarihsel Meclisler"),
+    ("KC", 12, "Kıbrıs Cumhuriyeti · ΙΒ΄ Dönem", "2021–2026", "Kıbrıs Cumhuriyeti Temsilciler Meclisi"),
     ("KC", 11, "Kıbrıs Cumhuriyeti · ΙΑ΄ Dönem", "2016–2021", "Kıbrıs Cumhuriyeti Temsilciler Meclisi"),
     ("KC", 10, "Kıbrıs Cumhuriyeti · Ι΄ Dönem", "2011–2016", "Kıbrıs Cumhuriyeti Temsilciler Meclisi"),
     ("KC", 8, "Kıbrıs Cumhuriyeti · Η΄ Dönem", "2001–2006", "Kıbrıs Cumhuriyeti Temsilciler Meclisi"),

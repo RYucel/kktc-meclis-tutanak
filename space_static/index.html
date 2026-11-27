@@ -805,7 +805,7 @@
     <button type="button" class="wing-card cy" data-wing="cy" id="wing-cy">
       <div class="wing-kicker"><span>Kıbrıs Cumhuriyeti · 1960–2026</span><span id="wing-cy-badge">Türkçe Çeviri + Yunanca</span></div>
       <div class="wing-title">Temsilciler Meclisi (Βουλή)</div>
-      <div class="wing-sub" id="wing-cy-sub">1960–64, 1977–79, 2002–04 &amp; 2015–17 yayında · Türkçe çeviri + Yunanca</div>
+      <div class="wing-sub" id="wing-cy-sub">1960–64, 1977–79, 2002–04, 2015–17 &amp; 2021–26 yayında · TR+EL</div>
     </button>
     <button type="button" class="wing-card cmp" data-wing="compare" id="wing-compare">
       <div class="wing-kicker"><span>İki Toplumlu Karşılaştırma</span><span>Yan Yana</span></div>
@@ -1055,7 +1055,7 @@ const CY_PARLIAMENT_PERIODS = [
   { id: 'KC:9', donem: 9, label: 'Θ΄ Dönem (2006–2011)', years: '2006–2011', note: 'Hristofyas–Talat müzakere süreci (parliament.cy arşivinden sıradaki aşamada aktarılacak).' },
   { id: 'KC:10', donem: 10, label: 'Ι΄ Dönem (2011–2016)', years: '2011–2016', priority: true, liveNote: '2015–2016 müzakere süreci (63 birleşim) yayında', note: 'Ekonomik kriz ve 2015–16 müzakereleri.' },
   { id: 'KC:11', donem: 11, label: 'ΙΑ΄ Dönem (2016–2021)', years: '2016–2021', priority: true, liveNote: '2016–2017 Crans-Montana Kıbrıs Konferansı dönemi (63 birleşim) yayında', note: 'Crans-Montana Kıbrıs Konferansı & pandemi dönemi.' },
-  { id: 'KC:12', donem: 12, label: 'ΙΒ΄ Dönem (2021–2026)', years: '2021–2026', priority: true, note: 'Güncel Temsilciler Meclisi dönemi (sıradaki aşamada aktarılacak).' },
+  { id: 'KC:12', donem: 12, label: 'ΙΒ΄ Dönem (2021–2026)', years: '2021–2026', priority: true, liveNote: '2021–2026 güncel Temsilciler Meclisi dönemi (178 birleşim) yayında', note: 'Güncel Temsilciler Meclisi dönemi.' },
 ];
 
 const $ = id => document.getElementById(id);
@@ -1538,9 +1538,9 @@ function aggregateCyMembers() {
 
 function getCyQuickLeaders() {
   const curated = [
-    'Glafkos Klerides', 'Dimitris Hristofyas', 'Dimitris Silluris', 'Yanakis Omiru',
-    'Alekos Mihailidis', 'Vasos Lisaridis', 'Averof Neofitu', 'Andros Kiprianu',
-    'Nikos Anastasiadis', 'Tasos Papadopulos', 'Yorgos Perdikis', 'Halit Ali Rıza',
+    'Glafkos Klerides', 'Annita Dimitriu', 'Dimitris Hristofyas', 'Dimitris Silluris',
+    'Yanakis Omiru', 'Alekos Mihailidis', 'Vasos Lisaridis', 'Averof Neofitu',
+    'Stefanos Stefanu', 'Andros Kiprianu', 'Nikos Anastasiadis', 'Halit Ali Rıza',
   ];
   const present = curated.filter(n => speakersByName.has(n));
   if (present.length >= 8) return present;
@@ -2380,13 +2380,74 @@ function resolveSideTables(side, fromYear, toYear) {
   if (isCy && sideTerms.length && hasBound && overlapping.length === 0) {
     return { emptyWindow: true, files: [] };
   }
-  if (overlapping.length > 0 && overlapping.length <= 4) {
+  if (overlapping.length > 0 && overlapping.length <= (isCy ? 12 : 4)) {
     return {
       emptyWindow: false,
       files: overlapping.map(t => t.donem != null ? `${t.meclis}_${t.donem}.parquet` : `${t.meclis}.parquet`),
     };
   }
   return { emptyWindow: false, files: [] };
+}
+
+function resolveQuerySource({ resolvedSpk = [], meclisSel = '', donemSel = '', wing = '', fromYear = '', toYear = '' }) {
+  if (resolvedSpk.length === 1) return { emptyWindow: false, files: [] };
+  const isCyAll = (!donemSel && (meclisSel === 'KC' || (!meclisSel && wing === 'cyprus_republic')));
+  if (isCyAll) return resolveSideTables('cy', fromYear, toYear);
+  if (meclisSel) {
+    const hasExplicitDonem = Boolean(donemSel && /^\d+$/.test(donemSel));
+    const chamberTerms = termsData.filter(t => t.meclis === meclisSel);
+    if (hasExplicitDonem || chamberTerms.length === 1) {
+      const tid = hasExplicitDonem ? `${meclisSel}:${donemSel}` : meclisSel;
+      const tMeta = termsById.get(tid) || topicTermsById.get(tid) || (chamberTerms.length === 1 ? chamberTerms[0] : null);
+      if (tMeta) {
+        const fname = tMeta.donem != null ? `${tMeta.meclis}_${tMeta.donem}.parquet` : `${tMeta.meclis}.parquet`;
+        return { emptyWindow: false, files: [fname] };
+      }
+    }
+  }
+  return { emptyWindow: false, files: [] };
+}
+
+async function runPagedSpeechQuery(c, { files, whereSql, orderSql, orderSqlPrefixed, limit, offset }) {
+  if (files.length > 1) {
+    const tbls = await Promise.all(files.map(ensureShardRegistered));
+    const fromSql = `read_parquet([${tbls.map(t => `'${t}'`).join(', ')}])`;
+    const [cntRes, rowsRes] = await Promise.all([
+      c.query(`SELECT COUNT(*)::DOUBLE AS cnt FROM ${fromSql} WHERE ${whereSql}`),
+      c.query(`
+        SELECT ${SPEECH_COLS}
+        FROM ${fromSql}
+        WHERE ${whereSql}
+        ORDER BY ${orderSql}
+        LIMIT ${Number(limit)} OFFSET ${Number(offset)}
+      `),
+    ]);
+    const total = Number(cntRes.toArray()[0]?.toJSON()?.cnt || 0);
+    const rows = rowsRes.toArray().map(r => r.toJSON());
+    return { total, rows, fromSql };
+  }
+  const targetTable = files.length === 1 ? await ensureShardRegistered(files[0]) : 'speeches.parquet';
+  const fromSql = `read_parquet('${targetTable}')`;
+  const rowsRes = await c.query(`
+    WITH matched AS (
+      SELECT file_row_number AS _rn, tarih, turn_index, word_count
+      FROM read_parquet('${targetTable}', file_row_number=true)
+      WHERE ${whereSql}
+    ),
+    top_rows AS (
+      SELECT _rn, (SELECT COUNT(*)::DOUBLE FROM matched) AS _total
+      FROM matched
+      ORDER BY ${orderSql}
+      LIMIT ${Number(limit)} OFFSET ${Number(offset)}
+    )
+    SELECT t._total, ${SPEECH_COLS.split(',').map(col => 's.' + col.trim()).join(', ')}
+    FROM read_parquet('${targetTable}', file_row_number=true) s
+    JOIN top_rows t ON s.file_row_number = t._rn
+    ORDER BY ${orderSqlPrefixed}
+  `);
+  const rows = rowsRes.toArray().map(r => r.toJSON());
+  const total = rows.length ? Number(rows[0]._total || 0) : 0;
+  return { total, rows, fromSql };
 }
 
 async function queryParliamentSide({ side, whereClauses, fromYear = '', toYear = '', limit = 8 }) {
@@ -2441,7 +2502,7 @@ async function queryParliamentSide({ side, whereClauses, fromYear = '', toYear =
 function renderComparisonColumn(side, res, { q, fromYear, toYear, termsList }) {
   const isCy = side === 'cy';
   const title = isCy ? 'Kıbrıs Cumhuriyeti Temsilciler Meclisi (KC)' : 'Kıbrıs Türk Meclisleri (KKTC / KTFD / KTY / TCM)';
-  const sub = isCy ? '1960–64, 1977–79, 2002–04 & 2015–17 yayında (TR+EL) · Kalan dönemler aşamalı' : '1963–2026 tam arşiv · KKTC, KTFD, KTY, TCM';
+  const sub = isCy ? '1960–64, 1977–79, 2002–04, 2015–17 & 2021–26 yayında (TR+EL)' : '1963–2026 tam arşiv · KKTC, KTFD, KTY, TCM';
   const speakersHtml = res.topSpeakers.length
     ? `<div class="cmp-speakers"><span class="quick-lbl" style="align-self:center">Öne Çıkanlar:</span>${res.topSpeakers.map(sp =>
         `<button type="button" class="chip" data-cmp-pick="${escHtml(sp.name)}" data-cmp-wing="${isCy ? 'cy' : 'north'}">${escHtml(sp.name)} (${sp.count.toLocaleString('tr-TR')})</button>`
@@ -2484,7 +2545,7 @@ function renderComparisonColumn(side, res, { q, fromYear, toYear, termsList }) {
     bodyHtml = `
       <div class="cmp-notice">
         <strong>Kıbrıs Cumhuriyeti Ara Dönem Bilgisi:</strong><br>
-        Şu an sistemde <strong>1960–1964</strong>, <strong>1977–1979</strong> (Denktaş–Makarios), <strong>2002–2004</strong> (Annan Planı) ve <strong>2015–2017</strong> (Crans-Montana) dönemleri yayındadır. Seçtiğiniz <strong>${escHtml(fromYear || '')}–${escHtml(toYear || '')}</strong> ara yılları bir sonraki adımda eklenecektir.
+        Şu an sistemde <strong>1960–1964</strong>, <strong>1977–1979</strong> (Denktaş–Makarios), <strong>2002–2004</strong> (Annan Planı), <strong>2015–2017</strong> (Crans-Montana) ve <strong>2021–2026</strong> (ΙΒ΄ Güncel Dönem) dönemleri yayındadır. Seçtiğiniz <strong>${escHtml(fromYear || '')}–${escHtml(toYear || '')}</strong> ara yılları bir sonraki adımda eklenecektir.
         <div style="margin-top:10px">
           <button type="button" class="btn-ghost" id="cmp-try-1963">2002–2004 Annan Planı Karşılaştırmasını Gör →</button>
         </div>
@@ -2588,34 +2649,40 @@ async function runSearch(offset = 0) {
     return;
   }
 
-  // Decide optimal Parquet table:
+  // Decide optimal Parquet table(s):
   // - Single speaker -> speeches.parquet (sorted by speaker_name, ~6 MB range read)
-  // - Specific term (no single speaker) -> terms_cache/{slug}.parquet (~0.2-20 MB instead of 208 MB!)
+  // - Specific term or Cyprus Republic wing -> matching terms_cache/*.parquet shard(s)
   const meclisSel = $('meclis').value.trim();
   const donemSel = $('donem').value.trim();
-  let targetTable = 'speeches.parquet';
-  let shardFname = null;
-  if (w.resolved.length !== 1 && meclisSel) {
-    const tid = (donemSel && /^\d+$/.test(donemSel)) ? `${meclisSel}:${donemSel}` : meclisSel;
-    if (termsById.has(tid) || topicTermsById.has(tid)) {
-      const tMeta = termsById.get(tid) || topicTermsById.get(tid);
-      shardFname = tMeta.donem != null ? `${tMeta.meclis}_${tMeta.donem}.parquet` : `${tMeta.meclis}.parquet`;
-      targetTable = `term_${shardFname}`;
-    }
+  const route = resolveQuerySource({
+    resolvedSpk: w.resolved,
+    meclisSel,
+    donemSel,
+    wing: activeWing === 'cy' ? 'cyprus_republic' : activeWing,
+    fromYear: $('from_year').value.trim(),
+    toYear: $('to_year').value.trim(),
+  });
+  if (route.emptyWindow) {
+    $('results-count').textContent = '0 konuşma bulundu';
+    $('btn-export').style.display = 'none';
+    $('results').innerHTML = `<div class="empty-state"><strong>Seçili tarih aralığında yayında tutanak yok.</strong><br>Kıbrıs Cumhuriyeti Temsilciler Meclisi için yayındaki dönemler: 1960–1964, 1977–1979, 2002–2004, 2015–2017 ve 2021–2026.</div>`;
+    $('pager').innerHTML = '';
+    return;
   }
 
   const fastHint = w.resolved.length === 1
     ? `${w.resolved[0]} için ilgili Parquet bloğu (~6 MB) okunuyor...`
-    : shardFname
-      ? `Yalnızca seçili dönemin Parquet dosyası (${shardFname}) taranıyor...`
-      : 'Tüm arşiv üzerinde Parquet sorgusu çalıştırılıyor (konuşmacı veya dönem seçerseniz çok daha hızlıdır)...';
+    : route.files.length === 1
+      ? `Yalnızca seçili dönemin Parquet dosyası (${route.files[0]}) taranıyor...`
+      : route.files.length > 1
+        ? `Yalnızca seçili meclisin ${route.files.length} dönem Parquet dosyası taranıyor...`
+        : 'Tüm arşiv üzerinde Parquet sorgusu çalıştırılıyor (konuşmacı veya dönem seçerseniz çok daha hızlıdır)...';
   $('results').innerHTML = `<div class="loading-box"><div class="spinner"></div><div><strong>Sorgulanıyor...</strong><div style="font-size:13px;color:var(--ink-soft);margin-top:2px">${escHtml(fastHint)}</div></div></div>`;
   $('btn-submit').disabled = true;
   setEngineStatus('busy', fastHint);
 
   try {
     const c = await ensureDuckDB();
-    if (shardFname) targetTable = await ensureShardRegistered(shardFname);
     const t0 = performance.now();
     const sortVal = $('sort').value;
     const orderSql = sortVal === 'oldest' ? 'tarih ASC NULLS LAST, turn_index ASC'
@@ -2625,31 +2692,16 @@ async function runSearch(offset = 0) {
                            : sortVal === 'longest' ? 's.word_count DESC, s.tarih DESC NULLS LAST'
                            : 's.tarih DESC NULLS LAST, s.turn_index ASC';
 
-    // Two-phase late materialization: scan only filter/sort columns first, then fetch wide columns for top 25 rows.
-    const rowsRes = await c.query(`
-      WITH matched AS (
-        SELECT file_row_number AS _rn, tarih, turn_index, word_count
-        FROM read_parquet('${targetTable}', file_row_number=true)
-        WHERE ${w.sql}
-      ),
-      top_rows AS (
-        SELECT _rn, (SELECT COUNT(*)::DOUBLE FROM matched) AS _total
-        FROM matched
-        ORDER BY ${orderSql}
-        LIMIT ${PAGE_SIZE} OFFSET ${offset}
-      )
-      SELECT t._total,
-             s.speech_id, s.doc_id, s.meclis, s.donem, s.birlesim, s.oturum, s.tarih, s.turn_index,
-             s.speaker_name, s.speaker_title, s.constituency, s.modifiers, s.speaker_role,
-             s.text, s.text_tr, s.word_count, s.source_file, s.source_url
-      FROM read_parquet('${targetTable}', file_row_number=true) s
-      JOIN top_rows t ON s.file_row_number = t._rn
-      ORDER BY ${orderSqlPrefixed}
-    `);
-    const rows = rowsRes.toArray().map(r => r.toJSON());
-    const total = rows.length ? Number(rows[0]._total || 0) : 0;
+    const { total, rows, fromSql } = await runPagedSpeechQuery(c, {
+      files: route.files,
+      whereSql: w.sql,
+      orderSql,
+      orderSqlPrefixed,
+      limit: PAGE_SIZE,
+      offset,
+    });
     const ms = Math.round(performance.now() - t0);
-    lastQueryState = { table: targetTable, whereSql: w.sql, orderSql, terms: w.terms };
+    lastQueryState = { fromSql, whereSql: w.sql, orderSql, terms: w.terms };
     lastItems = rows;
 
     setEngineStatus('ok', `Son sorgu ${ms.toLocaleString('tr-TR')} ms · DuckDB-WASM (sunucusuz)`);
@@ -2918,7 +2970,7 @@ $('btn-export').onclick = async () => {
     const res = await c.query(`
       SELECT tarih, meclis, donem, birlesim, oturum, turn_index,
              speaker_name, speaker_title, constituency, word_count, text, text_tr, source_url
-      FROM '${lastQueryState.table || 'speeches.parquet'}'
+      FROM ${lastQueryState.fromSql || "read_parquet('speeches.parquet')"}
       WHERE ${lastQueryState.whereSql}
       ORDER BY ${lastQueryState.orderSql}
       LIMIT 500
@@ -3201,7 +3253,7 @@ function buildWebMcpTools() {
   return [
     {
       name: 'search_speeches',
-      description: 'Search Cyprus Turkish Parliaments (1963-2026) and Republic of Cyprus House of Representatives (1960-64, 1977-79, 2002-04, 2015-17 live; bilingual Greek original + Turkish translation) by keyword, speaker name, parliamentary wing, year range, or unified topic_id.',
+      description: 'Search Cyprus Turkish Parliaments (1963-2026) and Republic of Cyprus House of Representatives (1960-64, 1977-79, 2002-04, 2015-17, 2021-26 live; bilingual Greek original + Turkish translation) by keyword, speaker name, parliamentary wing, year range, or unified topic_id.',
       annotations: { readOnlyHint: true },
       inputSchema: {
         type: 'object',
@@ -3244,10 +3296,15 @@ function buildWebMcpTools() {
         clauses.push(...tt.clauses);
         const whereSql = clauses.length ? clauses.join(' AND ') : '1=1';
 
-        let tbl = 'speeches.parquet';
-        if (resolvedSpk.length !== 1 && (args.meclis === 'KC' || args.wing === 'cyprus_republic')) {
-          tbl = await ensureShardRegistered('KC.parquet');
-        }
+        const route = resolveQuerySource({
+          resolvedSpk,
+          meclisSel: args.meclis ? String(args.meclis) : '',
+          donemSel: '',
+          wing: args.wing ? String(args.wing) : '',
+          fromYear: args.from_year ? String(args.from_year) : '',
+          toYear: args.to_year ? String(args.to_year) : '',
+        });
+        if (route.emptyWindow) return { total: 0, count: 0, offset: 0, items: [] };
         const lim = Math.min(50, Math.max(1, Number(args.limit || 10)));
         const off = Math.max(0, Number(args.offset || 0));
         const ord = args.sort === 'oldest' ? 'tarih ASC NULLS LAST, turn_index ASC'
@@ -3257,22 +3314,14 @@ function buildWebMcpTools() {
                    : args.sort === 'longest' ? 's.word_count DESC, s.tarih DESC NULLS LAST'
                    : 's.tarih DESC NULLS LAST, s.turn_index ASC';
 
-        const res = await c.query(`
-          WITH matched AS (
-            SELECT file_row_number AS _rn, tarih, turn_index, word_count
-            FROM read_parquet('${tbl}', file_row_number=true) WHERE ${whereSql}
-          ),
-          top_rows AS (
-            SELECT _rn, (SELECT COUNT(*)::DOUBLE FROM matched) AS _total
-            FROM matched ORDER BY ${ord} LIMIT ${lim} OFFSET ${off}
-          )
-          SELECT t._total, ${SPEECH_COLS.split(',').map(col => 's.' + col.trim()).join(', ')}
-          FROM read_parquet('${tbl}', file_row_number=true) s
-          JOIN top_rows t ON s.file_row_number = t._rn
-          ORDER BY ${ordS}
-        `);
-        const rows = res.toArray().map(r => r.toJSON());
-        const total = rows.length ? Number(rows[0]._total || 0) : 0;
+        const { total, rows } = await runPagedSpeechQuery(c, {
+          files: route.files,
+          whereSql,
+          orderSql: ord,
+          orderSqlPrefixed: ordS,
+          limit: lim,
+          offset: off,
+        });
         return { total, count: rows.length, offset: off, items: rows.map(serializeSpeechRow) };
       },
     },
@@ -3310,8 +3359,8 @@ function buildWebMcpTools() {
           filter: { query: q || null, topic_id: topicId || null, from_year: fromYear || null, to_year: toYear || null },
           coverage: {
             north_years: '1963-2026',
-            cyprus_republic_live_years: '1960-1964, 1977-1979, 2002-2004, 2015-2017',
-            cyprus_republic_planned_years: '1964-1976, 1980-2001, 2005-2014, 2018-2026',
+            cyprus_republic_live_years: '1960-1964, 1977-1979, 2002-2004, 2015-2017, 2021-2026',
+            cyprus_republic_planned_years: '1964-1976, 1980-2001, 2005-2014, 2018-2021',
           },
           north_turkish_cypriot: {
             total_speeches: north.total,
